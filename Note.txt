@@ -1,0 +1,27 @@
+Scaffold-DbContext “Data Source=WINDOWS\NGOCTRAM;Initial Catalog=naricosmetic;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext “Data Source=WINDOWS\NGOCTRAM;Initial Catalog=NIENLUAN;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -ContextDir Data -OutputDir Entities -DataAnnotations -f
+
+
+ var errors = ModelState
+                     .Where(x => x.Value.Errors.Count > 0)
+                     .Select(x => new { x.Key, x.Value.Errors }).ToArray();
+
+$env:codegen_trace=1
+
+
+//identify 
+// First define the new key
+builder.HasKey(p => new { p.BusinessDay, p.ClientId, p.Version });
+
+// Then configure the auto generated column
+// This (especially the `SetAfterUpdateBehavior` call) must be after 
+// unassociating the property as a PK, otherwise you'll get an exception
+builder.Property(p => p.Id)
+    .ValueGeneratedOnAdd()
+    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore); // <--
+
+site key
+6Ldd_lkjAAAAAAgrEDmAb_urlXGn1VSj6p8Ku8zS
+
+secretkey
+6Ldd_lkjAAAAAKP5fkz4iyqAbVm0w9uceLwgYto8

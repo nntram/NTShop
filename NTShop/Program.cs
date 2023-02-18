@@ -1,9 +1,10 @@
+using Arch.EntityFrameworkCore.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+using NTShop.Data;
 using NTShop.Repositories;
 using NTShop.Repositories.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 // Add services to the container.
 
@@ -14,7 +15,18 @@ builder.Services.AddSwaggerGen();
 
 //Add My services
 
-builder.Services.AddTransient<IProductsRepository, ProductsRepositoty>();
+builder.Services.AddTransient<IProductRepository, ProductRepositoty>();
+
+
+//Config database
+builder.Services.AddDbContext<NIENLUANContext>(
+               x => x.UseSqlServer(builder.Configuration.GetConnectionString("eshop")));
+
+//Add Unitofwork
+builder.Services.AddUnitOfWork<NIENLUANContext>();
+
+//Add AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
