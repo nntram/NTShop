@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿
 
 namespace NTShop.Models
 {
-    public class ProductModels
+    public class ProductModel
     {
         public string Productid { get; set; } = null!;     
         public string Categoryid { get; set; } = null!;       
@@ -17,5 +16,8 @@ namespace NTShop.Models
         public bool? Productinacitve { get; set; }        
         public int Productcode { get; set; }
         public bool? Productishot { get; set; }
+        public string Categoryname { get; set; } = null!;
+        public string Brandname{ get; set; } = null!;
+        public List<ProductImageModel> Productimages { get; set; }
     }
 }

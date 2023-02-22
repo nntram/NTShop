@@ -8,8 +8,16 @@ namespace B1809531_EShop_MVC6.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<Product, ProductModels>().ReverseMap();
-           
+            CreateMap<Product, ProductModel>()
+                .ForMember(t => t.Categoryname, opt => opt.MapFrom(t => t.Category.Categoryname))
+                .ForMember(t => t.Brandname, opt => opt.MapFrom(t => t.Brand.Brandname));
+            CreateMap<ProductModel, Product>();
+            CreateMap<Productimage, ProductImageModel>().ReverseMap();
+            CreateMap<Product, ProductCardModel>()
+                .ForMember(t => t.Categoryname, opt => opt.MapFrom(t => t.Category.Categoryname))
+                .ForMember(t => t.Brandname, opt => opt.MapFrom(t => t.Brand.Brandname))
+                .ForMember(t => t.Productimages, opt => opt.MapFrom(t => t.Productimages.First().Productimageurl));
+
 
         }
     }

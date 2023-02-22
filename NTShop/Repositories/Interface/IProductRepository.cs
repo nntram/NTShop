@@ -4,7 +4,9 @@ namespace NTShop.Repositories.Interface
 {
     public interface IProductRepository
     {
-        public Task<List<ProductModels>> GetAllAsync();
-        public Task<ProductModels> GetByIdAsync(string id);
+        public Task<List<ProductModel>> GetAllAsync();
+        public Task<ProductModel> GetByIdAsync(string id);
+
+        public Task<List<ProductCardModel>> GetAllCardAsync();
     }
 }

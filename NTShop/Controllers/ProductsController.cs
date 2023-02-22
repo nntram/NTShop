@@ -4,7 +4,7 @@ using NTShop.Repositories.Interface;
 namespace NTShop.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("products")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -18,6 +18,13 @@ namespace NTShop.Controllers
         public async Task<IActionResult> GetAll()
         {
             var data = await _productRepository.GetAllAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllCard()
+        {
+            var data = await _productRepository.GetAllCardAsync();
             return Ok(data);
         }
 
