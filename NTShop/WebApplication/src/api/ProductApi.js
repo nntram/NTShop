@@ -11,6 +11,11 @@ class ProductApi {
         return axiosClient.get(url);
     };
 
+    getCard = ({params}) => {
+        const url = '/products/get';
+        return axiosClient.get(url, {params});
+    };
+
     getById = (id) => {
         const url = '/products';
         return axiosClient.get(url, { id });

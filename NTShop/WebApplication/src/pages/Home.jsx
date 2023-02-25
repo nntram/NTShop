@@ -16,7 +16,6 @@ import Clock from '../components/UI/Clock'
 
 import ProductApi from '../api/ProductApi'
 import { useQuery } from 'react-query'
-import ProductListItem from '../components/UI/ProductListItem'
 
 const Home = () => {
 
@@ -31,7 +30,6 @@ const Home = () => {
     }
 }
 
-  const year = new Date().getFullYear();
   const [trendingProduct, setTrendingProduct] = useState([])
   const [bestSaleProduct, setBestSaleProduct] = useState([])
   const [wirelessProduct, setWirelessProduct] = useState([])
@@ -39,17 +37,18 @@ const Home = () => {
   const [popularProduct, setPopularProduct] = useState([])
 
   useEffect(() => {
-    const filteredTrendingProduct = products.filter((item) => item.category === 'chair')
+    const filteredTrendingProduct = productList.filter((item) => item.productishot === true).slice(0, 8)
     setTrendingProduct(filteredTrendingProduct)
-    const filteredBestSaleProduct = products.filter((item) => item.category === 'sofa')
-    setBestSaleProduct(filteredBestSaleProduct)
-    const filteredWirelessProduct = products.filter((item) => item.category === 'wireless')
-    setWirelessProduct(filteredWirelessProduct)
-    const filteredMobileProduct = products.filter((item) => item.category === 'mobile')
-    setMobileProduct(filteredMobileProduct)
-    const filteredPopularProduct = products.filter((item) => item.category === 'watch')
-    setPopularProduct(filteredPopularProduct)
-  }, [])
+
+    // const filteredBestSaleProduct = products.filter((item) => item.category === 'sofa')
+    // setBestSaleProduct(filteredBestSaleProduct)
+    // const filteredWirelessProduct = products.filter((item) => item.category === 'wireless')
+    // setWirelessProduct(filteredWirelessProduct)
+    // const filteredMobileProduct = products.filter((item) => item.category === 'mobile')
+    // setMobileProduct(filteredMobileProduct)
+    // const filteredPopularProduct = products.filter((item) => item.category === 'watch')
+    // setPopularProduct(filteredPopularProduct)
+  }, [productList])
 
   const { isLoading, isError, data, error } = useQuery('productList', fetchProductList)
  
@@ -66,18 +65,18 @@ const Home = () => {
       <section className='hero__section'>
         <Container>
           <Row>
-            <Col lg='6' md='6'>
+            <Col lg='6' md='6' className='d-flex align-items-center'>
               <div className="hero__content">
                 <p className="hero__subtitle">
-                  Trending product in {year}
+                  Cửa hàng chúng tôi
                 </p>
-                <h2>Make Your Interior More Minaimalistic & Modern</h2>
+                <h2>Chuyên cung cấp sản phẩm chăm sóc sắc đẹp</h2>
                 <p>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis magnam quae commodi rem nisi fuga repudiandae, enim itaque accusantium consequuntur, fugit cupiditate incidunt! Repudiandae, ipsam nisi animi culpa eligendi qui!
+                  Chúng tôi cam kết luôn mang đến sự hài lòng cho quý khách hàng. Các sản phẩm sẽ được đóng gói cẩn thận, giao hàng nhanh chóng. Đặc biệt, chúng tôi cam kết về nguồn gốc và chất lượng sản phẩm luôn được đảm bảo chính hãng. Còn chần chờ gì nữa, hãy lựa chọn sản phẩm ngay thôi nào.
                 </p>
                 <Link to='/shop'>
                   <motion.button className='buy__btn' whileHover={{ scale: 1.2 }}>
-                    SHOP NOW
+                  <i className="ri-shopping-cart-2-line"></i> Mua sắm ngay
                   </motion.button>
                 </Link>
               </div>
@@ -95,26 +94,14 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg='12' className='text-center'>
-              <h2 className='section__title'> Products</h2>
-            </Col>
-            <ProductListItem data={productList} />
-          </Row>
-        </Container>
-      </section>
-
-
-      <section className="trending__Products">
-        <Container>
-          <Row>
-            <Col lg='12' className='text-center'>
-              <h2 className='section__title'> Trending Products</h2>
+              <h2 className='section__title'>Sản phẩm nổi bật</h2>
             </Col>
             <ProductList data={trendingProduct} />
           </Row>
         </Container>
       </section>
 
-      <section className="best-sale__Products">
+      {/* <section className="best-sale__Products">
         <Container>
           <Row>
             <Col lg='12' className='text-center'>
@@ -123,7 +110,7 @@ const Home = () => {
             <ProductList data={bestSaleProduct} />
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       <section className="timer__count">
         <Container>
@@ -147,7 +134,7 @@ const Home = () => {
         </Container>
       </section>
 
-      <section className="new__Arival">
+      {/* <section className="new__Arival">
         <Container>
           <Row>
             <Col lg='12' className='text-center'>
@@ -168,7 +155,7 @@ const Home = () => {
             <ProductList data={popularProduct} />
           </Row>
         </Container>
-      </section>
+      </section> */}
     </Helmet>
   )
 }

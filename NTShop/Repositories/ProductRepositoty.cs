@@ -49,5 +49,17 @@ namespace NTShop.Repositories
 
             return _mapper.Map<ProductModel>(data);
         }
+
+        public async Task<List<ProductCardModel>> GetCardAsync(int size)
+        {
+            var data = (await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
+                      pageSize: size,
+                      predicate: p => p.Productinacitve == true,
+                      include: source => source.Include(m => m.Productimages)
+                                                 .Include(m => m.Brand)
+                                                 .Include(m => m.Category))).Items;
+
+            return _mapper.Map<List<ProductCardModel>>(data);
+        }
     }
 }

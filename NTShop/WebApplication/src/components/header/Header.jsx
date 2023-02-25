@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import './header.css'
 import { motion } from 'framer-motion'
 
-import logo from '../../assets/images/eco-logo.png'
+import logo from '../../assets/images/logo5.png'
 import userIcon from '../../assets/images/user-icon.png'
 import { useSelector } from 'react-redux'
 
@@ -17,15 +17,15 @@ import { toast } from 'react-toastify'
 const nav__links = [
   {
     path: 'home',
-    display: 'Home'
+    display: 'Trang chủ'
   },
   {
     path: 'shop',
-    display: 'Shop'
+    display: 'Sản phẩm'
   },
   {
-    path: 'cart',
-    display: 'Cart'
+    path: 'contact',
+    display: 'Liên hệ'
   },
 
 ]
@@ -86,7 +86,7 @@ const Header = () => {
               <img src={logo} alt='logo' />
               <div>
                 <h1>
-                  Multimart
+                 Nari Shop
                 </h1>
 
               </div>
@@ -137,8 +137,8 @@ const Header = () => {
                         <Link to='/dashboard'>Dashboard</Link>
                       </div> :
                       <div className='d-flex justify-content-center align-items-center flex-column'>
-                        <Link to='/signup'>Signup</Link>
-                        <Link to='/login'>Login</Link>
+                        <Link to='/signup'>Đăng ký</Link>
+                        <Link to='/login'>Đăng nhập</Link>
                         <Link to='/dashboard'>Dashboard</Link>
                       </div>
                   }

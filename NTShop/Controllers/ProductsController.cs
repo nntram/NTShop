@@ -28,6 +28,14 @@ namespace NTShop.Controllers
             return Ok(data);
         }
 
+
+        [HttpGet("get")]
+        public async Task<IActionResult> GetCard(int size = int.MaxValue)
+        {
+            var data = await _productRepository.GetCardAsync(size);
+            return Ok(data);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
