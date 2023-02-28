@@ -27,9 +27,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Add My services
-
 builder.Services.AddTransient<IProductRepository, ProductRepositoty>();
-
+builder.Services.AddTransient<IBrandRepository, BrandRepositoty>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepositoty>();
 
 //Config database
 builder.Services.AddDbContext<NIENLUANContext>(

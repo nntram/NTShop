@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Row, Col, Container } from 'reactstrap'
 
 import Helmet from '../components/helmet/Helmet'
 import heroImg from '../assets/images/hero-img.png'
 import '../styles/home.css'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useScroll } from 'framer-motion'
 
 import products from '../assets/data/products'
 import counterImg from '../assets/images/counter-timer-img.png'
@@ -15,11 +15,16 @@ import ProductList from '../components/UI/ProductList'
 import Clock from '../components/UI/Clock'
 
 import ProductApi from '../api/ProductApi'
-import { useQuery } from 'react-query'
+import { useQuery, useQueries } from 'react-query'
+import ScrollList from '../components/UI/ScrollList'
+import CategoryApi from '../api/CategoryApi'
+import BrandApi from '../api/BrandApi'
 
 const Home = () => {
 
   const [productList, setProductList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [brandList, setBrandList] = useState([]);
 
   const fetchProductList = async () => {
     try {
@@ -28,37 +33,65 @@ const Home = () => {
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
     }
-}
+  }
 
+  const fetchCategoryList = async () => {
+    try {
+      const response = await CategoryApi.getAll();
+      setCategoryList(response.map((item) => ({
+        id: item.categoryid,
+        name: item.categoryname,
+        image: item.categoryimage,
+        type: "categories"
+      })));
+    } catch (error) {
+      console.log('Failed to fetch category list: ', error);
+    }
+  }
+
+  const fetchBrandList = async () => {
+    try {
+      const response = await BrandApi.getAll();
+      setBrandList(response.map((item) => ({
+        id: item.brandid,
+        name: item.brandname,
+        image: item.brandimage,
+        type: "brands"
+      })));
+    } catch (error) {
+      console.log('Failed to fetch brand list: ', error);
+    }
+  }
   const [trendingProduct, setTrendingProduct] = useState([])
-  const [bestSaleProduct, setBestSaleProduct] = useState([])
-  const [wirelessProduct, setWirelessProduct] = useState([])
-  const [mobileProduct, setMobileProduct] = useState([])
-  const [popularProduct, setPopularProduct] = useState([])
+
+  const scrollRef = useRef(null)
+  const { } = useScroll({
+    container: scrollRef
+  })
+
 
   useEffect(() => {
     const filteredTrendingProduct = productList.filter((item) => item.productishot === true).slice(0, 8)
     setTrendingProduct(filteredTrendingProduct)
-
-    // const filteredBestSaleProduct = products.filter((item) => item.category === 'sofa')
-    // setBestSaleProduct(filteredBestSaleProduct)
-    // const filteredWirelessProduct = products.filter((item) => item.category === 'wireless')
-    // setWirelessProduct(filteredWirelessProduct)
-    // const filteredMobileProduct = products.filter((item) => item.category === 'mobile')
-    // setMobileProduct(filteredMobileProduct)
-    // const filteredPopularProduct = products.filter((item) => item.category === 'watch')
-    // setPopularProduct(filteredPopularProduct)
   }, [productList])
 
-  const { isLoading, isError, data, error } = useQuery('productList', fetchProductList)
- 
+  const queryResults = useQueries([
+    { queryKey: ['products', 1], queryFn: fetchProductList },
+    { queryKey: ['categories', 2], queryFn: fetchCategoryList },
+    { queryKey: ['brands', 3], queryFn: fetchBrandList },
+  ])
+
+  const isLoading = queryResults.some(query => query.isLoading)
+  const isError = queryResults.some(query => query.isLoading)
+
   if (isLoading) {
     return <span>Loading...</span>
   }
 
   if (isError) {
-    return <span>Error: {error.message}</span>
+    return <span>Error: {isError.message}</span>
   }
+
 
   return (
     <Helmet title={"Home"}>
@@ -76,7 +109,7 @@ const Home = () => {
                 </p>
                 <Link to='/shop'>
                   <motion.button className='buy__btn' whileHover={{ scale: 1.2 }}>
-                  <i className="ri-shopping-cart-2-line"></i> Mua sắm ngay
+                    <i className="ri-shopping-cart-2-line"></i> Mua sắm ngay
                   </motion.button>
                 </Link>
               </div>
@@ -88,29 +121,33 @@ const Home = () => {
         </Container>
       </section>
 
-      <Services />
+      <Services />     
 
-      <section className="trending__Products">
+      <section className="brands">
         <Container>
           <Row>
             <Col lg='12' className='text-center'>
-              <h2 className='section__title'>Sản phẩm nổi bật</h2>
+              <h2 className='section__title'>Thương hiệu</h2>
             </Col>
-            <ProductList data={trendingProduct} />
+            <div ref={scrollRef} className='ulScroll'>
+              <ScrollList data={brandList} />
+            </div>
           </Row>
         </Container>
       </section>
 
-      {/* <section className="best-sale__Products">
+      <section className="categories">
         <Container>
           <Row>
             <Col lg='12' className='text-center'>
-              <h2 className='section__title'> Best Sale Products</h2>
+              <h2 className='section__title'>Loại sản phẩm</h2>
             </Col>
-            <ProductList data={bestSaleProduct} />
+            <div ref={scrollRef} className='ulScroll'>
+              <ScrollList data={categoryList} />
+            </div>
           </Row>
         </Container>
-      </section> */}
+      </section>
 
       <section className="timer__count">
         <Container>
@@ -134,28 +171,17 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* <section className="new__Arival">
+      <section className="trending__Products">
         <Container>
           <Row>
             <Col lg='12' className='text-center'>
-              <h2 className='section__title'> New Arrivals</h2>
+              <h2 className='section__title'>Sản phẩm nổi bật</h2>
             </Col>
-            <ProductList data={wirelessProduct} />
-            <ProductList data={mobileProduct} />
+            <ProductList data={trendingProduct} />
           </Row>
         </Container>
       </section>
 
-      <section className="popular__Products">
-        <Container>
-          <Row>
-            <Col lg='12' className='text-center'>
-              <h2 className='section__title'> Popular In Category</h2>
-            </Col>
-            <ProductList data={popularProduct} />
-          </Row>
-        </Container>
-      </section> */}
     </Helmet>
   )
 }

@@ -1,0 +1,42 @@
+.card__item{
+    cursor: pointer;
+}
+.card__info h3 a{
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.card__info span{
+    font-size:  0.9rem;
+}
+
+.card__info a:hover{
+    color: inherit;
+}
+
+.card__name {
+    white-space: nowrap; 
+    width: 100%; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.card__img{
+    margin: 15px auto;
+    width: 200px;
+    height: 200px;
+}
+
+@media only screen and (max-width: 992px){
+    .card__info h3 a{
+        font-size: 1.1rem;
+    }
+}
+
+@media only screen and (max-width: 992px){
+    .card__info h3 a{
+        font-size: 1rem;
+    }
+}

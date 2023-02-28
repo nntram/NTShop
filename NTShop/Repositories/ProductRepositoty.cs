@@ -21,7 +21,7 @@ namespace NTShop.Repositories
         public async Task<List<ProductModel>> GetAllAsync()
         {
             var data = (await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
-                        pageSize: 10, 
+                        pageSize: int.MaxValue, 
                         predicate: p => p.Productinacitve == true,
                         include: source => source.Include(m => m.Productimages)
                                                    .Include(m => m.Brand)

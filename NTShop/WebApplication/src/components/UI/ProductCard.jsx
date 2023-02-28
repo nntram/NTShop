@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import '../../styles/product-cart.css'
+import '../../styles/product-card.css'
 import { Col } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
