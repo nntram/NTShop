@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NTShop.Models.Filters;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Controllers
@@ -21,21 +22,6 @@ namespace NTShop.Controllers
             return Ok(data);
         }
 
-        [HttpGet("get-all")]
-        public async Task<IActionResult> GetAllCard()
-        {
-            var data = await _productRepository.GetAllCardAsync();
-            return Ok(data);
-        }
-
-
-        [HttpGet("get")]
-        public async Task<IActionResult> GetCard(int size = int.MaxValue)
-        {
-            var data = await _productRepository.GetCardAsync(size);
-            return Ok(data);
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
@@ -46,5 +32,13 @@ namespace NTShop.Controllers
             }
             return Ok(data);
         }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllCard([FromQuery] ProductFilterModel filter)
+        {
+            var data = await _productRepository.GetAllCardAsync(filter);
+            return Ok(data);
+        }
+
     }
 }

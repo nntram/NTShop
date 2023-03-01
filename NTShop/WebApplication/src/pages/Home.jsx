@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Row, Col, Container } from 'reactstrap'
 
 import Helmet from '../components/helmet/Helmet'
-import heroImg from '../assets/images/hero-img.png'
 import '../styles/home.css'
 import { Link } from 'react-router-dom'
 import { motion, useScroll } from 'framer-motion'
@@ -11,14 +10,17 @@ import products from '../assets/data/products'
 import counterImg from '../assets/images/counter-timer-img.png'
 
 import Services from '../components/services/Services'
+import ProductList2 from '../components/UI/ProductList2'
 import ProductList from '../components/UI/ProductList'
 import Clock from '../components/UI/Clock'
 
 import ProductApi from '../api/ProductApi'
-import { useQuery, useQueries } from 'react-query'
+import {useQueries } from 'react-query'
 import ScrollList from '../components/UI/ScrollList'
 import CategoryApi from '../api/CategoryApi'
 import BrandApi from '../api/BrandApi'
+
+import HeroSlider from '../components/hero/HeroSlider'
 
 const Home = () => {
 
@@ -28,7 +30,11 @@ const Home = () => {
 
   const fetchProductList = async () => {
     try {
-      const response = await ProductApi.getAllCard();
+      const response = await ProductApi.getAllCard({
+        params: {
+          Productishot: true
+        }
+      });
       setProductList(response);
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
@@ -95,33 +101,10 @@ const Home = () => {
 
   return (
     <Helmet title={"Home"}>
-      <section className='hero__section'>
-        <Container>
-          <Row>
-            <Col lg='6' md='6' className='d-flex align-items-center'>
-              <div className="hero__content">
-                <p className="hero__subtitle">
-                  Cửa hàng chúng tôi
-                </p>
-                <h2>Chuyên cung cấp sản phẩm chăm sóc sắc đẹp</h2>
-                <p>
-                  Chúng tôi cam kết luôn mang đến sự hài lòng cho quý khách hàng. Các sản phẩm sẽ được đóng gói cẩn thận, giao hàng nhanh chóng. Đặc biệt, chúng tôi cam kết về nguồn gốc và chất lượng sản phẩm luôn được đảm bảo chính hãng. Còn chần chờ gì nữa, hãy lựa chọn sản phẩm ngay thôi nào.
-                </p>
-                <Link to='/shop'>
-                  <motion.button className='buy__btn' whileHover={{ scale: 1.2 }}>
-                    <i className="ri-shopping-cart-2-line"></i> Mua sắm ngay
-                  </motion.button>
-                </Link>
-              </div>
-            </Col>
-            <Col lg='6' md='6'>
-              <img src={heroImg} alt="" />
-            </Col>
-          </Row>
-        </Container>
-      </section>
 
-      <Services />     
+      <HeroSlider />
+
+      <Services />
 
       <section className="brands">
         <Container>
@@ -177,10 +160,22 @@ const Home = () => {
             <Col lg='12' className='text-center'>
               <h2 className='section__title'>Sản phẩm nổi bật</h2>
             </Col>
-            <ProductList data={trendingProduct} />
+            <ProductList2 data={trendingProduct} />
           </Row>
         </Container>
       </section>
+      <section className="popular__Products">
+        <Container>
+          <Row>
+            <Col lg='12' className='text-center'>
+              <h2 className='section__title'> Popular In Category</h2>
+            </Col>
+            <ProductList data={products} />
+          </Row>
+        </Container>
+      </section>
+
+
 
     </Helmet>
   )

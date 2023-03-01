@@ -6,13 +6,8 @@ class ProductApi {
         return axiosClient.get(url);
     };
 
-    getAllCard = () => {
+    getAllCard = ({params}) => {
         const url = '/products/get-all';
-        return axiosClient.get(url);
-    };
-
-    getCard = ({params}) => {
-        const url = '/products/get';
         return axiosClient.get(url, {params});
     };
 

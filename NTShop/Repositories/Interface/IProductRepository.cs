@@ -1,4 +1,5 @@
 ﻿using NTShop.Models;
+using NTShop.Models.Filters;
 
 namespace NTShop.Repositories.Interface
 {
@@ -7,7 +8,6 @@ namespace NTShop.Repositories.Interface
         public Task<List<ProductModel>> GetAllAsync();
         public Task<ProductModel> GetByIdAsync(string id);
 
-        public Task<List<ProductCardModel>> GetAllCardAsync();
-        public Task<List<ProductCardModel>> GetCardAsync(int size);
+        public Task<List<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter);
     }
 }
