@@ -20,7 +20,7 @@ import ScrollList from '../components/UI/ScrollList'
 import CategoryApi from '../api/CategoryApi'
 import BrandApi from '../api/BrandApi'
 
-import HeroSlider from '../components/hero/HeroSlider'
+import { HeroSection } from '../components/hero/HeroSection'
 
 const Home = () => {
 
@@ -102,7 +102,7 @@ const Home = () => {
   return (
     <Helmet title={"Home"}>
 
-      <HeroSlider />
+      <HeroSection />
 
       <Services />
 
