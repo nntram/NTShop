@@ -6,9 +6,9 @@ class BrandApi {
         return axiosClient.get(url);
     };
 
-    getById = (id) => {
+    getById = ({params}) => {
         const url = '/brands';
-        return axiosClient.get(url, { id });
+        return axiosClient.get(url, {params});
     };
 }
 

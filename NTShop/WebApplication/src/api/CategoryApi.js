@@ -6,9 +6,9 @@ class CategoryApi {
         return axiosClient.get(url);
     };
 
-    getById = (id) => {
+    getById = ({params}) => {
         const url = '/categories';
-        return axiosClient.get(url, { id });
+        return axiosClient.get(url, {params});
     };
 }
 

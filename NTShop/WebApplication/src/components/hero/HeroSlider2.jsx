@@ -1,6 +1,6 @@
 import React from 'react'
 import './hero-slider.css'
-import heroImg from '../../assets/images/hero-img.png'
+import heroImg from '../../assets/image_data/banners/hero-img.png'
 import { Row, Col, Container } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'

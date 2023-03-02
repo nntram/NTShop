@@ -1,6 +1,6 @@
 import React from 'react'
 import './hero-slider.css'
-import heroImg from '../../assets/images/hero-img4.png'
+import heroImg from '../../assets/image_data/banners/hero-img-02.png'
 import { Row, Col, Container } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -27,7 +27,7 @@ const HeroSlider = () => {
                         </div>
                     </Col>
                     <Col lg='6' md='6'>
-                        <img src={heroImg} alt="" />
+                        <img src={heroImg}/>
                     </Col>
                 </Row>
             </Container>
