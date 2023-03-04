@@ -2,7 +2,7 @@
 
 namespace NTShop.Models.Filters
 {
-    public class ProductFilterModel
+    public class ProductFilterModel : GetPagedModel
     {
         public string? Productid { get; set; }   
         public string? Categoryid { get; set; }      
@@ -15,6 +15,6 @@ namespace NTShop.Models.Filters
         public bool? Productinacitve { get; set; }        
         public int Productcode { get; set; }
         public bool? Productishot { get; set; }
-        public int? pageSize;
+     
     }
 }

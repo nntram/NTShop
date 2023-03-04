@@ -42,7 +42,8 @@ namespace NTShop.Repositories
         public async Task<List<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter)
         {
             var data = (await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
-                       pageSize: int.MaxValue,
+                       pageSize: filter.PageSize,
+                       pageIndex: filter.PageIndex,
                        predicate: p => p.Productinacitve == true,
                        include: source => source.Include(m => m.Productimages)
                                                   .Include(m => m.Brand)
@@ -58,5 +59,12 @@ namespace NTShop.Repositories
             return _mapper.Map<List<ProductCardModel>>(data);
         }
 
+        public int GetCount(ProductFilterModel filter)
+        {
+            var count = _unitOfWork.GetRepository<Product>().Count(
+                predicate: p => p.Productinacitve == true);
+
+            return count;
+        }
     }
 }

@@ -5,7 +5,7 @@ const ScrollList = ({ data }) => {
     return (
         <>
             {
-                data.map((item, index) => (
+                data && data.map((item, index) => (
                     <ScrollCard item={item} key={index}/>
                 ))
             }

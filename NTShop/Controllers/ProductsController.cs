@@ -40,5 +40,13 @@ namespace NTShop.Controllers
             return Ok(data);
         }
 
+        [HttpGet("get-count")]
+        public IActionResult GetCount([FromQuery] ProductFilterModel filter)
+        {
+            var data = _productRepository.GetCount(filter);
+            return Ok(data);
+        }
+
+
     }
 }

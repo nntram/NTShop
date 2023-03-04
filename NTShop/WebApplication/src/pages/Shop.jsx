@@ -11,6 +11,8 @@ import ProductApi from '../api/ProductApi'
 import { useQueries } from 'react-query'
 import CategoryApi from '../api/CategoryApi'
 import BrandApi from '../api/BrandApi'
+import Select from 'react-select'
+import ReactPaginate from 'react-paginate';
 
 const Shop = () => {
 
@@ -19,6 +21,23 @@ const Shop = () => {
   const [productList, setProductList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [brandList, setBrandList] = useState([]);
+  const [productCount, setProductCount] = useState(0);
+
+  const [sortOption, setSortOption] = useState(null);
+  const [categoryOption, setCategoryOption] = useState(null);
+  const [brandOption, setBrandOption] = useState(null);
+
+
+  const itemsPerPage = 12;
+  const pageCount = Math.ceil(productCount / itemsPerPage);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    fetchProductList({params: {
+      pageSize: 12,
+      pageIndex: event.selected,
+    }})
+  };
 
   const iconRef = useRef(null)
   const searchRef = useRef(null)
@@ -54,17 +73,24 @@ const Shop = () => {
     setProductsData(searchProducts)
   }
 
-
-
-  const fetchProductList = async () => {
+  const fetchProductList = async ({params}) => {
     try {
-      const response = await ProductApi.getAllCard({
-        params: {
-        }
-      });
+      const response = await ProductApi.getAllCard({params});
       setProductList(response);
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
+    }
+  }
+
+  const fetchProductCount = async () => {
+    try {
+      const response = await ProductApi.getCount({
+        params: {
+        }
+      });
+      setProductCount(response);
+    } catch (error) {
+      console.log('Failed to fetch product quantity: ', error);
     }
   }
 
@@ -97,9 +123,15 @@ const Shop = () => {
   }
 
   const queryResults = useQueries([
-    { queryKey: ['products', 1], queryFn: fetchProductList },
+    { queryKey: ['products', 1], queryFn: () => fetchProductList({
+      params: {
+        pageSize: 12,
+        pageIndex: 0,
+      }
+    })},
     { queryKey: ['categories', 2], queryFn: fetchCategoryList },
     { queryKey: ['brands', 3], queryFn: fetchBrandList },
+    { queryKey: ['productQuantity', 4], queryFn: fetchProductCount },
   ])
 
   const isLoading = queryResults.some(query => query.isLoading)
@@ -113,6 +145,54 @@ const Shop = () => {
     return <span>Error: {isError.message}</span>
   }
 
+  const sortOptions = [
+    {
+      value: 'lastest', label: (<span className='d-flex align-items-center gap-2'>
+        <i className="ri-calendar-line"></i> Mới nhất
+      </span>)
+    },
+
+    {
+      value: 'ascending', label: (<span className='d-flex align-items-center gap-2'>
+        <i className="ri-sort-asc"></i> Giá tăng dần
+      </span>),
+    },
+
+    {
+      value: 'descending', label: (<span className='d-flex align-items-center gap-2'>
+        <i className="ri-sort-desc"></i> Giá giảm dần
+      </span>)
+    },
+  ]
+
+  const categoryOptions = [
+    {
+      value: "all", label: (<span className='d-flex align-items-center gap-2'>
+        Tất cả loại sản phẩm
+      </span>)
+    }, ...categoryList.map((item, index) => (
+      {
+        value: item.id, label: (<span className='d-flex align-items-center gap-2'>
+          {item.name}
+        </span>)
+      }
+    ))]
+
+  const brandOptions = [
+    {
+      value: "all", label: (<span className='d-flex align-items-center gap-2'>
+        Tất cả thương hiệu
+      </span>)
+    }, ...brandList.map((item, index) => (
+      {
+        value: item.id, label: (<span className='d-flex align-items-center gap-2'>
+          {item.name}
+        </span>)
+      }
+    ))]
+
+
+
 
   return (
     <Helmet title='Shop'>
@@ -124,9 +204,8 @@ const Shop = () => {
             <Col lg='4' md='6'>
               <div className="search__box">
                 <input type="text" placeholder='Seacrh...'
-                  onChange=""
                   ref={searchRef} />
-                <span onClick="">
+                <span >
                   <i className="ri-search-line" ref={iconRef} ></i>
                 </span>
               </div>
@@ -134,45 +213,30 @@ const Shop = () => {
 
             <Col lg='3' md='6'>
               <div className="filter__widget">
-                <select onChange="">
-                  <option>Thương hiệu</option>
-                  <option value="sofa">Sofa</option>
-                  <option value="mobile">Mobile</option>
-                  <option value="chair">Chair</option>
-                  <option value="watch">Watch</option>
-                  <option value="wireless">Wireless</option>
-                </select>
+                <Select options={brandOptions}
+                  isSearchable={false}
+                  placeholder="Thương hiệu"
+                  onChange={setBrandOption} />
               </div>
             </Col>
 
             <Col lg='3' md='6'>
               <div className="filter__widget">
-                <select onChange="">
-                  <option>
-                    Loại sản phẩm
-                  </option>
-                  <option value="sofa">Sofa</option>
-                  <option value="mobile">Mobile</option>
-                  <option value="chair">Chair</option>
-                  <option value="watch">Watch</option>
-                  <option value="wireless">Wireless</option>
-                </select>
+                <Select options={categoryOptions}
+                  isSearchable={false}
+                  placeholder="Loại sản phẩm"
+                  onChange={setCategoryOption} />
               </div>
             </Col>
             <Col lg='2' md='6'>
               <div className="filter__widget">
-                
-                <select>
-                  <option>
-                  &#x29E9;Sắp xếp
-                  </option>
-                  <option value="ascending">Giá tăng dần</option>
-                  <option value="descending">Giá giảm dần</option>
-                </select>
-                
+                <Select options={sortOptions}
+                  isSearchable={false}
+                  placeholder=<SortPlaceHolder />
+                  onChange={setSortOption} />
               </div>
 
-              
+
             </Col>
 
           </Row>
@@ -190,11 +254,45 @@ const Shop = () => {
 
             }
           </Row>
+          <Row className='pt-5'>
+            <ReactPaginate
+              nextLabel="Trang sau >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={3}
+              marginPagesDisplayed={2}
+              pageCount={pageCount}
+              previousLabel="< Trang trước"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination justify-content-end"
+              activeClassName="active"
+              renderOnZeroPageCount={null}
+              
+            />
+          </Row>
+
+
+
         </Container>
+
       </section>
 
     </Helmet>
   )
 }
+export const SortPlaceHolder = () => {
+  return <span className='d-flex align-items-center gap-2'>
+    <i className="ri-list-unordered"></i> Sắp xếp
+  </span>
+}
+
 
 export default Shop
+

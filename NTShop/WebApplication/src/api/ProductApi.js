@@ -15,6 +15,11 @@ class ProductApi {
         const url = '/products';
         return axiosClient.get(url,  {params});
     };
+
+    getCount= ({params}) => {
+        const url = '/products/get-count';
+        return axiosClient.get(url,  {params});
+    };
 }
 
 const productApi = new ProductApi();

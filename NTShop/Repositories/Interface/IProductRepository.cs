@@ -9,5 +9,6 @@ namespace NTShop.Repositories.Interface
         public Task<ProductModel> GetByIdAsync(string id);
 
         public Task<List<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter);
+        public int GetCount(ProductFilterModel filter);
     }
 }
