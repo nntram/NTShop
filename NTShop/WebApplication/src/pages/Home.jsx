@@ -21,6 +21,7 @@ import CategoryApi from '../api/CategoryApi'
 import BrandApi from '../api/BrandApi'
 
 import { HeroSection } from '../components/hero/HeroSection'
+import Loading from '../components/loading/Loading'
 
 const Home = () => {
 
@@ -79,6 +80,10 @@ const Home = () => {
   useEffect(() => {
     const filteredTrendingProduct = productList.filter((item) => item.productishot === true).slice(0, 8)
     setTrendingProduct(filteredTrendingProduct)
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    })
   }, [productList])
 
   const queryResults = useQueries([
@@ -91,7 +96,7 @@ const Home = () => {
   const isError = queryResults.some(query => query.isLoading)
 
   if (isLoading) {
-    return <span>Loading...</span>
+    return <Loading />
   }
 
   if (isError) {

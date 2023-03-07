@@ -54,15 +54,56 @@ namespace NTShop.Repositories
                 {
                     data = data.Where(n => n.Productishot == true).ToList();
                 }
+                if (!String.IsNullOrEmpty(filter.Categoryid))
+                {
+                    data = data.Where(n => n.Categoryid == filter.Categoryid).ToList();
+                }
+                if (!String.IsNullOrEmpty(filter.Brandid))
+                {
+                    data = data.Where(n => n.Brandid == filter.Brandid).ToList();
+                }
+                if (!String.IsNullOrEmpty(filter.OrderBy))
+                {
+                    switch (filter.OrderBy)
+                    {
+                        case "ascending":
+                            data = data.OrderBy(n => n.Productsaleprice).ToList();
+                            break;
+                        case "descending":
+                            data = data.OrderByDescending(n => n.Productsaleprice).ToList();
+                            break;
+                        case "lastest":
+                            data = data.OrderByDescending(n => n.Productcreateddate).ToList();
+                            break;
+                    }
+                }
             }
 
             return _mapper.Map<List<ProductCardModel>>(data);
         }
 
-        public int GetCount(ProductFilterModel filter)
+        public async Task<int> GetCount(ProductFilterModel filter)
         {
-            var count = _unitOfWork.GetRepository<Product>().Count(
-                predicate: p => p.Productinacitve == true);
+            int count = 0;
+            var data = (await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
+                      pageSize: filter.PageSize,
+                      pageIndex: filter.PageIndex,
+                      predicate: p => p.Productinacitve == true,
+                      include: source => source.Include(m => m.Productimages)
+                                                 .Include(m => m.Brand)
+                                                 .Include(m => m.Category))).Items;
+            if (filter != null)
+            {
+                if (filter.Productishot == true)
+                {
+                    data = data.Where(n => n.Productishot == true).ToList();
+                }
+            }
+
+            if(data != null)
+            {
+                count = data.Count;
+            }
 
             return count;
         }

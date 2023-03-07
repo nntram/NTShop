@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import CommonSection from '../components/UI/CommonSection'
 import Helmet from '../components/helmet/Helmet'
 import { Container, Row, Col } from 'reactstrap'
@@ -12,7 +12,7 @@ import { useQueries } from 'react-query'
 import CategoryApi from '../api/CategoryApi'
 import BrandApi from '../api/BrandApi'
 import Select from 'react-select'
-import ReactPaginate from 'react-paginate';
+import Loading from '../components/loading/Loading'
 
 const Shop = () => {
 
@@ -28,50 +28,46 @@ const Shop = () => {
   const [brandOption, setBrandOption] = useState(null);
 
 
-  const itemsPerPage = 12;
-  const pageCount = Math.ceil(productCount / itemsPerPage);
 
-  // Invoke when user click to request another page.
-  const handlePageClick = (event) => {
-    fetchProductList({params: {
-      pageSize: 12,
-      pageIndex: event.selected,
-    }})
-  };
+
+useEffect( () => {
+  window.scrollTo(0, 0)
+}, [productList])
+
 
   const iconRef = useRef(null)
   const searchRef = useRef(null)
 
-  const handleSearchIcon = () => {
-    if (iconRef.current.className === "ri-close-line") {
-      searchRef.current.value = ""
-      handleSearch()
-    }
-  }
-  const handleFilter = e => {
-    const filterValue = e.target.value
+  // const handleSearchIcon = () => {
+  //   if (iconRef.current.className === "ri-close-line") {
+  //     searchRef.current.value = ""
+  //     handleSearch()
+  //   }
+  // }
+  // const handleFilter = e => {
+  //   const filterValue = e.target.value
 
-    const filterProducts = products.filter(
-      (item) => item.category === filterValue
-    )
-    setProductsData(filterProducts)
-  }
-  const handleSearch = () => {
-    const searchValue = searchRef.current.value
+  //   const filterProducts = products.filter(
+  //     (item) => item.category === filterValue
+  //   )
+  //   setProductsData(filterProducts)
+  // }
+  // const handleSearch = () => {
+  //   const searchValue = searchRef.current.value
 
-    if (searchValue !== '') {
-      iconRef.current.className = "ri-close-line"
+  //   if (searchValue !== '') {
+  //     iconRef.current.className = "ri-close-line"
 
-    }
-    else {
-      iconRef.current.className = "ri-search-line"
-    }
+  //   }
+  //   else {
+  //     iconRef.current.className = "ri-search-line"
+  //   }
 
-    const searchProducts = products.filter(
-      (item) => item.productName.toLowerCase().trim().includes(searchValue.toLowerCase().trim())
-    )
-    setProductsData(searchProducts)
-  }
+  //   const searchProducts = products.filter(
+  //     (item) => item.productName.toLowerCase().trim().includes(searchValue.toLowerCase().trim())
+  //   )
+  //   setProductsData(searchProducts)
+  // }
 
   const fetchProductList = async ({params}) => {
     try {
@@ -122,23 +118,24 @@ const Shop = () => {
     }
   }
 
+  const productInitParams = {
+    params: {
+      pageSize: 120,
+      pageIndex: 0,
+    }
+  }
   const queryResults = useQueries([
-    { queryKey: ['products', 1], queryFn: () => fetchProductList({
-      params: {
-        pageSize: 12,
-        pageIndex: 0,
-      }
-    })},
-    { queryKey: ['categories', 2], queryFn: fetchCategoryList },
-    { queryKey: ['brands', 3], queryFn: fetchBrandList },
-    { queryKey: ['productQuantity', 4], queryFn: fetchProductCount },
+    { queryKey: ['products', productInitParams], queryFn: () => fetchProductList(productInitParams)},
+    { queryKey: 'categories', queryFn: fetchCategoryList },
+    { queryKey: 'brands', queryFn: fetchBrandList },
+    { queryKey: 'productQuantity', queryFn: fetchProductCount },
   ])
 
   const isLoading = queryResults.some(query => query.isLoading)
   const isError = queryResults.some(query => query.isLoading)
 
   if (isLoading) {
-    return <span>Loading...</span>
+    return <Loading />
   }
 
   if (isError) {
@@ -190,9 +187,6 @@ const Shop = () => {
         </span>)
       }
     ))]
-
-
-
 
   return (
     <Helmet title='Shop'>
@@ -255,27 +249,8 @@ const Shop = () => {
             }
           </Row>
           <Row className='pt-5'>
-            <ReactPaginate
-              nextLabel="Trang sau >"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              marginPagesDisplayed={2}
-              pageCount={pageCount}
-              previousLabel="< Trang trước"
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakLabel="..."
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination justify-content-end"
-              activeClassName="active"
-              renderOnZeroPageCount={null}
-              
-            />
+            
+      
           </Row>
 
 

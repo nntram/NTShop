@@ -12,10 +12,12 @@ import AddProduct from '../admin/AddProduct'
 import AllProducts from '../admin/AllProducts'
 import Dashboard from '../admin/Dashboard'
 import Users from '../admin/Users'
+import Loading from '../components/loading/Loading'
 
 const Routers = () => {
   return <Routes>
     <Route path='/' element={<Navigate to="home" />}/>
+    <Route path='loading' element={<Loading />}/>
     <Route path='home' element={<Home/>}/>
     <Route path='shop' element={<Shop/>}/>
     <Route path='cart' element={<Cart/>}/>
