@@ -1,0 +1,28 @@
+.top-to-btm {
+    position: relative;
+}
+
+.icon-position {
+    position: fixed;
+    bottom: 40px;
+    right: 25px;
+    z-index: 20;
+}
+
+.icon-style {
+    background-color: var(--primary-color);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    color: #fff;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+}
+
+.icon-style:hover {
+    animation: none;
+    background: #fff;
+    color: #551B54;
+    border: 2px solid #551B54;
+}

@@ -1,4 +1,6 @@
-﻿using NTShop.Models;
+﻿using Arch.EntityFrameworkCore.UnitOfWork.Collections;
+using NTShop.Entities;
+using NTShop.Models;
 using NTShop.Models.Filters;
 
 namespace NTShop.Repositories.Interface
@@ -8,7 +10,6 @@ namespace NTShop.Repositories.Interface
         public Task<List<ProductModel>> GetAllAsync();
         public Task<ProductModel> GetByIdAsync(string id);
 
-        public Task<List<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter);
-        public Task<int> GetCount(ProductFilterModel filter);
+        public Task<PagedList<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter);
     }
 }

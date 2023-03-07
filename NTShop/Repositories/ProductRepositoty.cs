@@ -5,6 +5,7 @@ using NTShop.Models;
 using NTShop.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 using NTShop.Models.Filters;
+using Arch.EntityFrameworkCore.UnitOfWork.Collections;
 
 namespace NTShop.Repositories
 {
@@ -39,15 +40,17 @@ namespace NTShop.Repositories
             return _mapper.Map<ProductModel>(data);
         }
 
-        public async Task<List<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter)
+        public async Task<PagedList<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter)
         {
-            var data = (await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
+            var pages = await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
+                       
                        pageSize: filter.PageSize,
                        pageIndex: filter.PageIndex,
                        predicate: p => p.Productinacitve == true,
                        include: source => source.Include(m => m.Productimages)
                                                   .Include(m => m.Brand)
-                                                  .Include(m => m.Category))).Items;
+                                                  .Include(m => m.Category));
+            var data = pages.Items;
             if(filter != null)
             {
                 if(filter.Productishot == true)
@@ -78,34 +81,12 @@ namespace NTShop.Repositories
                     }
                 }
             }
-
-            return _mapper.Map<List<ProductCardModel>>(data);
+            var dataModel = _mapper.Map<List<ProductCardModel>>(data);
+            var result = _mapper.Map<PagedList<ProductCardModel>>(pages);
+            result.Items= dataModel;
+            return result;
         }
 
-        public async Task<int> GetCount(ProductFilterModel filter)
-        {
-            int count = 0;
-            var data = (await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
-                      pageSize: filter.PageSize,
-                      pageIndex: filter.PageIndex,
-                      predicate: p => p.Productinacitve == true,
-                      include: source => source.Include(m => m.Productimages)
-                                                 .Include(m => m.Brand)
-                                                 .Include(m => m.Category))).Items;
-            if (filter != null)
-            {
-                if (filter.Productishot == true)
-                {
-                    data = data.Where(n => n.Productishot == true).ToList();
-                }
-            }
-
-            if(data != null)
-            {
-                count = data.Count;
-            }
-
-            return count;
-        }
+     
     }
 }

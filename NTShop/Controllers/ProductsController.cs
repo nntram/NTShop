@@ -40,13 +40,7 @@ namespace NTShop.Controllers
             return Ok(data);
         }
 
-        [HttpGet("get-count")]
-        public async Task<IActionResult> GetCount([FromQuery] ProductFilterModel filter)
-        {
-            var data = await _productRepository.GetCount(filter);
-            return Ok(data);
-        }
-
+ 
 
     }
 }

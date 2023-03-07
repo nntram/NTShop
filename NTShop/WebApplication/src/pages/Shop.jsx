@@ -72,23 +72,12 @@ useEffect( () => {
   const fetchProductList = async ({params}) => {
     try {
       const response = await ProductApi.getAllCard({params});
-      setProductList(response);
+      setProductList(response.items);
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
     }
   }
 
-  const fetchProductCount = async () => {
-    try {
-      const response = await ProductApi.getCount({
-        params: {
-        }
-      });
-      setProductCount(response);
-    } catch (error) {
-      console.log('Failed to fetch product quantity: ', error);
-    }
-  }
 
   const fetchCategoryList = async () => {
     try {
@@ -128,7 +117,6 @@ useEffect( () => {
     { queryKey: ['products', productInitParams], queryFn: () => fetchProductList(productInitParams)},
     { queryKey: 'categories', queryFn: fetchCategoryList },
     { queryKey: 'brands', queryFn: fetchBrandList },
-    { queryKey: 'productQuantity', queryFn: fetchProductCount },
   ])
 
   const isLoading = queryResults.some(query => query.isLoading)

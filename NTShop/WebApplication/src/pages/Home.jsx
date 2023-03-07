@@ -36,7 +36,8 @@ const Home = () => {
           Productishot: true
         }
       });
-      setProductList(response);
+      setProductList(response.items);
+      
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
     }
@@ -51,6 +52,7 @@ const Home = () => {
         image: item.categoryimage,
         type: "categories"
       })));
+      
     } catch (error) {
       console.log('Failed to fetch category list: ', error);
     }
@@ -65,6 +67,7 @@ const Home = () => {
         image: item.brandimage,
         type: "brands"
       })));
+      
     } catch (error) {
       console.log('Failed to fetch brand list: ', error);
     }
@@ -76,24 +79,20 @@ const Home = () => {
     container: scrollRef
   })
 
-
+  const queryResults = useQueries([
+    { queryKey: 'products', queryFn: fetchProductList },
+    { queryKey: 'categories', queryFn: fetchCategoryList },
+    { queryKey: 'brands', queryFn: fetchBrandList },
+  ])
+  
+  const isLoading = queryResults.some(query => query.isLoading)
+  const isError = queryResults.some(query => query.isError)
+  
   useEffect(() => {
     const filteredTrendingProduct = productList.filter((item) => item.productishot === true).slice(0, 8)
     setTrendingProduct(filteredTrendingProduct)
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    })
   }, [productList])
 
-  const queryResults = useQueries([
-    { queryKey: ['products', 1], queryFn: fetchProductList },
-    { queryKey: ['categories', 2], queryFn: fetchCategoryList },
-    { queryKey: ['brands', 3], queryFn: fetchBrandList },
-  ])
-
-  const isLoading = queryResults.some(query => query.isLoading)
-  const isError = queryResults.some(query => query.isLoading)
 
   if (isLoading) {
     return <Loading />
