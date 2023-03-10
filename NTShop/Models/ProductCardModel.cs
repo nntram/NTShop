@@ -6,7 +6,7 @@
         public string? Productname { get; set; }
         public int? Productprice { get; set; }
         public int? Productsaleprice { get; set; }
-        public bool? Productinacitve { get; set; }
+        public bool? Productisacitve { get; set; }
         public int Productcode { get; set; }
         public bool? Productishot { get; set; }
         public string Categoryname { get; set; } = null!;

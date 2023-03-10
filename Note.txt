@@ -1,4 +1,4 @@
-Scaffold-DbContext “Data Source=WINDOWS\NGOCTRAM;Initial Catalog=naricosmetic;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext “Data Source=WINDOWS\NGOCTRAM;Initial Catalog=naricosmetic;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities
 Scaffold-DbContext “Data Source=WINDOWS\NGOCTRAM;Initial Catalog=NIENLUAN;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -ContextDir Data -OutputDir Entities -DataAnnotations -f
 
 

@@ -25,19 +25,16 @@ import Loading from '../components/loading/Loading'
 
 const Home = () => {
 
-  const [productList, setProductList] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
-  const [brandList, setBrandList] = useState([]);
-
   const fetchProductList = async () => {
     try {
       const response = await ProductApi.getAllCard({
         params: {
-          Productishot: true
+          Productishot: true,
+          Pagesize: 8
         }
       });
-      setProductList(response.items);
       
+      return response.items
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
     }
@@ -46,13 +43,14 @@ const Home = () => {
   const fetchCategoryList = async () => {
     try {
       const response = await CategoryApi.getAll();
-      setCategoryList(response.map((item) => ({
+     
+      return response.map((item) => ({
         id: item.categoryid,
         name: item.categoryname,
         image: item.categoryimage,
         type: "categories"
-      })));
-      
+      }))
+
     } catch (error) {
       console.log('Failed to fetch category list: ', error);
     }
@@ -61,18 +59,19 @@ const Home = () => {
   const fetchBrandList = async () => {
     try {
       const response = await BrandApi.getAll();
-      setBrandList(response.map((item) => ({
+
+      return response.map((item) => ({
         id: item.brandid,
         name: item.brandname,
         image: item.brandimage,
         type: "brands"
-      })));
+      }))
       
     } catch (error) {
       console.log('Failed to fetch brand list: ', error);
     }
   }
-  const [trendingProduct, setTrendingProduct] = useState([])
+
 
   const scrollRef = useRef(null)
   const { } = useScroll({
@@ -85,13 +84,9 @@ const Home = () => {
     { queryKey: 'brands', queryFn: fetchBrandList },
   ])
   
+
   const isLoading = queryResults.some(query => query.isLoading)
   const isError = queryResults.some(query => query.isError)
-  
-  useEffect(() => {
-    const filteredTrendingProduct = productList.filter((item) => item.productishot === true).slice(0, 8)
-    setTrendingProduct(filteredTrendingProduct)
-  }, [productList])
 
 
   if (isLoading) {
@@ -117,7 +112,7 @@ const Home = () => {
               <h2 className='section__title'>Thương hiệu</h2>
             </Col>
             <div ref={scrollRef} className='ulScroll'>
-              <ScrollList data={brandList} />
+              <ScrollList data={queryResults[2].data} />
             </div>
           </Row>
         </Container>
@@ -130,7 +125,7 @@ const Home = () => {
               <h2 className='section__title'>Loại sản phẩm</h2>
             </Col>
             <div ref={scrollRef} className='ulScroll'>
-              <ScrollList data={categoryList} />
+              <ScrollList data={queryResults[1].data} />
             </div>
           </Row>
         </Container>
@@ -164,11 +159,12 @@ const Home = () => {
             <Col lg='12' className='text-center'>
               <h2 className='section__title'>Sản phẩm nổi bật</h2>
             </Col>
-            <ProductList2 data={trendingProduct} />
+            <ProductList2 data={queryResults[0].data} />
           </Row>
         </Container>
       </section>
-      <section className="popular__Products">
+
+      {/* <section className="popular__Products">
         <Container>
           <Row>
             <Col lg='12' className='text-center'>
@@ -177,7 +173,7 @@ const Home = () => {
             <ProductList data={products} />
           </Row>
         </Container>
-      </section>
+      </section> */}
 
 
 

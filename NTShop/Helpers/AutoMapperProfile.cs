@@ -21,8 +21,7 @@ namespace B1809531_EShop_MVC6.Helpers
             CreateMap<Brand, BrandModel>();
             CreateMap<Category, CategoryModel>();
 
-            CreateMap<IPagedList<Product>, PagedList<ProductCardModel>>()
-                .ForMember(t => t.Items, opt => opt.Ignore());
+            CreateMap<IPagedList<Product>, PagedList<ProductCardModel>>();
         }
     }
 }

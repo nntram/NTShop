@@ -11,8 +11,8 @@ namespace NTShop.Models.Filters
         public int? Productprice { get; set; }      
         public int? Productsaleprice { get; set; }       
         public int? Productquantity { get; set; }       
-        public long? Productcreateddate { get; set; }      
-        public bool? Productinacitve { get; set; }        
+        public long? Productcreateddate { get; set; }
+        public bool? Productisacitve { get; set; } = true;    
         public int Productcode { get; set; }
         public bool? Productishot { get; set; }
      

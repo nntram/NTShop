@@ -43,8 +43,8 @@ namespace NTShop.Entities
         public int? Productquantity { get; set; }
         [Column("PRODUCTCREATEDDATE")]
         public long? Productcreateddate { get; set; }
-        [Column("PRODUCTINACITVE")]
-        public bool? Productinacitve { get; set; }
+        [Column("PRODUCTISACITVE")]
+        public bool? Productisacitve { get; set; }
         [Column("PRODUCTCODE")]
         public int Productcode { get; set; }
         [Column("PRODUCTISHOT")]

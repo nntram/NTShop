@@ -6,6 +6,7 @@ using NTShop.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 using NTShop.Models.Filters;
 using Arch.EntityFrameworkCore.UnitOfWork.Collections;
+using Abp.Linq.Expressions;
 
 namespace NTShop.Repositories
 {
@@ -23,8 +24,8 @@ namespace NTShop.Repositories
         public async Task<List<ProductModel>> GetAllAsync()
         {
             var data = (await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
-                        pageSize: int.MaxValue, 
-                        predicate: p => p.Productinacitve == true,
+                        pageSize: int.MaxValue,
+                        predicate: p => p.Productisacitve == true,
                         include: source => source.Include(m => m.Productimages)
                                                    .Include(m => m.Brand)
                                                    .Include(m => m.Category))).Items;
@@ -35,58 +36,52 @@ namespace NTShop.Repositories
         public async Task<ProductModel> GetByIdAsync(string id)
         {
             var data = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
-                        predicate: x => x.Productid == id && x.Productinacitve == true);
+                        predicate: x => x.Productid == id && x.Productisacitve == true);
 
             return _mapper.Map<ProductModel>(data);
         }
 
         public async Task<PagedList<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter)
         {
-            var pages = await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
-                       
-                       pageSize: filter.PageSize,
-                       pageIndex: filter.PageIndex,
-                       predicate: p => p.Productinacitve == true,
-                       include: source => source.Include(m => m.Productimages)
-                                                  .Include(m => m.Brand)
-                                                  .Include(m => m.Category));
-            var data = pages.Items;
-            if(filter != null)
+            var predicate = PredicateBuilder.New<Product>(p => p.Productisacitve == true);
+            if (!string.IsNullOrEmpty(filter.Productid))
             {
-                if(filter.Productishot == true)
-                {
-                    data = data.Where(n => n.Productishot == true).ToList();
-                }
-                if (!String.IsNullOrEmpty(filter.Categoryid))
-                {
-                    data = data.Where(n => n.Categoryid == filter.Categoryid).ToList();
-                }
-                if (!String.IsNullOrEmpty(filter.Brandid))
-                {
-                    data = data.Where(n => n.Brandid == filter.Brandid).ToList();
-                }
-                if (!String.IsNullOrEmpty(filter.OrderBy))
-                {
-                    switch (filter.OrderBy)
-                    {
-                        case "ascending":
-                            data = data.OrderBy(n => n.Productsaleprice).ToList();
-                            break;
-                        case "descending":
-                            data = data.OrderByDescending(n => n.Productsaleprice).ToList();
-                            break;
-                        case "lastest":
-                            data = data.OrderByDescending(n => n.Productcreateddate).ToList();
-                            break;
-                    }
-                }
+                predicate = predicate.And(p => p.Productid == filter.Productid);
             }
-            var dataModel = _mapper.Map<List<ProductCardModel>>(data);
+            if (!string.IsNullOrEmpty(filter.Brandid))
+            {
+                predicate = predicate.And(p => p.Brandid == filter.Brandid);
+            }
+            if (!string.IsNullOrEmpty(filter.Categoryid))
+            {
+                predicate = predicate.And(p => p.Categoryid == filter.Categoryid);
+            }
+            var pages = await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
+
+                     pageSize: filter.PageSize,
+                     pageIndex: filter.PageIndex,
+                     include: source => source.Include(m => m.Productimages)
+                                                  .Include(m => m.Brand)
+                                                  .Include(m => m.Category),
+                     predicate: predicate,
+                     orderBy: p =>
+                        (filter != null && !string.IsNullOrEmpty(filter.OrderBy) && filter.OrderBy == "ascending") ?
+                            p.OrderBy(s => s.Productsaleprice) :
+                         (filter != null && !string.IsNullOrEmpty(filter.OrderBy) && filter.OrderBy == "descending") ?
+                            p.OrderByDescending(s => s.Productsaleprice) :
+                        (filter != null && !string.IsNullOrEmpty(filter.OrderBy) && filter.OrderBy == "lastest") ?
+                            p.OrderByDescending(s => s.Productcreateddate) :
+                         p.OrderBy(s => s.Productid)
+
+                   );
+
+
             var result = _mapper.Map<PagedList<ProductCardModel>>(pages);
-            result.Items= dataModel;
             return result;
         }
 
-     
+        
     }
+
+    
 }

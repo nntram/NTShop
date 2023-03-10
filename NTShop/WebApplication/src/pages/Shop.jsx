@@ -8,7 +8,7 @@ import products from '../assets/data/products'
 import ProductList2 from '../components/UI/ProductList2'
 
 import ProductApi from '../api/ProductApi'
-import { useQueries } from 'react-query'
+import { useQueries, useInfiniteQuery } from 'react-query'
 import CategoryApi from '../api/CategoryApi'
 import BrandApi from '../api/BrandApi'
 import Select from 'react-select'
@@ -26,13 +26,6 @@ const Shop = () => {
   const [sortOption, setSortOption] = useState(null);
   const [categoryOption, setCategoryOption] = useState(null);
   const [brandOption, setBrandOption] = useState(null);
-
-
-
-
-useEffect( () => {
-  window.scrollTo(0, 0)
-}, [productList])
 
 
   const iconRef = useRef(null)
@@ -69,10 +62,16 @@ useEffect( () => {
   //   setProductsData(searchProducts)
   // }
 
-  const fetchProductList = async ({params}) => {
+  const fetchProductList = async (pageParam) => {
     try {
-      const response = await ProductApi.getAllCard({params});
-      setProductList(response.items);
+      const response = await ProductApi.getAllCard(
+        {
+          params: {
+            pageIndex: pageParam,
+            pageSize: 12
+          }
+        });
+      return (response);
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
     }
@@ -107,18 +106,31 @@ useEffect( () => {
     }
   }
 
-  const productInitParams = {
-    params: {
-      pageSize: 120,
-      pageIndex: 0,
+
+
+
+  const {
+    data,
+    isSuccess,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
+    ['products', 1],
+    ({ pageParam = 0 }) => fetchProductList(pageParam),
+    {
+      getNextPageParam: (lastPage) =>
+        lastPage.pageIndex < lastPage.totalPages - 1 ? lastPage.pageIndex + 1 : undefined
+      
     }
-  }
+
+  )
+
   const queryResults = useQueries([
-    { queryKey: ['products', productInitParams], queryFn: () => fetchProductList(productInitParams)},
     { queryKey: 'categories', queryFn: fetchCategoryList },
     { queryKey: 'brands', queryFn: fetchBrandList },
   ])
-
   const isLoading = queryResults.some(query => query.isLoading)
   const isError = queryResults.some(query => query.isLoading)
 
@@ -229,16 +241,29 @@ useEffect( () => {
         <Container>
           <Row>
             {
-              productList.length === 0 ?
-                <h1 className='text-center fs-4'>No data are found!</h1>
-                :
-                <ProductList2 data={productList} />
-
+              isSuccess &&
+              data.pages.map((products, index) => 
+                products.items.count === 0 ?
+                  <h2> Không tìm thấy sản phẩm. </h2> :
+                  <ProductList2 data={products.items} key={index} />
+              
+              )
             }
           </Row>
           <Row className='pt-5'>
-            
-      
+            <button
+              className='border-0 p-2'
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}
+            >
+              {isFetchingNextPage
+                ? 'Đang tải thêm...'
+                : hasNextPage
+                  ? 'Xem thêm'
+                  : 'Đã hết'}
+            </button>
+            <div>{isFetching && !isFetchingNextPage ? <Loading /> : null}</div>
+
           </Row>
 
 
@@ -247,7 +272,7 @@ useEffect( () => {
 
       </section>
 
-    </Helmet>
+    </Helmet >
   )
 }
 export const SortPlaceHolder = () => {
