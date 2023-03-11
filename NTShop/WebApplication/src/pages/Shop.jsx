@@ -4,7 +4,6 @@ import Helmet from '../components/helmet/Helmet'
 import { Container, Row, Col } from 'reactstrap'
 import '../styles/shop.css'
 
-import products from '../assets/data/products'
 import ProductList2 from '../components/UI/ProductList2'
 
 import ProductApi from '../api/ProductApi'
@@ -14,22 +13,16 @@ import BrandApi from '../api/BrandApi'
 import Select from 'react-select'
 import Loading from '../components/loading/Loading'
 
+
 const Shop = () => {
-
-  const [productsData, setProductsData] = useState(products)
-
-  const [productList, setProductList] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
-  const [brandList, setBrandList] = useState([]);
-  const [productCount, setProductCount] = useState(0);
 
   const [sortOption, setSortOption] = useState(null);
   const [categoryOption, setCategoryOption] = useState(null);
   const [brandOption, setBrandOption] = useState(null);
 
-
   const iconRef = useRef(null)
   const searchRef = useRef(null)
+
 
   // const handleSearchIcon = () => {
   //   if (iconRef.current.className === "ri-close-line") {
@@ -68,9 +61,13 @@ const Shop = () => {
         {
           params: {
             pageIndex: pageParam,
-            pageSize: 12
+            pageSize: 12, 
+            brandid: brandOption,
+            categoryid: categoryOption,
+            orderBy: sortOption
           }
         });
+       
       return (response);
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
@@ -81,7 +78,7 @@ const Shop = () => {
   const fetchCategoryList = async () => {
     try {
       const response = await CategoryApi.getAll();
-      setCategoryList(response.map((item) => ({
+      return (response.map((item) => ({
         id: item.categoryid,
         name: item.categoryname,
         image: item.categoryimage,
@@ -95,7 +92,7 @@ const Shop = () => {
   const fetchBrandList = async () => {
     try {
       const response = await BrandApi.getAll();
-      setBrandList(response.map((item) => ({
+      return (response.map((item) => ({
         id: item.brandid,
         name: item.brandname,
         image: item.brandimage,
@@ -107,17 +104,8 @@ const Shop = () => {
   }
 
 
-
-
-  const {
-    data,
-    isSuccess,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    ['products', 1],
+  const productResults = useInfiniteQuery(
+    ['products', brandOption, categoryOption, sortOption],
     ({ pageParam = 0 }) => fetchProductList(pageParam),
     {
       getNextPageParam: (lastPage) =>
@@ -131,15 +119,15 @@ const Shop = () => {
     { queryKey: 'categories', queryFn: fetchCategoryList },
     { queryKey: 'brands', queryFn: fetchBrandList },
   ])
-  const isLoading = queryResults.some(query => query.isLoading)
-  const isError = queryResults.some(query => query.isLoading)
+  const isLoading = queryResults.some(query => query.isLoading) 
+  const isError = queryResults.some(query => query.isLoading) || productResults.isError
 
   if (isLoading) {
     return <Loading />
   }
 
   if (isError) {
-    return <span>Error: {isError.message}</span>
+    return <span>Error: {isError.message || productResults.isError.message}</span>
   }
 
   const sortOptions = [
@@ -164,10 +152,10 @@ const Shop = () => {
 
   const categoryOptions = [
     {
-      value: "all", label: (<span className='d-flex align-items-center gap-2'>
+      value: "", label: (<span className='d-flex align-items-center gap-2'>
         Tất cả loại sản phẩm
       </span>)
-    }, ...categoryList.map((item, index) => (
+    }, ...queryResults[0].data.map((item) => (
       {
         value: item.id, label: (<span className='d-flex align-items-center gap-2'>
           {item.name}
@@ -177,16 +165,17 @@ const Shop = () => {
 
   const brandOptions = [
     {
-      value: "all", label: (<span className='d-flex align-items-center gap-2'>
+      value: "", label: (<span className='d-flex align-items-center gap-2'>
         Tất cả thương hiệu
       </span>)
-    }, ...brandList.map((item, index) => (
+    }, ...queryResults[1].data.map((item) => (
       {
         value: item.id, label: (<span className='d-flex align-items-center gap-2'>
           {item.name}
         </span>)
       }
     ))]
+
 
   return (
     <Helmet title='Shop'>
@@ -210,7 +199,8 @@ const Shop = () => {
                 <Select options={brandOptions}
                   isSearchable={false}
                   placeholder="Thương hiệu"
-                  onChange={setBrandOption} />
+                  onChange={(e) => setBrandOption(e.value)} 
+                  />
               </div>
             </Col>
 
@@ -219,17 +209,16 @@ const Shop = () => {
                 <Select options={categoryOptions}
                   isSearchable={false}
                   placeholder="Loại sản phẩm"
-                  onChange={setCategoryOption} />
+                  onChange={(e) => setCategoryOption(e.value)} />
               </div>
             </Col>
             <Col lg='2' md='6'>
               <div className="filter__widget">
                 <Select options={sortOptions}
                   isSearchable={false}
-                  placeholder=<SortPlaceHolder />
-                  onChange={setSortOption} />
+                  placeholder= {<SortPlaceHolder />}
+                  onChange={(e) => setSortOption(e.value)} />
               </div>
-
 
             </Col>
 
@@ -241,11 +230,11 @@ const Shop = () => {
         <Container>
           <Row>
             {
-              isSuccess &&
-              data.pages.map((products, index) => 
-                products.items.count === 0 ?
-                  <h2> Không tìm thấy sản phẩm. </h2> :
-                  <ProductList2 data={products.items} key={index} />
+              productResults.isSuccess &&
+              productResults.data.pages.map((page, index) => 
+                page.items.length === 0 ?
+                  <h4 className='text-center'> Không tìm thấy sản phẩm. </h4> :
+                  <ProductList2 data={page.items} key={index} />
               
               )
             }
@@ -253,20 +242,18 @@ const Shop = () => {
           <Row className='pt-5'>
             <button
               className='border-0 p-2'
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
+              onClick={() => productResults.fetchNextPage()}
+              disabled={!productResults.hasNextPage || productResults.isFetchingNextPage}
             >
-              {isFetchingNextPage
+              {productResults.isFetchingNextPage
                 ? 'Đang tải thêm...'
-                : hasNextPage
+                : productResults.hasNextPage
                   ? 'Xem thêm'
                   : 'Đã hết'}
             </button>
-            <div>{isFetching && !isFetchingNextPage ? <Loading /> : null}</div>
+            <div>{productResults.isFetching && !productResults.isFetchingNextPage ? <Loading /> : null}</div>
 
           </Row>
-
-
 
         </Container>
 

@@ -4,6 +4,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
  // Create a client
  const queryClient = new QueryClient()
@@ -13,6 +14,7 @@ function App() {
      // Provide the client to your App
      <QueryClientProvider client={queryClient}>
        <Layout />
+       <ReactQueryDevtools initialIsOpen={true} />
      </QueryClientProvider>
    )
 }
