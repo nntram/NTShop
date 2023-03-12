@@ -24,36 +24,25 @@ const Shop = () => {
   const searchRef = useRef(null)
 
 
-  // const handleSearchIcon = () => {
-  //   if (iconRef.current.className === "ri-close-line") {
-  //     searchRef.current.value = ""
-  //     handleSearch()
-  //   }
-  // }
-  // const handleFilter = e => {
-  //   const filterValue = e.target.value
+  const handleSearchIcon = () => {
+    if (iconRef.current.className === "ri-close-line") {
+      searchRef.current.value = ""
+      handleSearch()
+    }
+  }
+  
+  const handleSearch = () => {
+    const searchValue = searchRef.current.value
 
-  //   const filterProducts = products.filter(
-  //     (item) => item.category === filterValue
-  //   )
-  //   setProductsData(filterProducts)
-  // }
-  // const handleSearch = () => {
-  //   const searchValue = searchRef.current.value
+    if (searchValue !== '') {
+      iconRef.current.className = "ri-close-line"
 
-  //   if (searchValue !== '') {
-  //     iconRef.current.className = "ri-close-line"
+    }
+    else {
+      iconRef.current.className = "ri-search-line"
+    }
 
-  //   }
-  //   else {
-  //     iconRef.current.className = "ri-search-line"
-  //   }
-
-  //   const searchProducts = products.filter(
-  //     (item) => item.productName.toLowerCase().trim().includes(searchValue.toLowerCase().trim())
-  //   )
-  //   setProductsData(searchProducts)
-  // }
+  }
 
   const fetchProductList = async (pageParam) => {
     try {
@@ -186,9 +175,9 @@ const Shop = () => {
           <Row>
             <Col lg='4' md='6'>
               <div className="search__box">
-                <input type="text" placeholder='Seacrh...'
-                  ref={searchRef} />
-                <span >
+                <input type="text" placeholder='Tên sản phẩm...'
+                  ref={searchRef} onChange={handleSearch}/>
+                <span onClick={handleSearchIcon}>
                   <i className="ri-search-line" ref={iconRef} ></i>
                 </span>
               </div>
