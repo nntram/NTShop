@@ -12,13 +12,15 @@ import CategoryApi from '../api/CategoryApi'
 import BrandApi from '../api/BrandApi'
 import Select from 'react-select'
 import Loading from '../components/loading/Loading'
-
+import useDebounce from '../custom-hooks/useDebounce'
 
 const Shop = () => {
 
   const [sortOption, setSortOption] = useState(null);
   const [categoryOption, setCategoryOption] = useState(null);
   const [brandOption, setBrandOption] = useState(null);
+  const [filter, setFilter] = useState(null);
+  const debouncedFilter = useDebounce(filter, 500);
 
   const iconRef = useRef(null)
   const searchRef = useRef(null)
@@ -41,6 +43,7 @@ const Shop = () => {
     else {
       iconRef.current.className = "ri-search-line"
     }
+    setFilter(searchValue)
 
   }
 
@@ -53,7 +56,8 @@ const Shop = () => {
             pageSize: 12, 
             brandid: brandOption,
             categoryid: categoryOption,
-            orderBy: sortOption
+            orderBy: sortOption,
+            productName: filter
           }
         });
        
@@ -94,13 +98,13 @@ const Shop = () => {
 
 
   const productResults = useInfiniteQuery(
-    ['products', brandOption, categoryOption, sortOption],
+    ['products', brandOption, categoryOption, sortOption, debouncedFilter],
     ({ pageParam = 0 }) => fetchProductList(pageParam),
     {
       getNextPageParam: (lastPage) =>
-        lastPage.pageIndex < lastPage.totalPages - 1 ? lastPage.pageIndex + 1 : undefined
-      
-    }
+        lastPage.pageIndex < lastPage.totalPages - 1 ? lastPage.pageIndex + 1 : undefined    
+    },
+    { enabled: Boolean(debouncedFilter) }
 
   )
 

@@ -56,6 +56,11 @@ namespace NTShop.Repositories
             {
                 predicate = predicate.And(p => p.Categoryid == filter.Categoryid);
             }
+            if (!string.IsNullOrEmpty(filter.Productname))
+            {
+                predicate = predicate.And(p => 
+                    p.Productname.ToLower().Contains(filter.Productname.ToLower()));
+            }
             var pages = await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
 
                      pageSize: filter.PageSize,
