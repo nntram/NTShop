@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Row, Col, Container } from 'reactstrap'
 
 import Helmet from '../components/helmet/Helmet'
@@ -6,7 +6,6 @@ import '../styles/home.css'
 import { Link } from 'react-router-dom'
 import { motion, useScroll } from 'framer-motion'
 
-import products from '../assets/data/products'
 import counterImg from '../assets/images/counter-timer-img.png'
 
 import Services from '../components/services/Services'
@@ -163,18 +162,6 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-
-      {/* <section className="popular__Products">
-        <Container>
-          <Row>
-            <Col lg='12' className='text-center'>
-              <h2 className='section__title'> Popular In Category</h2>
-            </Col>
-            <ProductList data={products} />
-          </Row>
-        </Container>
-      </section> */}
-
 
 
     </Helmet>

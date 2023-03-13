@@ -21,7 +21,7 @@ const Routers = () => {
     <Route path='home' element={<Home/>}/>
     <Route path='shop' element={<Shop/>}/>
     <Route path='cart' element={<Cart/>}/>
-    <Route path='shop/:id' element={<ProductDetails/>}/>
+    <Route path='shop/:productId' element={<ProductDetails/>}/>
     
     <Route path='/*' element={<ProtectedRoute />}>
       <Route path='checkout' element={<Checkout />} />

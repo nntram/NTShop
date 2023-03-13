@@ -36,7 +36,10 @@ namespace NTShop.Repositories
         public async Task<ProductModel> GetByIdAsync(string id)
         {
             var data = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
-                        predicate: x => x.Productid == id && x.Productisacitve == true);
+                        predicate: x => x.Productid == id && x.Productisacitve == true,
+                        include: source => source.Include(m => m.Productimages)
+                                                  .Include(m => m.Brand)
+                                                  .Include(m => m.Category));
 
             return _mapper.Map<ProductModel>(data);
         }

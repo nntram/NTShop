@@ -11,9 +11,9 @@ class ProductApi {
         return axiosClient.get(url, {params});
     };
 
-    getById = ({params}) => {
-        const url = '/products';
-        return axiosClient.get(url,  {params});
+    getById = (id) => {
+        const url = `/products/${id}`;
+        return axiosClient.get(url);
     };
 
 
