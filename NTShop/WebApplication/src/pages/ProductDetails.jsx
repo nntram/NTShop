@@ -19,7 +19,6 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(null)
   const reviewUser = useRef('')
   const reviewMsg = useRef('')
-  const navigate = useNavigate()
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -84,12 +83,12 @@ const ProductDetails = () => {
   const relatedProducts = queryRelatedProducts.data
   
 
-  if (queryProduct.isLoading || relatedProducts.isLoading) {
+  if (queryProduct.isLoading) {
     return <Loading />
   }
 
-  if (queryProduct.isError || relatedProducts.isError) {
-    return <div>{queryProduct.isError.message && relatedProducts.isError.message}</div>
+  if (queryProduct.isError) {
+    return <div>{queryProduct.isError.message}</div>
   }
 
   return (

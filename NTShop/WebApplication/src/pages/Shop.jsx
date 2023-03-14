@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import CommonSection from '../components/UI/CommonSection'
 import Helmet from '../components/helmet/Helmet'
-import { Container, Row, Col } from 'reactstrap'
+import { Container, Row, Col,Button } from 'reactstrap'
 import '../styles/shop.css'
 
 import ProductList from '../components/UI/ProductList'
@@ -239,8 +239,9 @@ const Shop = () => {
             }
           </Row>
           <Row className='pt-5'>
-            <button
-              className='border-0 p-2'
+            <Button
+              outline
+              color='secondary'
               onClick={() => productResults.fetchNextPage()}
               disabled={!productResults.hasNextPage || productResults.isFetchingNextPage}
             >
@@ -249,7 +250,7 @@ const Shop = () => {
                 : productResults.hasNextPage
                   ? 'Xem thêm'
                   : 'Đã hết'}
-            </button>
+            </Button>
             <div>{productResults.isFetching && !productResults.isFetchingNextPage ? <Loading /> : null}</div>
 
           </Row>
