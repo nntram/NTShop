@@ -25,6 +25,7 @@
 
 .tab__content p{
     line-height: 30px;
+    color: var(--primary-color);
 }
 
 .product__reviews ul li span{
@@ -84,9 +85,8 @@
 
 .product__desc table{
     empty-cells: show;
-    width: unset !important;
-    margin: auto;
-    background-color: aliceblue;
+    display: none;
+
 }
 
 .product__desc table th, .product__desc table td {

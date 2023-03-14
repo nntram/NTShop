@@ -9,7 +9,6 @@ import { motion, useScroll } from 'framer-motion'
 import counterImg from '../assets/images/counter-timer-img.png'
 
 import Services from '../components/services/Services'
-import ProductList2 from '../components/UI/ProductList2'
 import ProductList from '../components/UI/ProductList'
 import Clock from '../components/UI/Clock'
 
@@ -158,7 +157,7 @@ const Home = () => {
             <Col lg='12' className='text-center'>
               <h2 className='section__title'>Sản phẩm nổi bật</h2>
             </Col>
-            <ProductList2 data={queryResults[0].data} />
+            <ProductList data={queryResults[0].data} />
           </Row>
         </Container>
       </section>

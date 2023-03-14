@@ -4,41 +4,45 @@ import '../../styles/product-card.css'
 import { Col } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
-import { useDispatch } from 'react-redux'
-import {cartActions} from "../../redux/slices/cartSlice"
-import { toast } from 'react-toastify';
-
-const ProductCard = ({item}) => {
-    const dispath = useDispatch()
-    const addToCart = () => {
-        dispath(cartActions.addItem({
-            id: item.id,
-            productName: item.productName,
-            price: item.price,
-            imgUrl: item.imgUrl
-        }))
-
-        toast.success('Product added to cart.')
-    }
+const ProductCard2 = ({item}) => {
+    
     return (
-        <Col lg='3' md='4' className='mb-2'>
-            <div className='product__item'>
+        <Col lg='3' md='4' className='my-2'>
+            <div className='product__item border'>
                 <div className="product__img">
-                    <motion.img whileHover={{scale:0.9}} src={item.imgUrl} alt="" />
+                    <motion.img whileHover={{scale:0.9}} alt=""
+                    src={require("../../assets/image_data/products/" + item.productimages)} />
                 </div>
+                
                 <div className="p-2 product__info">
                 <h3 className='product__name'>
-                    <Link to={`/shop/${item.id}`}>{item.productName}</Link>
+                    <Link to={`/shop/${item.productid}`}
+                     data-toggle="tooltip" title={item.productname}>
+                        {item.productname}
+                    </Link>
                 </h3>
-                <span>{item.category}</span>
+                <span>{item.categoryname}</span>
                 </div>
-                <div className="product__card-bottom d-flex align-items-center 
-                                justify-content-between p-2">
+                <div className="product__card-bottom d-flex 
+                        align-items-center justify-content-center gap-3 p-2">
+                    {
+                        (item.productprice !== item.productsaleprice) ? 
+                            <del className="">
+                                {item.productprice.toLocaleString()} đ
+                             </del> : ""                       
+
+                    }
                     <span className="price">
-                       $ {item.price}
-                    </span>
-                    <motion.span whileHover={{scale:1.2}} onClick={addToCart}>
-                        <i className="ri-add-line"></i>
+                       {item.productsaleprice.toLocaleString()} đ
+                    </span>                  
+                </div>
+                <div className="product__card-bottom d-flex 
+                        align-items-center justify-content-center gap-3 p-2">                    
+                    <motion.span whileHover={{scale:1.2}} >
+                        <i className="ri-shopping-cart-2-line"></i>
+                    </motion.span>
+                    <motion.span whileHover={{scale:1.2}} >
+                        <i className="ri-heart-line"></i>
                     </motion.span>
                 </div>
             </div>
@@ -46,4 +50,4 @@ const ProductCard = ({item}) => {
     )
 }
 
-export default ProductCard
+export default ProductCard2

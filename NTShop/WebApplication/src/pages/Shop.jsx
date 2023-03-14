@@ -4,8 +4,7 @@ import Helmet from '../components/helmet/Helmet'
 import { Container, Row, Col } from 'reactstrap'
 import '../styles/shop.css'
 
-import ProductList2 from '../components/UI/ProductList2'
-
+import ProductList from '../components/UI/ProductList'
 import ProductApi from '../api/ProductApi'
 import { useQueries, useInfiniteQuery } from 'react-query'
 import CategoryApi from '../api/CategoryApi'
@@ -32,7 +31,7 @@ const Shop = () => {
       handleSearch()
     }
   }
-  
+
   const handleSearch = () => {
     const searchValue = searchRef.current.value
 
@@ -53,14 +52,14 @@ const Shop = () => {
         {
           params: {
             pageIndex: pageParam,
-            pageSize: 12, 
+            pageSize: 12,
             brandid: brandOption,
             categoryid: categoryOption,
             orderBy: sortOption,
             productName: filter
           }
         });
-       
+
       return (response);
     } catch (error) {
       console.log('Failed to fetch product list: ', error);
@@ -102,7 +101,7 @@ const Shop = () => {
     ({ pageParam = 0 }) => fetchProductList(pageParam),
     {
       getNextPageParam: (lastPage) =>
-        lastPage.pageIndex < lastPage.totalPages - 1 ? lastPage.pageIndex + 1 : undefined    
+        lastPage && lastPage.pageIndex < lastPage.totalPages - 1 ? lastPage.pageIndex + 1 : undefined
     },
     { enabled: Boolean(debouncedFilter) }
 
@@ -112,7 +111,7 @@ const Shop = () => {
     { queryKey: 'categories', queryFn: fetchCategoryList },
     { queryKey: 'brands', queryFn: fetchBrandList },
   ])
-  const isLoading = queryResults.some(query => query.isLoading) 
+  const isLoading = queryResults.some(query => query.isLoading)
   const isError = queryResults.some(query => query.isLoading) || productResults.isError
 
   if (isLoading) {
@@ -143,31 +142,39 @@ const Shop = () => {
     },
   ]
 
-  const categoryOptions = [
+  let categoryOptions = [
     {
       value: "", label: (<span className='d-flex align-items-center gap-2'>
         Tất cả loại sản phẩm
       </span>)
-    }, ...queryResults[0].data.map((item) => (
-      {
-        value: item.id, label: (<span className='d-flex align-items-center gap-2'>
-          {item.name}
-        </span>)
-      }
-    ))]
+    }]
 
-  const brandOptions = [
+  let brandOptions = [
     {
       value: "", label: (<span className='d-flex align-items-center gap-2'>
         Tất cả thương hiệu
       </span>)
-    }, ...queryResults[1].data.map((item) => (
-      {
-        value: item.id, label: (<span className='d-flex align-items-center gap-2'>
-          {item.name}
-        </span>)
-      }
-    ))]
+    }]
+
+    if(queryResults[0].data){
+      categoryOptions = [...categoryOptions, ...queryResults[0].data.map((item) => (
+        {
+          value: item.id, label: (<span className='d-flex align-items-center gap-2'>
+            {item.name}
+          </span>)
+        }
+      ))]
+    }
+
+    if(queryResults[1].data){
+      brandOptions = [...brandOptions, ...queryResults[1].data.map((item) => (
+        {
+          value: item.id, label: (<span className='d-flex align-items-center gap-2'>
+            {item.name}
+          </span>)
+        }
+      ))]
+    }
 
 
   return (
@@ -180,7 +187,7 @@ const Shop = () => {
             <Col lg='4' md='6'>
               <div className="search__box">
                 <input type="text" placeholder='Tên sản phẩm...'
-                  ref={searchRef} onChange={handleSearch}/>
+                  ref={searchRef} onChange={handleSearch} />
                 <span onClick={handleSearchIcon}>
                   <i className="ri-search-line" ref={iconRef} ></i>
                 </span>
@@ -192,8 +199,8 @@ const Shop = () => {
                 <Select options={brandOptions}
                   isSearchable={false}
                   placeholder="Thương hiệu"
-                  onChange={(e) => setBrandOption(e.value)} 
-                  />
+                  onChange={(e) => setBrandOption(e.value)}
+                />
               </div>
             </Col>
 
@@ -209,7 +216,7 @@ const Shop = () => {
               <div className="filter__widget">
                 <Select options={sortOptions}
                   isSearchable={false}
-                  placeholder= {<SortPlaceHolder />}
+                  placeholder={<SortPlaceHolder />}
                   onChange={(e) => setSortOption(e.value)} />
               </div>
 
@@ -224,11 +231,10 @@ const Shop = () => {
           <Row>
             {
               productResults.isSuccess &&
-              productResults.data.pages.map((page, index) => 
-                page.items.length === 0 ?
-                  <h4 className='text-center'> Không tìm thấy sản phẩm. </h4> :
-                  <ProductList2 data={page.items} key={index} />
-              
+              productResults.data.pages.map((page, index) =>
+                page && page.items.length !== 0 ?
+                  <ProductList data={page.items} key={index} /> : ""
+                  
               )
             }
           </Row>

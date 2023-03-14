@@ -9,7 +9,9 @@ import ProductList from '../components/UI/ProductList'
 import { toast } from 'react-toastify'
 import ProductApi from '../api/ProductApi'
 import Loading from '../components/loading/Loading'
-import { useQueries } from 'react-query'
+import { useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
+import NotFound from './NotFound'
 
 const ProductDetails = () => {
   const { productId } = useParams()
@@ -17,7 +19,7 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(null)
   const reviewUser = useRef('')
   const reviewMsg = useRef('')
-
+  const navigate = useNavigate()
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -55,29 +57,43 @@ const ProductDetails = () => {
     }
   }
 
-  const queryResults = useQueries([
+  const fetchProducts = async (categoryid, brandid) => {
+    try {
+      const response = await ProductApi.getAllCard({params: {
+        pageSize:8,
+        brandid: brandid,
+        categoryid: categoryid
+      }});
+      return (response);
+    } catch (error) {
+      console.log('Failed to fetch products: ', error)
+    }
+  }
+
+  const queryProduct = useQuery(
     { queryKey: 'product', queryFn: ({ id = productId }) => fetchProductById(id) },
-  ])
-  const isLoading = queryResults.some(query => query.isLoading)
-  const isError = queryResults.some(query => query.isLoading)
+  )
+  const product = queryProduct.data
 
-  // useEffect(() =>{
-  //   window.scrollTo(0,0)
-  // }, [queryResults])
+  const queryRelatedProducts = useQuery(
+    { queryKey: 'relatedProducts', 
+      queryFn: ({ categoryid = product? product.categoryid : "", 
+                  brandid = product? product.brandid : "" }) => 
+                    fetchProducts(categoryid, brandid) },
+  )
+  const relatedProducts = queryRelatedProducts.data
+  
 
-  if (isLoading) {
+  if (queryProduct.isLoading || relatedProducts.isLoading) {
     return <Loading />
   }
 
-  if (isError) {
-    return <span>Error: {isError.message}</span>
+  if (queryProduct.isError || relatedProducts.isError) {
+    return <div>{queryProduct.isError.message && relatedProducts.isError.message}</div>
   }
 
-  const product = queryResults[0].data
-
-
-
   return (
+    product ?
     <Helmet title={product.productname}>
       <CommonSection title={product.productname} />
 
@@ -195,17 +211,19 @@ const ProductDetails = () => {
               </div>
             </Col>
 
-            <Col lg='12' className='mt-5'>
-              <h2 className='related__title'>You might also like</h2>
+            <Col lg='12' className='mb-3'>
+              <h2 className='related__title'>Sản phẩm tương tự</h2>
             </Col>
 
-            <ProductList />
+            {relatedProducts ? <ProductList data={relatedProducts.items}/> : ""}
+            
           </Row>
         </Container>
       </section>
 
 
-    </Helmet >
+    </Helmet > : 
+    <NotFound />
   )
 }
 
