@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 
 const HeroSlider = () => {
     return (
-        <section className='hero__section'>
+        <section className='hero__section hero-slide'>
             <Container>
                 <Row>
                     <Col lg='6' md='6' className='d-flex align-items-center'>

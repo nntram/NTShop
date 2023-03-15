@@ -1,71 +1,9 @@
-.slide {
-    position: relative;
-    padding: 0;
-    margin: 0;
-    height: 750px;
-    overflow: hidden; 
+.hero-slide {
+    height: 750px; 
   }
-  .slide-child{
-    position: absolute;
-    width: 100%;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-  }
-  
+ 
   .hero__section2 {
     background: radial-gradient(circle, rgba(148,187,233,0.5) 25%, rgba(238,174,202,0.5) 100%);
-  }
-  
-  .example-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .next,
-  .prev {
-    top: calc(50% - 20px);
-    position: absolute;
-    background: white;
-    border-radius: 30px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 18px;
-    z-index: 2;
-  }
-  
-  .next {
-    right: 10px;
-  }
-  
-  .prev {
-    left: 10px;
-    transform: scale(-1);
-  }
-  
-  
-  .refresh {
-    padding: 10px;
-    position: absolute;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
-    width: 20px;
-    height: 20px;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
   }
   
   .hero__section {
@@ -97,7 +35,7 @@
     .hero__content h2 {
       font-size: 2rem;
     }
-    .slide {
+    .hero-slide {
       height: 700px;
     }
   
@@ -112,7 +50,7 @@
     .hero__content p {
       font-size: 0.9rem;
     }
-    .slide {
+    .hero-slide {
       height: 1000px;
     }
   

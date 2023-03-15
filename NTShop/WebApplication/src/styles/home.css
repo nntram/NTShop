@@ -78,15 +78,3 @@
     padding: 20px 0;
     margin: 0 auto;
 }
-
-::-webkit-scrollbar {
-    height: 5px;
-    width: 5px;
-    background: whitesmoke;
-    -webkit-border-radius: 1ex;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgb(204, 196, 196);
-    -webkit-border-radius: 1ex;
-}

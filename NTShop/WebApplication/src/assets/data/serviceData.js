@@ -7,14 +7,14 @@ const serviceData = [
   },
   {
     icon: "ri-refresh-line",
-    title: "Hỗ trợ trả hàng",
-    subtitle: "Nếu lỗi thuộc về nhà sản xuất hoặc cửa hàng",
+    title: "Tư vấn miễn phí",
+    subtitle: "Liên hệ với chúng tôi khi bạn cần tư vấn.",
     bg: "#ceebe9",
   },
   {
     icon: "ri-secure-payment-line",
     title: "Thanh toán đơn giản",
-    subtitle: "Thanh toán bằng tiền mặt hoặc thanh toán trực tuyến",
+    subtitle: "Nhiều hình thức thanh toán",
     bg: "#e2f2b2",
   },
   {

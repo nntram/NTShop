@@ -46,7 +46,7 @@ namespace NTShop.Repositories
 
         public async Task<PagedList<ProductCardModel>> GetAllCardAsync(ProductFilterModel filter)
         {
-            var predicate = PredicateBuilder.New<Product>(p => p.Productisacitve == true);
+            var predicate = PredicateBuilder.New<Product>(p => p.Productisacitve == filter.Productisacitve);
             if (!string.IsNullOrEmpty(filter.Productid))
             {
                 predicate = predicate.And(p => p.Productid == filter.Productid);

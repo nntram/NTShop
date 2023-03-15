@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef} from 'react'
 import CommonSection from '../components/UI/CommonSection'
 import Helmet from '../components/helmet/Helmet'
 import { Container, Row, Col,Button } from 'reactstrap'
@@ -56,7 +56,7 @@ const Shop = () => {
             brandid: brandOption,
             categoryid: categoryOption,
             orderBy: sortOption,
-            productName: filter
+            productName: filter,
           }
         });
 

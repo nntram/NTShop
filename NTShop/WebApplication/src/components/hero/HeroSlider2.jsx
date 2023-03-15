@@ -7,10 +7,9 @@ import { motion } from 'framer-motion'
 
 const HeroSlider2 = () => {
     return (
-        <section className='hero__section2'>
+        <section className='hero__section2 hero-slide'>
             <Container>
                 <Row>
-
                     <Col lg='6' md='6'>
                         <img src={heroImg} alt="" />
                     </Col>
