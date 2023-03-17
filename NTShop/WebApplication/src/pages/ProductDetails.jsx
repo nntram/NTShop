@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 import ProductApi from '../api/ProductApi'
 import Loading from '../components/loading/Loading'
 import { useQuery } from 'react-query'
-import NotFound from './NotFound'
+import NotFound from '../components/UI/NotFound'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 
@@ -20,6 +20,8 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(null)
   const reviewUser = useRef('')
   const reviewMsg = useRef('')
+
+  const [quantity, setQuantity] = useState('1')
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -87,6 +89,33 @@ const ProductDetails = () => {
   )
   const relatedProducts = queryRelatedProducts.data
 
+  const validQuantity = (value) => {
+    if(value < 1 || !value){
+      setQuantity(1)
+      return;
+    }
+    if(product && value > product.productquantity ){
+      setQuantity(product.productquantity)
+      toast.warning('Vượt quá số lượng sản phẩm.')
+      return;
+    }
+     setQuantity(value) 
+  }
+  const handleQuantity = (e) => {
+    if (!e.target.validity.valid){
+      return;
+    }
+    validQuantity(e.target.value)
+  }
+  const incrementQuantity = () => {
+    const newValue = parseInt(quantity) + 1
+    validQuantity(newValue)
+  }
+
+  const decrementQuantity = () => {
+    const newValue = parseInt(quantity) - 1
+    validQuantity(newValue)
+  }
 
   if (queryProduct.isLoading) {
     return <Loading />
@@ -152,11 +181,21 @@ const ProductDetails = () => {
                   <span>Số lượng:</span>
                   <div className="input-group w-25">
                     <div className="input-group-prepend">
-                      <button className="quantity__btn" type="button">-</button>
+                      <motion.button className="quantity__btn" whileTap={{opacity: 0.5}}
+                        onClick={decrementQuantity}>
+                        -
+                      </motion.button>
                     </div>
-                    <input type="text" className="form-control text-center" value="1" />
+                    <input type="text"                      
+                      className="form-control text-center" 
+                      pattern="[0-9]*"
+                      value={quantity} 
+                      onChange={(e) => handleQuantity(e)} />
                     <div className="input-group-prepend">
-                      <button className="quantity__btn" type="button">+</button>
+                      <motion.button className="quantity__btn" whileTap={{opacity: 0.5}}
+                        onClick={incrementQuantity}>
+                        +
+                      </motion.button>
                     </div>
                   </div>
 

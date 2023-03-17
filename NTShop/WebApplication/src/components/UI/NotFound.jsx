@@ -1,6 +1,6 @@
 import React from 'react'
-import Helmet from '../components/helmet/Helmet'
-import bgImg from "../assets/images/404.jpg"
+import Helmet from '../helmet/Helmet'
+import bgImg from "../../assets/images/404.jpg"
 
 const NotFound = () => {
   return (
