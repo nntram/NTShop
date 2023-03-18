@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace NTShop.Repositories
 {
-    public class BrandRepositoty : IBrandRepository
+    public class BrandRepository : IBrandRepository
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public BrandRepositoty(IUnitOfWork unitOfWork, IMapper mapper)
+        public BrandRepository(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

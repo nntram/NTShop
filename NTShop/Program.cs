@@ -1,8 +1,11 @@
 using Arch.EntityFrameworkCore.UnitOfWork;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NTShop.Data;
 using NTShop.Repositories;
 using NTShop.Repositories.Interface;
+using System.Text;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -27,9 +30,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Add My services
-builder.Services.AddTransient<IProductRepository, ProductRepositoty>();
-builder.Services.AddTransient<IBrandRepository, BrandRepositoty>();
-builder.Services.AddTransient<ICategoryRepository, CategoryRepositoty>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IBrandRepository, BrandRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 
 //Config database
 builder.Services.AddDbContext<NIENLUANContext>(
@@ -40,6 +44,19 @@ builder.Services.AddUnitOfWork<NIENLUANContext>();
 
 //Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 
 var app = builder.Build();
 
@@ -54,7 +71,8 @@ app.UseHttpsRedirection();
 
 //add Cors
 app.UseCors(MyAllowSpecificOrigins);
-
+//add auth
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

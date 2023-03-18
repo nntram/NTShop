@@ -52,8 +52,8 @@ namespace NTShop.Entities
         [Column("CUSTOMERAVATAR")]
         [StringLength(256)]
         public string? Customeravatar { get; set; }
-        [Column("CUSTOMERINACTIVE")]
-        public bool? Customerinactive { get; set; }
+        [Column("CUSTOMERISACTIVE")]
+        public bool? Customerisactive { get; set; }
 
         [ForeignKey("Wardid")]
         [InverseProperty("Customers")]

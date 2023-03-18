@@ -38,7 +38,6 @@ const Header = () => {
   const headerRef = useRef(null)
   const menuRef = useRef(null)
   const closeRef = useRef(null)
-  const profileActionRef = useRef(null)
   const totalQuantity = useSelector(state => state.cart.totalQuantity)
 
   const { currentUser } = useAuth()
@@ -75,8 +74,6 @@ const Header = () => {
     closeRef.current.classList.toggle('active__menu')
   }
 
-  const profileActionsToggle = () => profileActionRef.current.classList.toggle('show__profile')
-
   return (
     <header className='header' ref={headerRef}>
       <Container>
@@ -86,7 +83,7 @@ const Header = () => {
               <img src={logo} alt='logo' />
               <div>
                 <h1>
-                 Nari Shop
+                  Nari Shop
                 </h1>
 
               </div>
@@ -122,27 +119,37 @@ const Header = () => {
                 <i className="ri-shopping-cart-2-line"></i>
                 <span className="badge">{totalQuantity}</span>
               </span>
-              <div className='profile'>
+              <div className='profile dropdown'>
                 <motion.img whileTap={{ scale: 1.2 }}
-                  src={currentUser ? currentUser.photoURL : userIcon} alt=""
-                  onClick={profileActionsToggle} />
-
-                <div className="profile__actions"
-                  ref={profileActionRef}
-                  onClick={profileActionsToggle} >
-                  {
+                  src={currentUser ? currentUser.photoURL : userIcon} />
+                <div class="dropdown-content">
+                {
                     currentUser ?
-                      <div className='d-flex justify-content-center align-items-center flex-column'>
-                        <span onClick={logout}>Logout</span>
-                        <Link to='/dashboard'>Dashboard</Link>
-                      </div> :
-                      <div className='d-flex justify-content-center align-items-center flex-column'>
-                        <Link to='/signup'>Đăng ký</Link>
-                        <Link to='/login'>Đăng nhập</Link>
-                        <Link to='/dashboard'>Dashboard</Link>
-                      </div>
+                      <>
+                        <a href='#' onClick={logout} className='d-flex gap-3'>
+                          <i className="ri-logout-box-line"></i>
+                          <span>Đăng xuất</span>
+                        </a>
+                        <Link to='/dashboard' className='d-flex gap-3'>
+                          <i class="ri-dashboard-line"></i>
+                          <span>Dashboard</span>
+                        </Link>
+                      </> :
+                      <>
+                        <Link to='/signup' className='d-flex gap-3'>
+                          <i className="ri-account-circle-line"></i>
+                          <span>Đăng ký</span>
+                        </Link>
+                        <Link to='/login' className='d-flex gap-3'>
+                          <i className="ri-login-box-line"></i>
+                          <span>Đăng nhập</span>
+                        </Link>
+                        <Link to='/dashboard' className='d-flex gap-3'>
+                          <i class="ri-dashboard-line"></i>
+                          <span>Dashboard</span>
+                        </Link>
+                      </>
                   }
-
                 </div>
 
               </div>

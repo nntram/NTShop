@@ -10,12 +10,12 @@ using Abp.Linq.Expressions;
 
 namespace NTShop.Repositories
 {
-    public class ProductRepositoty : IProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProductRepositoty(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductRepository(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

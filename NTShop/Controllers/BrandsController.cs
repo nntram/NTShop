@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Controllers
 {
     [ApiController]
     [Route("brands")]
+    [Authorize]
     public class BrandsController : ControllerBase
     {
         private readonly IBrandRepository _brandRepository;

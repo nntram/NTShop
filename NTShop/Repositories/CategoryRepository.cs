@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace NTShop.Repositories
 {
-    public class CategoryRepositoty : ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CategoryRepositoty(IUnitOfWork unitOfWork, IMapper mapper)
+        public CategoryRepository(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
