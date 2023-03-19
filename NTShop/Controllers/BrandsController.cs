@@ -6,7 +6,6 @@ namespace NTShop.Controllers
 {
     [ApiController]
     [Route("brands")]
-    [Authorize]
     public class BrandsController : ControllerBase
     {
         private readonly IBrandRepository _brandRepository;

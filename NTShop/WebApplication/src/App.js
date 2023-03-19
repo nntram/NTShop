@@ -7,7 +7,14 @@ import {
 import { ReactQueryDevtools } from 'react-query/devtools'
 
  // Create a client
- const queryClient = new QueryClient()
+ const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 1000,
+    },
+  },
+})
 
 function App() {
   return (
