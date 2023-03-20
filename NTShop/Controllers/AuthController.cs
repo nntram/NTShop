@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using NTShop.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
 using NTShop.Models;
+using NTShop.Models.AuthModel;
 using NTShop.Repositories.Interface;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using NTShop.Services.Interface;
+
 using BC = BCrypt.Net.BCrypt;
 
 namespace NTShop.Controllers
@@ -16,72 +13,85 @@ namespace NTShop.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepository;
-        public IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(ICustomerRepository customerRepository, IConfiguration configuration)
+        public AuthController(ICustomerRepository customerRepository, ITokenService tokenService)
         {
             _customerRepository = customerRepository;
-            _configuration = configuration;
+            _tokenService = tokenService;
         }
 
         [Route("{area}/login")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromForm] LoginModel model, [FromRoute]string area)
+        public async Task<IActionResult> Login([FromForm] LoginModel loginModel, [FromRoute]string area)
         {
-            string userId = "", userName = "", password = "", displayName = "", email = "", role = "";
+            if (loginModel is null)
+            {
+                return BadRequest();
+            }
+
+            var account = new AccountModel();
             if(area == "customer")
             {
-                var data = await _customerRepository.GetByUserName(model.UserName);
+                var data = await _customerRepository.GetByUserName(loginModel.UserName);
                 if (data == null)
                 {
                     return BadRequest("Tài khoản không tồn tại.");
                 }
-                userId = data.Customerid;
-                userName = data.Customerusername;
-                password = data.Customerpassword;
-                displayName = data.Customername;
-                email = data.Customeremail;
-                role = "customer";
+
+                 account = _tokenService.CustomerToAccountModel(data);
             }
             
-            if (BC.Verify(model.Password, password))
+            if (BC.Verify(loginModel.Password, account.Password))
             {
-                //create claims details based on the user information
-                var claims = new List<Claim> {
-                        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),  
-                        new Claim(ClaimTypes.Role, "Customer"),
-                        new Claim("Role", role),
-                        new Claim("UserId", userId),
-                        new Claim("DisplayName", displayName),
-                        new Claim("UserName", userName),
-                        new Claim("Email", email),
+                var accessToken = _tokenService.GenerateAccessToken(account);
+                var refreshToken = _tokenService.GenerateRefreshToken();
 
-                    };
+                _tokenService.SetRefreshToken(Response, refreshToken);
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var token = new JwtSecurityToken(
-                    _configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Audience"],
-                    claims,
-                    expires: DateTime.UtcNow.AddMinutes(10),
-                    signingCredentials: signIn);
-
-                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                return Ok(accessToken);
             }
-
 
             return BadRequest("Sai mật khẩu.");
         }
 
-        [Authorize(Roles = "Customer")]
-        [HttpGet("test")]
-        public IActionResult Auth()
+        [HttpPost]
+        [Route("refresh")]
+        public async Task<IActionResult> Refresh([FromForm]TokenModel tokenModel)
         {
-            return Ok();
+            if (tokenModel is null)
+            {
+                return BadRequest();
+            }
+
+            string accessToken = tokenModel.AccessToken;
+            string refreshToken = tokenModel.RefreshToken;
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+            var userName = principal.Identity.Name;
+
+            var data = await _customerRepository.GetByUserName(userName);
+            if (data == null)
+            {
+                return BadRequest("Tài khoản không tồn tại.");
+            }
+
+            //if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            //    return BadRequest("Invalid client request");
+
+            var account = _tokenService.CustomerToAccountModel(data);
+            var newAccessToken = _tokenService.GenerateAccessToken(account);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            //user.RefreshToken = newRefreshToken;
+            //_userContext.SaveChanges();
+
+            _tokenService.SetRefreshToken(Response, newRefreshToken);
+            return Ok(newAccessToken);
         }
+
+
+
+
     }
 
 }

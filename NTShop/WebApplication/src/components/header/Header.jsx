@@ -122,7 +122,7 @@ const Header = () => {
               <div className='profile dropdown'>
                 <motion.img whileTap={{ scale: 1.2 }}
                   src={currentUser ? currentUser.photoURL : userIcon} />
-                <div class="dropdown-content">
+                <div className="dropdown-content">
                 {
                     currentUser ?
                       <>
@@ -131,7 +131,7 @@ const Header = () => {
                           <span>Đăng xuất</span>
                         </a>
                         <Link to='/dashboard' className='d-flex gap-3'>
-                          <i class="ri-dashboard-line"></i>
+                          <i className="ri-dashboard-line"></i>
                           <span>Dashboard</span>
                         </Link>
                       </> :
@@ -145,7 +145,7 @@ const Header = () => {
                           <span>Đăng nhập</span>
                         </Link>
                         <Link to='/dashboard' className='d-flex gap-3'>
-                          <i class="ri-dashboard-line"></i>
+                          <i className="ri-dashboard-line"></i>
                           <span>Dashboard</span>
                         </Link>
                       </>

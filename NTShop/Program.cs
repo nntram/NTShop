@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using NTShop.Data;
 using NTShop.Repositories;
 using NTShop.Repositories.Interface;
+using NTShop.Services;
+using NTShop.Services.Interface;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -43,6 +45,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 //Add My services
+builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IBrandRepository, BrandRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();

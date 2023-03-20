@@ -68,3 +68,15 @@ section{
   font-weight: 600;
   margin-bottom: 2rem;
 }
+
+::-webkit-scrollbar {
+  height: 10px;
+  width: 5px;
+  background: whitesmoke;
+  -webkit-border-radius: 1ex;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(204, 196, 196);
+  -webkit-border-radius: 1ex;
+}

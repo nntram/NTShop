@@ -25,3 +25,5 @@ site key
 
 secretkey
 6Ldd_lkjAAAAAKP5fkz4iyqAbVm0w9uceLwgYto8
+
+--legacy-peer-deps
