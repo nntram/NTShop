@@ -12,7 +12,8 @@
         public string Role { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-
-
+        public string RefreshToken { get; set; } = string.Empty;
+        public DateTime? TokenExpiryTime { get; set; }
+        public bool? IsActive { get; set; } = false;
     }
 }

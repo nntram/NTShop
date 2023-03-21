@@ -1,4 +1,5 @@
 ﻿using NTShop.Models;
+using NTShop.Models.AuthModel;
 
 namespace NTShop.Repositories.Interface
 {
@@ -6,7 +7,8 @@ namespace NTShop.Repositories.Interface
     {
         public Task<List<CustomerModel>> GetAllAsync();
         public Task<CustomerModel> GetByIdAsync(string id);
-        public Task<CustomerModel> GetByUserName(string username);
+        public Task<AccountModel> GetByUserName(string username);
+        public Task<bool> UpdateAccountAsync(AccountModel model);
     }
 
 }

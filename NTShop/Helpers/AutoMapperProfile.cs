@@ -18,9 +18,9 @@ namespace B1809531_EShop_MVC6.Helpers
                 .ForMember(t => t.Brandname, opt => opt.MapFrom(t => t.Brand.Brandname))
                 .ForMember(t => t.Productimages, opt => opt.MapFrom(t => t.Productimages.First().Productimageurl));
 
-            CreateMap<Brand, BrandModel>();
-            CreateMap<Category, CategoryModel>();
-            CreateMap<Customer, CustomerModel>();
+            CreateMap<Brand, BrandModel>().ReverseMap();
+            CreateMap<Category, CategoryModel>().ReverseMap();
+            CreateMap<Customer, CustomerModel>().ReverseMap();
             CreateMap<IPagedList<Product>, PagedList<ProductCardModel>>();
         }
     }

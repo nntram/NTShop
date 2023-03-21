@@ -60,6 +60,8 @@ builder.Services.AddUnitOfWork<NIENLUANContext>();
 
 //Add AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+//Add Jwt and cookie to store refreshToken
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
@@ -72,6 +74,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+    options.Events = new JwtBearerEvents()
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["refreshToken"];
+            return Task.CompletedTask;
+        }
+    };
+}).AddCookie(x =>
+{
+    x.Cookie.Name = "refreshToken";
 });
 
 var app = builder.Build();

@@ -16,7 +16,6 @@ namespace NTShop.Models
         public string? Customeremail { get; set; }
         public string? Customeremailconfirm { get; set; }
         public string? Customerusername { get; set; }
-        public string? Customerpassword { get; set; }
         public string? Customeravatar { get; set; }
         public bool? Customerisactive { get; set; }
     }

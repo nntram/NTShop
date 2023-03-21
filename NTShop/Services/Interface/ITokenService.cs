@@ -11,6 +11,5 @@ namespace NTShop.Services.Interface
         string GenerateRefreshToken();
         public void SetRefreshToken(HttpResponse respone, string newRefreshToken);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
-        public AccountModel CustomerToAccountModel(CustomerModel data);
     }
 }

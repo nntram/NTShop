@@ -3,7 +3,6 @@ using NTShop.Models;
 using NTShop.Models.AuthModel;
 using NTShop.Repositories.Interface;
 using NTShop.Services.Interface;
-
 using BC = BCrypt.Net.BCrypt;
 
 namespace NTShop.Controllers
@@ -30,63 +29,71 @@ namespace NTShop.Controllers
                 return BadRequest();
             }
 
-            var account = new AccountModel();
             if(area == "customer")
             {
                 var data = await _customerRepository.GetByUserName(loginModel.UserName);
-                if (data == null)
+                if (data == null || data.IsActive == false )
                 {
-                    return BadRequest("Tài khoản không tồn tại.");
+                    return NotFound("Tài khoản không tồn tại.");
                 }
 
-                 account = _tokenService.CustomerToAccountModel(data);
+                if (BC.Verify(loginModel.Password, data.Password))
+                {
+                    var accessToken = _tokenService.GenerateAccessToken(data);
+                    var refreshToken = _tokenService.GenerateRefreshToken();
+
+                    data.RefreshToken = refreshToken;
+                    data.TokenExpiryTime = DateTime.Now.AddDays(7);
+
+                    var update = await _customerRepository.UpdateAccountAsync(data);
+                    if (update is true)
+                    {
+                        _tokenService.SetRefreshToken(Response, refreshToken);
+                        return Ok(accessToken);
+                    }
+                    return StatusCode(500);
+                }
             }
             
-            if (BC.Verify(loginModel.Password, account.Password))
-            {
-                var accessToken = _tokenService.GenerateAccessToken(account);
-                var refreshToken = _tokenService.GenerateRefreshToken();
-
-                _tokenService.SetRefreshToken(Response, refreshToken);
-
-                return Ok(accessToken);
-            }
-
             return BadRequest("Sai mật khẩu.");
         }
 
         [HttpPost]
         [Route("refresh")]
-        public async Task<IActionResult> Refresh([FromForm]TokenModel tokenModel)
+        public async Task<IActionResult> Refresh([FromHeader]string authorization)
         {
-            if (tokenModel is null)
+            if (authorization is null)
             {
                 return BadRequest();
             }
 
-            string accessToken = tokenModel.AccessToken;
-            string refreshToken = tokenModel.RefreshToken;
+            string accessToken = authorization.Substring(7);
+            string refreshToken = Request.Cookies["refreshToken"];
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
             var userName = principal.Identity.Name;
 
             var data = await _customerRepository.GetByUserName(userName);
-            if (data == null)
+            if (data == null || 
+                data.RefreshToken != refreshToken || 
+                data.TokenExpiryTime <= DateTime.Now)
             {
-                return BadRequest("Tài khoản không tồn tại.");
+                return NotFound();
             }
 
-            //if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            //    return BadRequest("Invalid client request");
-
-            var account = _tokenService.CustomerToAccountModel(data);
-            var newAccessToken = _tokenService.GenerateAccessToken(account);
+            var newAccessToken = _tokenService.GenerateAccessToken(data);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
-            //user.RefreshToken = newRefreshToken;
-            //_userContext.SaveChanges();
 
-            _tokenService.SetRefreshToken(Response, newRefreshToken);
-            return Ok(newAccessToken);
+            data.RefreshToken = newRefreshToken;
+            data.TokenExpiryTime = DateTime.Now.AddDays(7);
+
+            var update = await _customerRepository.UpdateAccountAsync(data);
+            if (update is true)
+            {
+                _tokenService.SetRefreshToken(Response, newRefreshToken);
+                return Ok(newAccessToken);
+            }
+            return StatusCode(500);
         }
 
 

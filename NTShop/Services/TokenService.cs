@@ -58,14 +58,14 @@ namespace NTShop.Services
             }
         }
 
-        public void SetRefreshToken(HttpResponse respone, string newRefreshToken)
+        public void SetRefreshToken(HttpResponse response, string newRefreshToken)
         {
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = DateTime.Now.AddDays(7),
             };
-            respone.Cookies.Append("refreshToken", newRefreshToken, cookieOptions);           
+            response.Cookies.Append("refreshToken", newRefreshToken, cookieOptions);           
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
@@ -89,18 +89,5 @@ namespace NTShop.Services
             return principal;
         }
 
-        public AccountModel CustomerToAccountModel(CustomerModel data)
-        {
-            var account = new AccountModel();
-
-            account.UserId = data.Customerid;
-            account.UserName = data.Customerusername;
-            account.DisplayName = data.Customername;
-            account.Email = data.Customeremail;
-            account.Role = "Customer";
-            account.Password = data.Customerpassword;
-
-            return account;
-        }
     }
 }

@@ -2,6 +2,7 @@
 using AutoMapper;
 using NTShop.Entities;
 using NTShop.Models;
+using NTShop.Models.AuthModel;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Repositories
@@ -33,12 +34,46 @@ namespace NTShop.Repositories
             return _mapper.Map<CustomerModel>(data);
         }
 
-        public async Task<CustomerModel> GetByUserName(string username)
+        public async Task<AccountModel> GetByUserName(string username)
         {
-            var account = await _unitOfWork.GetRepository<Customer>().GetFirstOrDefaultAsync
+            var data = await _unitOfWork.GetRepository<Customer>().GetFirstOrDefaultAsync
                             (predicate: p => p.Customerusername == username);
+            var account = new AccountModel();
 
-            return _mapper.Map<CustomerModel>(account);
+            account.UserName = data.Customerusername;
+            account.UserId = data.Customerid;
+            account.Email = data.Customeremail;
+            account.RefreshToken = data.Customerrefreshtoken;
+            account.TokenExpiryTime = data.Customertokenexpirytime;
+            account.Password = data.Customerpassword;
+            account.DisplayName = data.Customername;
+            account.IsActive = data.Customerisactive;
+
+            return (account);
+        }
+
+        public async Task<bool> UpdateAccountAsync(AccountModel model)
+        {
+            var data = await _unitOfWork.GetRepository<Customer>().FindAsync(model.UserId);
+            if(data is null) return false;
+
+            data.Customerrefreshtoken = model.RefreshToken;
+            data.Customertokenexpirytime = model.TokenExpiryTime;
+            data.Customerpassword = model.Password;
+            data.Customerisactive= model.IsActive;
+
+            try
+            {
+                _unitOfWork.GetRepository<Customer>().Update(data);
+                _unitOfWork.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+          
         }
     }
 }
