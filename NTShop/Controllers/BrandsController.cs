@@ -4,7 +4,6 @@ using NTShop.Repositories.Interface;
 
 namespace NTShop.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("brands")]
     public class BrandsController : ControllerBase

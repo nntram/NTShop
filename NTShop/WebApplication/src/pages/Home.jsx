@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { Row, Col, Container } from 'reactstrap'
 
 import Helmet from '../components/helmet/Helmet'
 import '../styles/home.css'
 import { Link } from 'react-router-dom'
-import { motion, useScroll } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 import counterImg from '../assets/images/counter-timer-img.png'
 
@@ -71,10 +71,7 @@ const Home = () => {
     }
   }
 
-  const scrollRef = useRef(null)
-  const { } = useScroll({
-    container: scrollRef
-  })
+
 
   const queryResults = useQueries([
     { queryKey: 'products', queryFn: fetchProductList },

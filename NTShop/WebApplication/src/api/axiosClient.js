@@ -39,7 +39,7 @@ axiosClient.interceptors.response.use(function (response) {
         return new Promise(function(resolve, reject) {
           failedQueue.push({resolve, reject})
         }).then(token => {
-          originalRequest.headers['Authorization'] = 'Bearer ' + token;
+          originalRequest.headers['authorization'] = 'Bearer ' + token;
           return axiosClient(originalRequest);
         }).catch(err => {
           return Promise.reject(err);
@@ -49,15 +49,16 @@ axiosClient.interceptors.response.use(function (response) {
     originalRequest._retry = true;
     isRefreshing = true;
 
-    const refreshToken = window.localStorage.getItem('refreshToken');
+    const user = window.localStorage.getItem('userAuth');
+    var bodyFormData = new FormData();
+    bodyFormData.append('authorization', user.accessToken)
     return new Promise(function (resolve, reject) {
-       axiosClient.post('http://localhost:8000/auth/refresh', { refreshToken })
+       axiosClient.post('https://localhost:7157/auth/refresh', bodyFormData)
         .then(({data}) => {
-            window.localStorage.setItem('token', data.token);
-            window.localStorage.setItem('refreshToken', data.refreshToken);
-            axiosClient.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
-            originalRequest.headers['Authorization'] = 'Bearer ' + data.token;
-            processQueue(null, data.token);
+            window.localStorage.setItem('userAuth', data);
+            axiosClient.defaults.headers.common['authorization'] = 'Bearer ' + data;
+            originalRequest.headers['authorization'] = 'Bearer ' + data;
+            processQueue(null, data);
             resolve(axiosClient(originalRequest));
         })
         .catch((err) => {

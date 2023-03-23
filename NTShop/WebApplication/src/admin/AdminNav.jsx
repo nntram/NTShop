@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Container, Row} from 'reactstrap'
-import useAuth from '../custom-hooks/useAuth'
 import '../styles/admin-nav.css'
 import { NavLink } from 'react-router-dom'
-
+import AuthContext from '../context/AuthProvider'
+import userIcon from '../assets/images/user-icon.png'
 const admin__nav = [
   {
     display: "Dashboard",
@@ -28,7 +28,7 @@ const admin__nav = [
   
 ]
 const AdminNav = () => {
-  const { currentUser } = useAuth()
+  const { auth } = useContext(AuthContext)
   return (
     <>
       <header className='admin__header'>
@@ -47,7 +47,7 @@ const AdminNav = () => {
               <div className="admin__nav-top-right">
                 <span><i className="ri-notification-line"></i></span>
                 <span><i className="ri-settings-2-line"></i></span>
-                <img src={currentUser && currentUser.photoURL} alt="" />
+                <img src={userIcon} alt="" />
               </div>
             </div>
           </Container>

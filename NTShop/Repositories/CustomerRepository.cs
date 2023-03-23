@@ -38,8 +38,13 @@ namespace NTShop.Repositories
         {
             var data = await _unitOfWork.GetRepository<Customer>().GetFirstOrDefaultAsync
                             (predicate: p => p.Customerusername == username);
-            var account = new AccountModel();
 
+            var account = new AccountModel();
+            if (data is null)
+            {
+                return null;
+            }
+            
             account.UserName = data.Customerusername;
             account.UserId = data.Customerid;
             account.Email = data.Customeremail;
