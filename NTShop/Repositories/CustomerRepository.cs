@@ -53,6 +53,7 @@ namespace NTShop.Repositories
             account.Password = data.Customerpassword;
             account.DisplayName = data.Customername;
             account.IsActive = data.Customerisactive;
+            account.Role = "Customer";
 
             return (account);
         }

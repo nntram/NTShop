@@ -6,7 +6,10 @@ class AuthApi {
         return axiosClient.post(url, formData, {
             headers:  {
                 'content-type': 'multipart/form-data',
-                'Access-Control-Allow-Origin': null},
+                'access-control-expose-headers' : 'Set-Cookie'
+            },
+             withCredentials: true 
+            
         });
     };
 

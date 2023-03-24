@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using NTShop.Models;
 using NTShop.Models.AuthModel;
 using NTShop.Repositories.Interface;
@@ -9,7 +11,7 @@ namespace NTShop.Controllers
 {
     [ApiController]
     [Route("auth")]
-    public class AuthController : ControllerBase
+    public class AuthController : Controller
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly ITokenService _tokenService;
@@ -22,17 +24,17 @@ namespace NTShop.Controllers
 
         [Route("{area}/login")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromForm] LoginModel loginModel, [FromRoute]string area)
+        public async Task<IActionResult> Login([FromForm] LoginModel loginModel, [FromRoute] string area)
         {
             if (loginModel is null)
             {
                 return BadRequest();
             }
 
-            if(area == "customer")
+            if (area == "customer")
             {
                 var data = await _customerRepository.GetByUserName(loginModel.UserName);
-                if (data == null || data.IsActive == false )
+                if (data == null || data.IsActive == false)
                 {
                     return NotFound("Tài khoản không tồn tại.");
                 }
@@ -48,36 +50,33 @@ namespace NTShop.Controllers
                     var update = await _customerRepository.UpdateAccountAsync(data);
                     if (update is true)
                     {
-                        _tokenService.SetRefreshToken(Response, refreshToken);
-                      
-
+                        Response.Cookies.Append("refreshToken", refreshToken, HttpOnlyCookieOptions());
                         return Ok(accessToken);
                     }
                     return StatusCode(500);
                 }
             }
-            
+
             return BadRequest("Sai mật khẩu.");
         }
 
         [HttpPost]
         [Route("refresh")]
-        public async Task<IActionResult> Refresh([FromHeader]string authorization)
+        public async Task<IActionResult> Refresh([FromForm] string authorization)
         {
             if (authorization is null)
             {
                 return BadRequest();
             }
 
-            string accessToken = authorization.Substring(7);
             string refreshToken = Request.Cookies["refreshToken"];
 
-            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(authorization);
             var userName = principal.Identity.Name;
 
             var data = await _customerRepository.GetByUserName(userName);
-            if (data == null || 
-                data.RefreshToken != refreshToken || 
+            if (data == null ||
+                data.RefreshToken != refreshToken ||
                 data.TokenExpiryTime <= DateTime.Now)
             {
                 return NotFound();
@@ -92,16 +91,25 @@ namespace NTShop.Controllers
             var update = await _customerRepository.UpdateAccountAsync(data);
             if (update is true)
             {
-                _tokenService.SetRefreshToken(Response, newRefreshToken);
-                
+                Response.Cookies.Append("refreshToken", newRefreshToken, HttpOnlyCookieOptions());
                 return Ok(newAccessToken);
             }
             return StatusCode(500);
         }
 
 
+        private static CookieOptions HttpOnlyCookieOptions()
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.Now.AddDays(7),
+                SameSite = SameSiteMode.None,
+                Secure = true,
+            };
 
+            return cookieOptions;
+        }
 
     }
-
 }

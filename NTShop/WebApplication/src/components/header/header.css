@@ -208,10 +208,15 @@
     }
 
 }
-
+@media only screen and (max-width: 1000px){
+    .username{
+        display: none;
+    }
+}
 @media only screen and (max-width: 1200px){
     .dropdown-content{
         right: 0;
     }
 }
+
 

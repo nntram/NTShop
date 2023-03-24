@@ -21,8 +21,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       builder =>
                       {
-                          builder.WithOrigins("http://localhost:3000"
-                                              );
+                          builder.WithOrigins("http://localhost:3000")
+                          .AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                       });
 });
 
@@ -62,7 +62,8 @@ builder.Services.AddUnitOfWork<NIENLUANContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //Add Jwt and cookie to store refreshToken
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
@@ -72,19 +73,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = true,
         ValidAudience = builder.Configuration["Jwt:Audience"],
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ClockSkew = TimeSpan.Zero, //expire token immediatly
     };
-    options.Events = new JwtBearerEvents()
-    {
-        OnMessageReceived = context =>
-        {
-            context.Token = context.Request.Cookies["refreshToken"];
-            return Task.CompletedTask;
-        }
-    };
-}).AddCookie(x =>
-{
-    x.Cookie.Name = "refreshToken";
 });
 
 var app = builder.Build();

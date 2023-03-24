@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using NTShop.Entities;
 using NTShop.Models;
@@ -27,7 +28,7 @@ namespace NTShop.Services
             var claims = new List<Claim> {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()),
                         new Claim(JwtRegisteredClaimNames.Name, account.UserName),
                         new Claim(JwtRegisteredClaimNames.NameId, account.UserId),
                         new Claim(JwtRegisteredClaimNames.Email, account.Email),
@@ -42,7 +43,7 @@ namespace NTShop.Services
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddMinutes(10),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: signIn);
 
             return (new JwtSecurityTokenHandler().WriteToken(token)); ;
@@ -56,16 +57,6 @@ namespace NTShop.Services
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
             }
-        }
-
-        public void SetRefreshToken(HttpResponse response, string newRefreshToken)
-        {
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.Now.AddDays(7),
-            };
-            response.Cookies.Append("refreshToken", newRefreshToken, cookieOptions);           
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
@@ -87,6 +78,17 @@ namespace NTShop.Services
                 throw new SecurityTokenException("Invalid token");
 
             return principal;
+        }
+
+        public static CookieOptions HttpOnlyCookieOptions()
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.Now.AddDays(7),
+            };
+
+            return cookieOptions;
         }
 
     }

@@ -94,7 +94,7 @@ const Header = () => {
               <div className="profile dropdown">
                 <div className='d-flex gap-2 align-items-center'>
                   <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />
-                  {currentUser ? <p>{currentUser.DisplayName}</p> : ""}
+                  {currentUser ? <p className='username'>{currentUser.DisplayName}</p> : ""}
                 </div>
                 <div className="dropdown-content">
                   {currentUser ? (
