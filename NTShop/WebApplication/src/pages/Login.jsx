@@ -8,14 +8,14 @@ import Loading from "../components/loading/Loading";
 import { useMutation } from "react-query";
 import authApi from "../api/AuthApi.js";
 import jwt_decode from "jwt-decode"
-import AuthContext from '../context/AuthProvider.js'
+import {useAuth} from '../context/AuthProvider.js'
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { currentUser, setCurrentUser} =  useContext(AuthContext)
+  const { currentUser, setCurrentUser} =  useAuth()
 
   
   useEffect(() => {

@@ -1,13 +1,15 @@
-import React, {useContext,} from 'react'
-import { Navigate } from 'react-router-dom'
-import { Outlet } from 'react-router-dom'
-import AuthContext from '../context/AuthProvider'
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const ProtectedRoute = () => {
-    const { currentUser } = useContext(AuthContext)
+  const { currentUser } = useAuth();
 
-    console.log(currentUser)
-    return currentUser ? <Outlet /> : <Navigate to='/login' />
-}
+  if (currentUser === undefined) {
+    return null; // or loading indicator, etc...
+  }
+  return currentUser ? <Outlet /> : <Navigate to="/login" />;
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;

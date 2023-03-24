@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef} from "react";
 import { Container, Row } from "reactstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./header.css";
@@ -8,7 +8,7 @@ import userIcon from "../../assets/images/user-icon.png";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import AuthContext from '../../context/AuthProvider.js'
+import { useAuth } from '../../context/AuthProvider.js'
 
 const nav__links = [
   {
@@ -34,18 +34,14 @@ const Header = () => {
   const menuRef = useRef(null);
   const closeRef = useRef(null);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const { currentUser, setCurrentUser} =  useContext(AuthContext)
+  const { currentUser, setCurrentUser} =  useAuth()
 
-
-  
   const logout = () => {
     window.localStorage.removeItem("userAuth");
     setCurrentUser(null)
     toast.success("Đã đăng xuất khỏi tài khoản.");
     navigate("/home");
   };
-
- 
 
   const menuToggle = () => {
     menuRef.current.classList.toggle("active__menu");
