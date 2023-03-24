@@ -1,10 +1,12 @@
-import React from 'react'
-import useAuth from '../custom-hooks/useAuth'
+import React, {useContext,} from 'react'
 import { Navigate } from 'react-router-dom'
 import { Outlet } from 'react-router-dom'
+import AuthContext from '../context/AuthProvider'
 
 const ProtectedRoute = () => {
-    const { currentUser } = useAuth()
+    const { currentUser } = useContext(AuthContext)
+
+    console.log(currentUser)
     return currentUser ? <Outlet /> : <Navigate to='/login' />
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,  useContext, useEffect } from "react";
 import Helmet from "../components/helmet/Helmet";
 import { Container, Row, Col, Form, FormGroup } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,15 +7,23 @@ import { toast } from "react-toastify";
 import Loading from "../components/loading/Loading";
 import { useMutation } from "react-query";
 import authApi from "../api/AuthApi.js";
-import useAuth from '../custom-hooks/useAuth.js'
+import jwt_decode from "jwt-decode"
+import AuthContext from '../context/AuthProvider.js'
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const {onStateChange, setOnStateChange} = useAuth()
+  const { currentUser, setCurrentUser} =  useContext(AuthContext)
 
+  
+  useEffect(() => {
+    if(currentUser){
+      navigate('/home')
+    }
+  }, [currentUser])
+  
   const fetchLogin = async (formData) => {
     try {
       const response = await authApi.customerLogin(formData);
@@ -41,9 +49,9 @@ const Login = () => {
       const user = await mutation.mutateAsync(formData);
       
       if(user){
-        window.localStorage.setItem('userAuth', JSON.stringify(user))
+        window.localStorage.setItem('userAuth', user)
         toast.success('Đã đăng nhập thành công.')
-        
+        setCurrentUser(jwt_decode(user))
         navigate('/checkout')
       }
       

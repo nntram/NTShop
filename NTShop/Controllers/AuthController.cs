@@ -49,14 +49,9 @@ namespace NTShop.Controllers
                     if (update is true)
                     {
                         _tokenService.SetRefreshToken(Response, refreshToken);
-                        var response = new AuthResponse();
+                      
 
-                        response.AccessToken = accessToken;
-                        response.UserId = data.UserId;
-                        response.Role = "Customer";
-                        response.DisplayName = data.DisplayName;
-
-                        return Ok(response);
+                        return Ok(accessToken);
                     }
                     return StatusCode(500);
                 }
@@ -98,14 +93,8 @@ namespace NTShop.Controllers
             if (update is true)
             {
                 _tokenService.SetRefreshToken(Response, newRefreshToken);
-                var response = new AuthResponse();
-
-                response.AccessToken = newAccessToken;
-                response.UserId = data.UserId;
-                response.Role = "Customer";
-                response.DisplayName = data.DisplayName;
-
-                return Ok(response);
+                
+                return Ok(newAccessToken);
             }
             return StatusCode(500);
         }

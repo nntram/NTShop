@@ -1,4 +1,4 @@
-import React, { useRef, useEffect} from "react";
+import React, { useRef, useContext } from "react";
 import { Container, Row } from "reactstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./header.css";
@@ -8,8 +8,7 @@ import userIcon from "../../assets/images/user-icon.png";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import useAuth from '../../custom-hooks/useAuth.js'
-
+import AuthContext from '../../context/AuthProvider.js'
 
 const nav__links = [
   {
@@ -35,33 +34,18 @@ const Header = () => {
   const menuRef = useRef(null);
   const closeRef = useRef(null);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const { currentUser, setCurrentUser } = useAuth()
+  const { currentUser, setCurrentUser} =  useContext(AuthContext)
 
-  const stickyHeaderFunc = () => {
-    window.addEventListener("scroll", () => {
-      if (
-        document.body.scrollTop > 80 ||
-        document.documentElement.scrollTop > 80
-      ) {
-        headerRef.current.classList.add("sticky__header");
-      } else {
-        headerRef.current.classList.remove("sticky__header");
-      }
-    });
-  };
 
+  
   const logout = () => {
-    setCurrentUser(null)
     window.localStorage.removeItem("userAuth");
+    setCurrentUser(null)
     toast.success("Đã đăng xuất khỏi tài khoản.");
     navigate("/home");
   };
 
-  useEffect(() => {
-    stickyHeaderFunc();
-
-    return () => window.removeEventListener("scroll", stickyHeaderFunc);
-  });
+ 
 
   const menuToggle = () => {
     menuRef.current.classList.toggle("active__menu");
@@ -69,7 +53,7 @@ const Header = () => {
   };
 
   return (
-    <header className="header" ref={headerRef}>
+    <header className="header sticky__header" ref={headerRef}>
       <Container>
         <Row>
           <div className="nav__wrapper">
@@ -114,7 +98,7 @@ const Header = () => {
               <div className="profile dropdown">
                 <div className='d-flex gap-2 align-items-center'>
                   <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />
-                  {currentUser ? <p>{currentUser.displayName}</p> : ""}
+                  {currentUser ? <p>{currentUser.DisplayName}</p> : ""}
                 </div>
                 <div className="dropdown-content">
                   {currentUser ? (
