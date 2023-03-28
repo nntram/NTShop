@@ -7,6 +7,7 @@ const axiosClient = axios.create({
     headers: {
         'content-type': 'application/json',
     },
+    withCredentials: true
 });
 
 // Set the AUTH token for any request

@@ -75,11 +75,17 @@ namespace NTShop.Controllers
             var userName = principal.Identity.Name;
 
             var data = await _customerRepository.GetByUserName(userName);
-            if (data == null ||
-                data.RefreshToken != refreshToken ||
-                data.TokenExpiryTime <= DateTime.Now)
+            if (data == null)
             {
-                return NotFound();
+                return NotFound("Tài khoản không tồn tại.");
+            }
+            if (data.RefreshToken != refreshToken)
+            {
+                return NotFound("Refresh token không đúng.\n data:" + data.RefreshToken + "\n cookie: \n " + refreshToken);
+            }
+            if (data.TokenExpiryTime <= DateTime.Now)
+            {
+                return NotFound("Refresh token hết hạn.");
             }
 
             var newAccessToken = _tokenService.GenerateAccessToken(data);
