@@ -50,9 +50,17 @@ const Login = () => {
       
       if(user){
         window.localStorage.setItem('userAuth', user)
-        toast.success('Đã đăng nhập thành công.')
-        setCurrentUser(jwt_decode(user))
-        navigate('/checkout')
+        
+        try{
+          setCurrentUser(jwt_decode(user))
+          toast.success('Đã đăng nhập thành công.')
+          navigate('/checkout')
+        }
+        catch{
+          setCurrentUser(null)
+          toast.error('Đã xảy rea lỗi.')
+        }      
+        
       }
       
     } catch (error) {

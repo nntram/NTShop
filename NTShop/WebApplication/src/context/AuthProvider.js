@@ -10,7 +10,12 @@ export const AuthProvider = ({ children }) => {
     const setAuth = () => {
       const token = localStorage.getItem("userAuth");
       if (token) {
-        setCurrentUser(jwt_decode(token));
+        try{
+          setCurrentUser(jwt_decode(token));
+        }
+        catch{
+          setCurrentUser(null);
+        }       
       } else {
         setCurrentUser(null);
       }

@@ -68,7 +68,7 @@ axiosClient.interceptors.response.use(function (response) {
        axiosClient.post('https://localhost:7157/auth/refresh', bodyFormData,  {headers: {
         "Content-Type": "multipart/form-data",
       }})
-        .then(({data}) => {
+        .then((data) => {
             window.localStorage.setItem('userAuth', data);
             axiosClient.defaults.headers.common['Authorization'] = 'Bearer ' + data;
             originalRequest.headers['Authorization'] = 'Bearer ' + data;
