@@ -54,12 +54,12 @@ namespace NTShop.Entities
         public string? Customeravatar { get; set; }
         [Column("CUSTOMERISACTIVE")]
         public bool? Customerisactive { get; set; }
-        [Column("CUSTOMERTOKENEXPIRYTIME", TypeName = "datetime")]
-        public DateTime? Customertokenexpirytime { get; set; }
         [Column("CUSTOMERREFRESHTOKEN")]
         [StringLength(128)]
         [Unicode(false)]
         public string? Customerrefreshtoken { get; set; }
+        [Column("CUSTOMERTOKENEXPIRYTIME")]
+        public long? Customertokenexpirytime { get; set; }
 
         [ForeignKey("Wardid")]
         [InverseProperty("Customers")]

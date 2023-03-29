@@ -1,4 +1,4 @@
-import React, { useRef} from "react";
+import React, { useRef, useState, useEffect} from "react";
 import { Container, Row } from "reactstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./header.css";
@@ -8,7 +8,6 @@ import userIcon from "../../assets/images/user-icon.png";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from '../../context/AuthProvider.js'
 
 const nav__links = [
   {
@@ -34,20 +33,40 @@ const Header = () => {
   const menuRef = useRef(null);
   const closeRef = useRef(null);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const { currentUser, setCurrentUser} =  useAuth()
+  const [currentUser, setCurrentUser] = useState()
 
   const logout = () => {
-    window.localStorage.removeItem("userAuth");
-    setCurrentUser(null)
+    sessionStorage.removeItem("userAuth");
+    sessionStorage.removeItem("currentUser");
+    
+    localStorage.removeItem("remember");
+    localStorage.removeItem("userAuth");
+    localStorage.removeItem("currentUser");
     toast.success("Đã đăng xuất khỏi tài khoản.");
     navigate("/home");
   };
+
+  
 
   const menuToggle = () => {
     menuRef.current.classList.toggle("active__menu");
     closeRef.current.classList.toggle("active__menu");
   };
 
+  useEffect(() => {
+    const parseCurrentUser = () => {
+      const user = sessionStorage.getItem("currentUser");
+      
+      try {
+        if(user !== JSON.stringify(currentUser)){
+          setCurrentUser(JSON.parse(user))
+        }
+      } catch (error) {
+        setCurrentUser(null)
+      }
+    }
+    parseCurrentUser()
+  })
   return (
     <header className="header sticky__header" ref={headerRef}>
       <Container>

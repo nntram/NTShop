@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NTShop.Models.Filters;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("products")]
     public class ProductsController : ControllerBase

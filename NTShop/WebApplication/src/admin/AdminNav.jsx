@@ -1,8 +1,7 @@
-import React, {useContext} from 'react'
+import {useState, useEffect} from 'react'
 import { Container, Row} from 'reactstrap'
 import '../styles/admin-nav.css'
 import { NavLink } from 'react-router-dom'
-import {useAuth} from '../context/AuthProvider'
 import userIcon from '../assets/images/user-icon.png'
 const admin__nav = [
   {
@@ -28,7 +27,21 @@ const admin__nav = [
   
 ]
 const AdminNav = () => {
-  const { currentUser } = useAuth()
+  const [currentUser, setCurrentUser] = useState()
+  useEffect(() => {
+    const parseCurrentUser = () => {
+      const user = sessionStorage.getItem("currentUser");
+      
+      try {
+        if(user !== JSON.stringify(currentUser)){
+          setCurrentUser(JSON.parse(user))
+        }
+      } catch (error) {
+        setCurrentUser(null)
+      }
+    }
+    parseCurrentUser()
+  })
   return (
     <>
       <header className='admin__header'>

@@ -7,29 +7,27 @@ import { toast } from "react-toastify";
 import Loading from "../components/loading/Loading";
 import { useMutation } from "react-query";
 import authApi from "../api/AuthApi.js";
-import jwt_decode from "jwt-decode"
-import {useAuth} from '../context/AuthProvider.js'
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { currentUser, setCurrentUser} =  useAuth()
 
-  
   useEffect(() => {
-    if(currentUser){
-      navigate('/home')
+    const currentUser = window.localStorage.getItem("currentUser");
+    if (currentUser) {
+      navigate("/home");
     }
-  }, [currentUser])
-  
+  }, [navigate]);
+
   const fetchLogin = async (formData) => {
     try {
       const response = await authApi.customerLogin(formData);
       return response;
-    } 
-    catch (error) {
+    } catch (error) {
       setError(error.response.data);
       console.log("Failed to login: ", error);
     }
@@ -47,22 +45,24 @@ const Login = () => {
       formData.append("UserName", username);
       formData.append("Password", password);
       const user = await mutation.mutateAsync(formData);
-      
-      if(user){
-        window.localStorage.setItem('userAuth', user)
-        
-        try{
-          setCurrentUser(jwt_decode(user))
-          toast.success('Đã đăng nhập thành công.')
-          navigate('/checkout')
+
+      if (user) {
+        try {
+          const decode = JSON.stringify(jwt_decode(user))
+          sessionStorage.setItem("currentUser", decode);
+          sessionStorage.setItem("userAuth", user);
+          localStorage.setItem("remember", remember);
+
+          if(remember){
+            localStorage.setItem("currentUser", decode);
+            localStorage.setItem("userAuth", user);
+          }
+          toast.success("Đã đăng nhập thành công.");
+          navigate("/checkout");
+        } catch {
+          toast.error("Đã xảy ra lỗi.");
         }
-        catch{
-          setCurrentUser(null)
-          toast.error('Đã xảy rea lỗi.')
-        }      
-        
       }
-      
     } catch (error) {
       console.log(error.messsage);
     }
@@ -101,6 +101,8 @@ const Login = () => {
                       type="checkbox"
                       className="form-check-input"
                       id="remember"
+                      checked={remember}
+                      onChange={() => setRemember(!remember)}
                     />
                     <label className="text-white mx-2" htmlFor="remember">
                       {" "}

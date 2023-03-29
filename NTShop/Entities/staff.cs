@@ -45,12 +45,12 @@ namespace NTShop.Entities
         public string? Staffpassword { get; set; }
         [Column("STAFFISACTIVE")]
         public bool? Staffisactive { get; set; }
-        [Column("STAFFTOKENEXPIRYTIME", TypeName = "datetime")]
-        public DateTime? Stafftokenexpirytime { get; set; }
         [Column("STAFFREFRESHTOKEN")]
         [StringLength(128)]
         [Unicode(false)]
         public string? Staffrefreshtoken { get; set; }
+        [Column("STAFFTOKENEXPIRYTIME")]
+        public long? Stafftokenexpirytime { get; set; }
 
         [ForeignKey("Roleid")]
         [InverseProperty("staff")]

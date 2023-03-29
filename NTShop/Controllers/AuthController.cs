@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NTShop.Models;
@@ -45,7 +46,7 @@ namespace NTShop.Controllers
                     var refreshToken = _tokenService.GenerateRefreshToken();
 
                     data.RefreshToken = refreshToken;
-                    data.TokenExpiryTime = DateTime.Now.AddDays(7);
+                    data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
 
                     var update = await _customerRepository.UpdateAccountAsync(data);
                     if (update is true)
@@ -83,7 +84,7 @@ namespace NTShop.Controllers
             {
                 return NotFound("Refresh token không đúng.\n data:" + data.RefreshToken + "\n cookie: \n " + refreshToken);
             }
-            if (data.TokenExpiryTime <= DateTime.Now)
+            if (data.TokenExpiryTime <= DateTime.Now.ToUnixTimestamp())
             {
                 return NotFound("Refresh token hết hạn.");
             }
@@ -92,7 +93,7 @@ namespace NTShop.Controllers
             var newRefreshToken = _tokenService.GenerateRefreshToken();
 
             data.RefreshToken = newRefreshToken;
-            data.TokenExpiryTime = DateTime.Now.AddDays(7);
+            data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
 
             var update = await _customerRepository.UpdateAccountAsync(data);
             if (update is true)

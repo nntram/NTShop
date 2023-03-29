@@ -28,13 +28,14 @@ namespace NTShop.Services
             var claims = new List<Claim> {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()),
+                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUnixTimestamp().ToString()),
                         new Claim(JwtRegisteredClaimNames.Name, account.UserName),
                         new Claim(JwtRegisteredClaimNames.NameId, account.UserId),
                         new Claim(JwtRegisteredClaimNames.Email, account.Email),
                         new Claim(ClaimTypes.Role, account.Role),                        
                         new Claim("Role", account.Role),
                         new Claim("DisplayName", account.DisplayName),
+                        new Claim("RefreshTokenExpire", DateTime.Now.AddDays(7).ToUnixTimestamp().ToString()),
                     };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
