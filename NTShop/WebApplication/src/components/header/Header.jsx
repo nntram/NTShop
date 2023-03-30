@@ -46,7 +46,6 @@ const Header = () => {
     navigate("/home");
   };
 
-  
 
   const menuToggle = () => {
     menuRef.current.classList.toggle("active__menu");

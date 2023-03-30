@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Helmet from "../components/helmet/Helmet";
 import { Container, Row, Col, Form, FormGroup } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +15,8 @@ const Login = () => {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const eyeRef = useRef(null);
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     const currentUser = window.localStorage.getItem("currentUser");
@@ -68,6 +70,18 @@ const Login = () => {
     }
   };
 
+  const eyeToggle = () => {
+    eyeRef.current.classList.toggle("ri-eye-off-line");
+    eyeRef.current.classList.toggle("ri-eye-line");
+    
+    if(eyeRef.current.classList.contains("ri-eye-off-line")){
+      passwordRef.current.type = 'password'
+    }
+    else{
+      passwordRef.current.type = 'text'
+    }
+  };
+
   return (
     <Helmet title="Login">
       {mutation.isLoading ? (
@@ -93,8 +107,11 @@ const Login = () => {
                       type="password"
                       placeholder="Mật khẩu"
                       value={password}
+                      ref ={passwordRef}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <i className="eye__button ri-eye-off-line"
+                      ref={eyeRef} onClick = {eyeToggle}></i>
                   </FormGroup>
                   <FormGroup>
                     <input

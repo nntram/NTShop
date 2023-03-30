@@ -22,20 +22,15 @@ function App() {
       const user = localStorage.getItem("currentUser");
       try {
         const userObj = JSON.parse(user);
-        console.log(userObj.RefreshTokenExpire)
-        console.log(Date.now()/1000)
-
         if (token && user && userObj.RefreshTokenExpire <= Date.now()) {
           sessionStorage.setItem("currentUser", user);
           sessionStorage.setItem("userAuth", token);
         }
       } catch (error) {
 
-      }
-      
+      }      
     }
-    console.log("app effect");
-  });
+  }, []);
   return (
     // Provide the client to your App
     <QueryClientProvider client={queryClient}>
