@@ -1,14 +1,14 @@
 import axiosClient from './axiosClient'
 
 class BrandApi {
-    getAll = () => {
+    getAll =  async () => {
         const url = '/brands';
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     };
 
-    getById = ({params}) => {
-        const url = '/brands';
-        return axiosClient.get(url, {params});
+    getById =  async (id) => {
+        const url = '/brands/' + id;
+        return await axiosClient.get(url);
     };
 }
 

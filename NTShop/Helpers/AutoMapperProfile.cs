@@ -2,6 +2,7 @@
 using AutoMapper;
 using NTShop.Entities;
 using NTShop.Models;
+using NTShop.Models.AddressModel;
 
 namespace B1809531_EShop_MVC6.Helpers
 {
@@ -22,6 +23,11 @@ namespace B1809531_EShop_MVC6.Helpers
             CreateMap<Category, CategoryModel>().ReverseMap();
             CreateMap<Customer, CustomerModel>().ReverseMap();
             CreateMap<IPagedList<Product>, PagedList<ProductCardModel>>();
+
+            CreateMap<Province, ProvinceModel>().ReverseMap();
+            CreateMap<District, DistrictModel>().ReverseMap();
+            CreateMap<Ward, WardModel>().ReverseMap();
+
         }
     }
 }

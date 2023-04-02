@@ -176,7 +176,6 @@ const Shop = () => {
       ))]
     }
 
-
   return (
     <Helmet title='Shop'>
       <CommonSection title='Sản phẩm' />

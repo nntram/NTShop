@@ -18,8 +18,8 @@
 
 .product__card-bottom .price{
     color: var(--primary-color);
-    font-size: 1.3rem;
-    font-weight: 500;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .product__card-bottom span i{

@@ -1,18 +1,18 @@
 import axiosClient from './axiosClient'
 
 class AuthApi {
-    customerLogin = (formData) => {
+    customerLogin =  async (formData) => {
         const url = '/auth/customer/login';
-        return axiosClient.post(url, formData, {
+        return await axiosClient.post(url, formData, {
             headers:  {
                 'content-type': 'multipart/form-data',
             }          
         });
     };
 
-    getById = ({params}) => {
+    getById =  async ({params}) => {
         const url = '/brands';
-        return axiosClient.get(url, {params});
+        return await axiosClient.get(url, {params});
     };
 }
 

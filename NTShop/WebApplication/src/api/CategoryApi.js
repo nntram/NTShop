@@ -1,14 +1,14 @@
 import axiosClient from './axiosClient'
 
 class CategoryApi {
-    getAll = () => {
+    getAll = async () => {
         const url = '/categories';
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     };
 
-    getById = ({params}) => {
-        const url = '/categories';
-        return axiosClient.get(url, {params});
+    getById = async (id) => {
+        const url = '/categories/' + id;
+        return await axiosClient.get(url);
     };
 }
 

@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NTShop.Models
+namespace NTShop.Models.AuthModel
 {
     public class LoginModel
     {
-        [Required]  
+        [Required]
         public string UserName { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!;

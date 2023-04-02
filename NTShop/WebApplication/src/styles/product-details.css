@@ -62,7 +62,7 @@
     outline: none;
 }
 
-.form__group span {
+.rating__group span {
     color: coral;
     font-weight: 600;
     cursor: pointer;

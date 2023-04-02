@@ -87,7 +87,7 @@ const Login = () => {
       {mutation.isLoading ? (
         <Loading />
       ) : (
-        <section>
+        <section className="auth__background">
           <Container>
             <Row>
               <Col lg="6" className="m-auto text-center">

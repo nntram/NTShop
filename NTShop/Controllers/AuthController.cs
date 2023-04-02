@@ -1,8 +1,5 @@
 ﻿using Abp.Extensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NTShop.Models;
 using NTShop.Models.AuthModel;
 using NTShop.Repositories.Interface;
 using NTShop.Services.Interface;

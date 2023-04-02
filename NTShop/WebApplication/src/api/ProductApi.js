@@ -1,19 +1,19 @@
 import axiosClient from './axiosClient'
 
 class ProductApi {
-    getAll = () => {
+    getAll = async () => {
         const url = '/products';
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     };
 
-    getAllCard = ({params}) => {
+    getAllCard = async ({params}) => {
         const url = '/products/get-all';
-        return axiosClient.get(url, {params});
+        return await axiosClient.get(url, {params});
     };
 
-    getById = (id) => {
+    getById = async (id) => {
         const url = `/products/${id}`;
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     };
 
 

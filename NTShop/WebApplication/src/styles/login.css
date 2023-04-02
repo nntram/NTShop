@@ -1,7 +1,15 @@
+
+.auth__background {
+    background: url("../assets/images/login_bg.jpg");
+    background-size: cover;
+}
+
 .auth__form{
     background: var(--primary-color);
     padding: 40px;
     border-radius: 5px;
+    box-shadow: 10px 10px 15px 0px gray;
+    background: rgba(10, 29, 55, 0.5);
 }
 
 .auth__btn{
@@ -13,10 +21,11 @@
 
 .auth__form p{
     margin-top: 30px;
+    color: lightgrey;
 }
 
 .auth__form p a{
-    color: lightgrey
+    color: white;
 }
 
 .auth__form input[type="file"]{
@@ -28,7 +37,7 @@
 .eye__button{
     position: absolute;
     margin-left: -40px;
-    margin-top: 6px;
+    margin-top: 5px;
     cursor: pointer;
     font-size: 1.3rem;
 }
