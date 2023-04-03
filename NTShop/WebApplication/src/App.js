@@ -1,8 +1,9 @@
 import "./App.css";
 import Layout from "./components/layout/Layout";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+// import { ReactQueryDevtools } from "react-query/devtools";
 import { useEffect } from "react";
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -28,15 +29,21 @@ function App() {
         }
       } catch (error) {
 
-      }      
+      }
     }
   }, []);
   return (
-    // Provide the client to your App
-    <QueryClientProvider client={queryClient}>
-      <Layout />
-      <ReactQueryDevtools initialIsOpen={true} />
-    </QueryClientProvider>
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+      language="vi"
+
+    >
+      <QueryClientProvider client={queryClient}>
+        <Layout />
+        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+      </QueryClientProvider>
+
+    </GoogleReCaptchaProvider>
   );
 }
 

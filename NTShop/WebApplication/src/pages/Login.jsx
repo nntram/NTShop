@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Helmet from "../components/helmet/Helmet";
 import { Container, Row, Col, Form, FormGroup } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,8 +8,10 @@ import Loading from "../components/loading/Loading";
 import { useMutation } from "react-query";
 import authApi from "../api/AuthApi.js";
 import jwt_decode from "jwt-decode";
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const Login = () => {
+  const [token, setToken] = useState();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
@@ -18,12 +20,26 @@ const Login = () => {
   const eyeRef = useRef(null);
   const passwordRef = useRef(null);
 
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const handleReCaptchaVerify = useCallback(async () => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available');
+      return;
+    }
+
+    const token = await executeRecaptcha('login');
+    setToken(token)
+  }, [executeRecaptcha]);
+
   useEffect(() => {
     const currentUser = window.localStorage.getItem("currentUser");
     if (currentUser) {
       navigate("/home");
     }
-  }, [navigate]);
+    handleReCaptchaVerify();
+  }, [navigate, handleReCaptchaVerify]);
+
+  
 
   const fetchLogin = async (formData) => {
     try {
@@ -46,6 +62,7 @@ const Login = () => {
       var formData = new FormData();
       formData.append("UserName", username);
       formData.append("Password", password);
+      formData.append("Token", token);
       const user = await mutation.mutateAsync(formData);
 
       if (user) {
@@ -55,7 +72,7 @@ const Login = () => {
           sessionStorage.setItem("userAuth", user);
           localStorage.setItem("remember", remember);
 
-          if(remember){
+          if (remember) {
             localStorage.setItem("currentUser", decode);
             localStorage.setItem("userAuth", user);
           }
@@ -73,11 +90,11 @@ const Login = () => {
   const eyeToggle = () => {
     eyeRef.current.classList.toggle("ri-eye-off-line");
     eyeRef.current.classList.toggle("ri-eye-line");
-    
-    if(eyeRef.current.classList.contains("ri-eye-off-line")){
+
+    if (eyeRef.current.classList.contains("ri-eye-off-line")) {
       passwordRef.current.type = 'password'
     }
-    else{
+    else {
       passwordRef.current.type = 'text'
     }
   };
@@ -107,11 +124,11 @@ const Login = () => {
                       type="password"
                       placeholder="Mật khẩu"
                       value={password}
-                      ref ={passwordRef}
+                      ref={passwordRef}
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     <i className="eye__button ri-eye-off-line"
-                      ref={eyeRef} onClick = {eyeToggle}></i>
+                      ref={eyeRef} onClick={eyeToggle}></i>
                   </FormGroup>
                   <FormGroup>
                     <input
@@ -126,8 +143,8 @@ const Login = () => {
                       Ghi nhớ đăng nhập?
                     </label>
                   </FormGroup>
-
-                  <p className="text-danger">{error}</p>
+                  
+                  {error && <p className="text-warning">{error}</p>}
                   <button className="buy__btn auth__btn" type="submit">
                     Đăng nhập
                   </button>

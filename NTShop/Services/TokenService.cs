@@ -1,14 +1,11 @@
 ﻿using Abp.Extensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using NTShop.Entities;
-using NTShop.Models;
+using Newtonsoft.Json;
 using NTShop.Models.AuthModel;
 using NTShop.Services.Interface;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Security.Principal;
 using System.Text;
 
 namespace NTShop.Services
@@ -90,6 +87,18 @@ namespace NTShop.Services
             };
 
             return cookieOptions;
+        }
+
+        public async Task<RecaptchaResponseModel> VerifyReCaptcha( string token)
+        {
+            string secretKey = _configuration["RecaptchaSettings:SecretKey"];
+
+            HttpClient client= new HttpClient();
+
+            var response = await client.GetStringAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={token}");
+            var verify = JsonConvert.DeserializeObject<RecaptchaResponseModel>(response);
+
+            return verify;
         }
 
     }

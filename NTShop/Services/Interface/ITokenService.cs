@@ -10,5 +10,6 @@ namespace NTShop.Services.Interface
         string GenerateAccessToken(AccountModel account);
         string GenerateRefreshToken();
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        public Task<RecaptchaResponseModel> VerifyReCaptcha(string token);
     }
 }

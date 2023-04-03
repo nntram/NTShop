@@ -4,8 +4,8 @@
 
 .icon-position {
     position: fixed;
-    bottom: 40px;
-    right: 25px;
+    bottom: 100px;
+    right: 10px;
     z-index: 20;
 }
 

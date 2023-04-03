@@ -8,7 +8,8 @@ namespace NTShop.Models.AuthModel
         public string UserName { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!;
-        public bool? Remerber { get; set; } = false;
+        [Required]
+        public string Token { get; set; } = null!;
 
 
     }
