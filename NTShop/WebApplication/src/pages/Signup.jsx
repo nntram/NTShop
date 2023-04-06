@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Helmet from "../components/helmet/Helmet";
 import { Container, Row, Col, FormGroup, Input, Label } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -15,19 +15,15 @@ import { AvForm, AvField, AvGroup, AvInput, AvRadioGroup, AvRadio } from 'availi
 
 
 const Signup = () => {
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
 
+  const eyeRef = useRef(null);
+  const eyeRef2 = useRef(null);
+  const passwordRef = useRef(null);
+  const passwordRef2 = useRef(null);
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [ward, setWard] = useState("");
 
-  const [address, setAdress] = useState("");
-  const [gender, setGender] = useState(true);
   const [file, setFile] = useState(null);
 
   const navigate = useNavigate();
@@ -135,6 +131,18 @@ const Signup = () => {
     gender: 'male',
   };
 
+  const eyeToggle = (eye, pass) => {
+    eye.current.classList.toggle("ri-eye-close-line");
+    eye.current.classList.toggle("ri-eye-line");
+
+    if (eye.current.classList.contains("ri-eye-close-line")) {
+      pass.current.type = 'password'
+    }
+    else {
+      pass.current.type = 'text'
+    }
+  };
+
 
   return (
     <Helmet title="Signup">
@@ -151,8 +159,6 @@ const Signup = () => {
                     Họ và tên <span className="text-danger">*</span>
                   </Label>
                   <AvField name="name" type="text"
-
-                   
                     placeholder="Họ và tên"
                     validate={{
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
@@ -167,18 +173,19 @@ const Signup = () => {
                   <AvRadio label="Nam"
                     className="mx-2"
                     value="male"
-                     />
+                  />
                   <AvRadio label="Nữ" name="gender"
                     className="mx-2"
                     value="female"
-                    />
+                  />
                 </AvRadioGroup>
 
                 <AvGroup>
                   <Label className="text-right text-white mx-2">
                     Email <span className="text-danger">*</span>
                   </Label>
-                  <AvField name="email" type="email"                   
+                  <AvField name="email" type="email"
+
                     placeholder="email@gmail.com"
                     validate={{
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
@@ -189,7 +196,7 @@ const Signup = () => {
                   <Label className="text-right text-white mx-2">
                     Số điện thoại <span className="text-danger">*</span>
                   </Label>
-                  <AvField name="phonenumber" type="text"y
+                  <AvField name="phonenumber" type="text"
 
                     placeholder="Số điện thoại"
                     validate={{
@@ -202,8 +209,8 @@ const Signup = () => {
                   <Label className="text-right text-white mx-2">
                     Tỉnh, thành <span className="text-danger">*</span>
                   </Label>
-                  <AvField type="select" name="province" required 
-                       onChange={(e) => handleProvinceSelect(e.target.value)}>
+                  <AvField type="select" name="province" required
+                    onChange={(e) => handleProvinceSelect(e.target.value)}>
                     <option value="" hidden>Chọn tỉnh, thành</option>
                     {
                       provinceOptions && provinceOptions.map((item) => (
@@ -214,13 +221,13 @@ const Signup = () => {
                     }
                   </AvField>
                 </AvGroup>
-               
+
                 <AvGroup>
                   <Label className="text-right text-white mx-2">
                     Quận, huyện <span className="text-danger">*</span>
                   </Label>
-                  <AvField type="select" name="district" required 
-                       onChange={(e) => handleDistrictSelect(e.target.value)}>
+                  <AvField type="select" name="district" required
+                    onChange={(e) => handleDistrictSelect(e.target.value)}>
                     <option value="" hidden>Chọn quận, huyện</option>
                     {
                       districtOptions && districtOptions.map((item) => (
@@ -236,8 +243,8 @@ const Signup = () => {
                   <Label className="text-right text-white mx-2">
                     Xã, phường <span className="text-danger">*</span>
                   </Label>
-                  <AvField type="select" name="ward" required 
-                       onChange={(e) => handleWardSelect(e.target.value)}>
+                  <AvField type="select" name="ward" required
+                    onChange={(e) => handleWardSelect(e.target.value)}>
                     <option value="" hidden>Chọn xã, phường</option>
                     {
                       wardOptions && wardOptions.map((item) => (
@@ -254,7 +261,6 @@ const Signup = () => {
                     Địa chỉ <span className="text-danger">*</span>
                   </Label>
                   <AvField name="address" type="text"
-                   
                     placeholder="Số nhà, tên đường..."
                     validate={{
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
@@ -265,13 +271,13 @@ const Signup = () => {
                 <h5 className="text-white mt-5 mb-3">
                   2. Thông tin tài khoản
                 </h5>
-               
+
                 <AvGroup>
                   <Label className="text-right text-white mx-2">
                     Tên đăng nhập <span className="text-danger">*</span>
                   </Label>
                   <AvField name="username" type="text"
-                 
+
                     placeholder="Tên đăng nhập"
                     validate={{
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
@@ -283,28 +289,35 @@ const Signup = () => {
                   <Label className="text-right text-white mx-2">
                     Mật khẩu <span className="text-danger">*</span>
                   </Label>
-                  <AvField name="password" type="password"
-                  
-                    placeholder="Nhập mật khẩu"
-                    validate={{
-                      required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
-                      maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
-                    }} />
+                  <div className="position-relative">
+                    <AvField name="password" type="password"
+                      innerRef = {passwordRef}
+                      placeholder="Nhập mật khẩu"
+                      validate={{
+                        required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
+                        maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
+                      }} />
+                    <i className="ri-eye-close-line signup__eye__button"
+                      ref={eyeRef} onClick={() => eyeToggle(eyeRef, passwordRef)}></i>
+                  </div>
                 </AvGroup>
                 <AvGroup >
                   <Label className="text-right text-white mx-2">
                     Nhập lại mật khẩu <span className="text-danger">*</span>
                   </Label>
-                  <AvField name="password2" type="password"                
-                  
-                    placeholder="Nhập lại mật khẩu"
-                    validate={{
-                      match:{value:'password', errorMessage: 'Mật khẩu không trùng khớp'},
-                      required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin' },
-                      maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
-                    }} 
+                  <div className="position-relative">
+                    <AvField name="password2" type="password"
+                      innerRef = {passwordRef2}
+                      placeholder="Nhập lại mật khẩu"
+                      validate={{
+                        match: { value: 'password', errorMessage: 'Mật khẩu không trùng khớp' },
+                        required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin' },
+                        maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
+                      }}
                     />
-                     <i className="ri-eye-off-line signup__eye__button"></i>
+                    <i className="ri-eye-close-line signup__eye__button"
+                      ref={eyeRef2} onClick={() => eyeToggle(eyeRef2, passwordRef2)}></i>
+                  </div>
                 </AvGroup>
                 <FormGroup>
                   <label className="text-right text-white mx-2">
@@ -325,7 +338,7 @@ const Signup = () => {
                   </p>
                 </FormGroup>
               </AvForm>
-            
+
             </Col>
 
           </Row>
