@@ -39,3 +39,8 @@
 .radio__group > *{
     background-color: transparent;
 }
+
+.signup__eye__button{
+    position: absolute;
+    right: 50px;
+}

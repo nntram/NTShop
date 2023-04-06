@@ -144,24 +144,21 @@ const Shop = () => {
 
   let categoryOptions = [
     {
-      value: "", label: (<span className='d-flex align-items-center gap-2'>
-        Tất cả loại sản phẩm
-      </span>)
+      value: "", label: 
+        "Tất cả loại sản phẩm"
+      
     }]
 
   let brandOptions = [
     {
-      value: "", label: (<span className='d-flex align-items-center gap-2'>
-        Tất cả thương hiệu
-      </span>)
+      value: "", label: 
+        "Tất cả thương hiệu"
     }]
 
     if(queryResults[0].data){
       categoryOptions = [...categoryOptions, ...queryResults[0].data.map((item) => (
         {
-          value: item.id, label: (<span className='d-flex align-items-center gap-2'>
-            {item.name}
-          </span>)
+          value: item.id, label: item.name
         }
       ))]
     }
@@ -169,9 +166,8 @@ const Shop = () => {
     if(queryResults[1].data){
       brandOptions = [...brandOptions, ...queryResults[1].data.map((item) => (
         {
-          value: item.id, label: (<span className='d-flex align-items-center gap-2'>
-            {item.name}
-          </span>)
+          value: item.id, label: item.name
+
         }
       ))]
     }
