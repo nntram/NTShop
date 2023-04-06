@@ -89,7 +89,7 @@ namespace NTShop.Services
             return cookieOptions;
         }
 
-        public async Task<RecaptchaResponseModel> VerifyReCaptcha( string token)
+        public async Task<RecaptchaResponseModel> VerifyReCaptcha(string token)
         {
             string secretKey = _configuration["RecaptchaSettings:SecretKey"];
 

@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import Helmet from "../components/helmet/Helmet";
-import { Container, Row, Col, Form, FormGroup } from "reactstrap";
+import { Container, Row, Col, Form, FormGroup, Input, Label } from "reactstrap";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { setDoc, doc } from "firebase/firestore";
-import { auth } from "../firebase.config";
-import { storage, db } from "../firebase.config";
+
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import AddressApi from "../api/AddressApi"
 import { useQuery } from "react-query";
 import Loading from "../components/loading/Loading";
-
+import { AvForm, AvField, AvGroup, AvInput, AvRadioGroup, AvRadio } from 'availity-reactstrap-validation';
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -144,6 +140,11 @@ const Signup = () => {
     return <h6>Đã xảy ra lỗi.</h6>
   }
 
+  const defaultValues = {
+    gender: 'male',
+  };
+
+
   return (
     <Helmet title="Signup">
       <section className="auth__background">
@@ -152,78 +153,66 @@ const Signup = () => {
             <Col lg="6" className="m-auto">
               <h3 className="fw-bold mb-4 text-center">Đăng ký tài khoản</h3>
 
-              <Form className="auth__form" onSubmit={signup}>
+              <AvForm className="auth__form" onSubmit={signup} model={defaultValues}>
                 <h5 className="text-white mb-3">1. Thông tin khách hàng</h5>
-                <FormGroup className="form__group">
-                  <label className="text-right text-white mx-2">
-                    Họ và tên:
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Họ và tên"
+                <AvGroup>
+                  <Label className="text-right text-white mx-2">
+                    Họ và tên <span className="text-danger">*</span>
+                  </Label>
+                  <AvField name="name" type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                  />
-                </FormGroup>
-                <FormGroup className="form__group">
-                  <div className="d-flex gap-5 my-3">
-                    <label className="text-right text-white mx-2">
-                      Giới tính:
-                    </label>
+                    placeholder="Họ và tên"
+                    validate={{
+                      required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
+                      maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
+                    }} />
+                </AvGroup>           
 
-                    <div className="d-flex gap-1">
-                      <input
-                        type="radio"
-                        id="male"
-                        name="gender"
-                        value="male"
-                        checked={gender}
-                        onClick={() => setGender(true)}
-                        onChange={e => { }}
-                      />
-                      <label htmlFor="male" className="text-white">
-                        Nam
-                      </label>
-                    </div>
-                    <div className="d-flex gap-1">
-                      <input
-                        type="radio"
-                        id="female"
-                        name="gender"
-                        value="female"
-                        checked={!gender}
-                        onClick={() => setGender(false)}
-                        onChange={e => { }}
-                      />
-                      <label htmlFor="female" className="text-white">
-                        Nữ
-                      </label>
-                    </div>
-                  </div>
-                </FormGroup>
-                <FormGroup className="form__group">
-                  <label className="text-right text-white mx-2">Email:</label>
-                  <input
-                    type="email"
-                    placeholder="Email"
+                <AvRadioGroup className='radio__group' inline name="gender" required>
+                  <Label className="text-white mx-2">
+                    Giới tính <span className="text-danger">*</span>
+                  </Label>
+                  <AvRadio label="Nam"
+                    className="mx-2"
+                    value="male"
+                    onClick={() => setGender(true)} />
+                  <AvRadio label="Nữ" name="gender"
+                    className="mx-2"
+                    value="female"
+                    onClick={() => setGender(false)} />
+                </AvRadioGroup>
+
+                <AvGroup>
+                  <Label className="text-right text-white mx-2">
+                    Email <span className="text-danger">*</span>
+                  </Label>
+                  <AvField name="email" type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                  />
-                </FormGroup>
-                <FormGroup className="form__group">
-                  <label className="text-right text-white mx-2">
-                    Số điện thoại:
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Số điện thoại"
+                    placeholder="email@gmail.com"
+                    validate={{
+                      required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
+                      maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
+                    }} />
+                </AvGroup>
+                <AvGroup>
+                  <Label className="text-right text-white mx-2">
+                    Số điện thoại <span className="text-danger">*</span>
+                  </Label>
+                  <AvField name="phonenumber" type="text"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </FormGroup>
-                <FormGroup className="form__group">
+                    placeholder="Số điện thoại"
+                    validate={{
+                      pattern: {value: /((09|03|07|08|05)+([0-9]{8})\b)/, errorMessage: 'Vui lòng nhập đúng định dạng.' } ,
+                      required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
+                      maxLength: { value: 10, errorMessage: 'Quá độ dài cho phép' },
+                    }} />
+                </AvGroup>  
+                <FormGroup>
                   <label className="text-right text-white mx-2">
-                    Tỉnh, thành:
+                    Tỉnh, thành <span className="text-danger">*</span>
                   </label>
                   <Select
                     placeholder="Chọn tỉnh, thành"
@@ -233,20 +222,20 @@ const Signup = () => {
 
                   />
                 </FormGroup>
-                <FormGroup className="form__group">
+                <FormGroup>
                   <label className="text-right text-white mx-2">
-                    Quận, huyện:
+                    Quận, huyện <span className="text-danger">*</span>
                   </label>
                   <Select
                     placeholder="Chọn quận, huyện"
                     options={districtOptions}
                     onChange={(e) => handleDistrictSelect(e)}
-                    value = {districtOpt}
+                    value={districtOpt}
                   />
                 </FormGroup>
-                <FormGroup className="form__group">
+                <FormGroup>
                   <label className="text-right text-white mx-2">
-                    Xã, phường:
+                    Xã, phường <span className="text-danger">*</span>
                   </label>
                   <Select
                     placeholder="Chọn xã, phường"
@@ -255,27 +244,29 @@ const Signup = () => {
                     value={wardOpt}
                   />
                 </FormGroup>
-
-                <FormGroup className="form__group">
-                  <label className="text-right text-white mx-2">
-                    Địa chỉ:
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Số nhà, tên đường..."
+             
+                <AvGroup>
+                  <Label className="text-right text-white mx-2">
+                    Địa chỉ <span className="text-danger">*</span>
+                  </Label>
+                  <AvField name="address" type="text"
                     value={address}
                     onChange={(e) => setAdress(e.target.value)}
-                  />
-                </FormGroup>
+                    placeholder="Số nhà, tên đường..."
+                    validate={{
+                      required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
+                      maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
+                    }} />
+                </AvGroup>    
 
                 <h5 className="text-white mt-5 mb-3">
                   2. Thông tin tài khoản
                 </h5>
-                <FormGroup className="form__group">
+                <FormGroup>
                   <label className="text-right text-white mx-2">
-                    Tên đăng nhập:
+                    Tên đăng nhập <span className="text-danger">*</span>
                   </label>
-                  <input
+                  <Input
                     type="text"
                     placeholder="Tên đăng nhập"
                     value={username}
@@ -283,33 +274,33 @@ const Signup = () => {
                   />
                 </FormGroup>
 
-                <FormGroup className="form__group">
+                <FormGroup>
                   <label className="text-right text-white mx-2">
-                    Mật khẩu
+                    Mật khẩu <span className="text-danger">*</span>
                   </label>
-                  <input
+                  <Input
                     type="password"
                     placeholder="Mật khẩu"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </FormGroup>
-                <FormGroup className="form__group">
+                <FormGroup>
                   <label className="text-right text-white mx-2">
-                    Nhập lại mật khẩu
+                    Nhập lại mật khẩu <span className="text-danger">*</span>
                   </label>
-                  <input
+                  <Input
                     type="password"
                     placeholder="Nhập lại mật khẩu"
                     value={password2}
                     onChange={(e) => setPassword2(e.target.value)}
                   />
                 </FormGroup>
-                <FormGroup className="form__group">
+                <FormGroup>
                   <label className="text-right text-white mx-2">
                     Ảnh đại diện
                   </label>
-                  <input
+                  <Input
                     id="avatar"
                     type="file"
                     onChange={(e) => setFile(e.target.files[0])}
@@ -323,9 +314,9 @@ const Signup = () => {
                     Bạn đã có tài khoản? <Link to="/login">Đăng nhập</Link>
                   </p>
                 </FormGroup>
-              </Form>
+              </AvForm>
             </Col>
-            
+
           </Row>
         </Container>
       </section>

@@ -26,12 +26,12 @@ namespace NTShop.Controllers
         {
             var captchaVerify = _tokenService.VerifyReCaptcha(loginModel.Token);
 
-            if(captchaVerify == null)
+            if(captchaVerify == null || !captchaVerify.Result.success)
             {
                 return BadRequest("Lỗi Google reCaptcha.");
             }
 
-            if(!captchaVerify.Result.success || captchaVerify.Result.score < 0.5)
+            if(captchaVerify.Result.score < 0.5)
             {
                 return BadRequest("Thao tác bị chặn bởi Google reCaptcha.");
             }

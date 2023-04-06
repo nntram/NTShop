@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Helmet from "../components/helmet/Helmet";
-import { Container, Row, Col, Form, FormGroup } from "reactstrap";
+import { Container, Row, Col, Form, FormGroup, Input } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { toast } from "react-toastify";
@@ -23,10 +23,8 @@ const Login = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const handleReCaptchaVerify = useCallback(async () => {
     if (!executeRecaptcha) {
-      console.log('Execute recaptcha not yet available');
       return;
     }
-
     const token = await executeRecaptcha('login');
     setToken(token)
   }, [executeRecaptcha]);
@@ -37,9 +35,7 @@ const Login = () => {
       navigate("/home");
     }
     handleReCaptchaVerify();
-  }, [navigate, handleReCaptchaVerify]);
-
-  
+  }, [navigate, handleReCaptchaVerify, error]);
 
   const fetchLogin = async (formData) => {
     try {
@@ -111,29 +107,32 @@ const Login = () => {
                 <h3 className="fw-bold mb-4">Đăng nhập</h3>
 
                 <Form className="auth__form" onSubmit={signIn}>
-                  <FormGroup className="form__group">
-                    <input
+                  <FormGroup>
+                    <Input
+                      required
                       type="text"
                       placeholder="Tên đăng nhập"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </FormGroup>
-                  <FormGroup className="form__group">
-                    <input
+                  <FormGroup>
+                    <Input
+                      required
                       type="password"
                       placeholder="Mật khẩu"
                       value={password}
-                      ref={passwordRef}
+                      innerRef={passwordRef}
                       onChange={(e) => setPassword(e.target.value)}
+                      className="d-inline-block"
                     />
                     <i className="eye__button ri-eye-off-line"
                       ref={eyeRef} onClick={eyeToggle}></i>
                   </FormGroup>
                   <FormGroup>
-                    <input
+                    <Input                      
                       type="checkbox"
-                      className="form-check-input"
+                      className="form-check-Input"
                       id="remember"
                       checked={remember}
                       onChange={() => setRemember(!remember)}

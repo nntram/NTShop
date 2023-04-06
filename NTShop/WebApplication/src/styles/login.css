@@ -9,7 +9,7 @@
     padding: 40px;
     border-radius: 5px;
     box-shadow: 10px 10px 15px 0px gray;
-    background: rgba(10, 29, 55, 0.5);
+    background: rgba(10, 29, 55, 0.237);
 }
 
 .auth__btn{
@@ -28,16 +28,14 @@
     color: white;
 }
 
-.auth__form input[type="file"]{
- color:#fff;
- cursor: pointer;
- border: 1px solid lightgrey;
-}
-
 .eye__button{
     position: absolute;
     margin-left: -40px;
     margin-top: 5px;
     cursor: pointer;
     font-size: 1.3rem;
+}
+
+.radio__group > *{
+    background-color: transparent;
 }
