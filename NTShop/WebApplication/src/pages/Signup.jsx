@@ -6,12 +6,11 @@ import "../styles/login.css";
 
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import Select from "react-select";
 import AddressApi from "../api/AddressApi"
 import { useQuery } from "react-query";
 import Loading from "../components/loading/Loading";
-import { AvForm, AvField, AvGroup, AvInput, AvRadioGroup, AvRadio } from 'availity-reactstrap-validation';
-
+import { AvForm, AvField, AvGroup, AvRadioGroup, AvRadio, AvInput, AvFeedback } from 'availity-reactstrap-validation';
+import _debounce from 'lodash.debounce';
 
 
 const Signup = () => {
@@ -28,10 +27,8 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  const signup = async (e) => {
-    e.preventDefault();
-
-
+  const signup = async (event, values) => {
+    console.log(values)
   };
 
   const fetchProvinces = async () => {
@@ -105,9 +102,6 @@ const Signup = () => {
 
     setDistrict("")
     setWard("")
-
-
-    console.log(value)
   }
   const handleDistrictSelect = (value) => {
     setDistrict(value)
@@ -143,6 +137,15 @@ const Signup = () => {
     }
   };
 
+  // debounce to not pound the 'server'
+  const validate = () => {
+    if (file && file.size) {
+      const max_size = 2000000;
+      if (file.size > max_size)
+        return false;
+    }
+    return true;
+  }
 
   return (
     <Helmet title="Signup">
@@ -152,7 +155,10 @@ const Signup = () => {
             <Col lg="6" className="m-auto">
               <h3 className="fw-bold mb-4 text-center">Đăng ký tài khoản</h3>
 
-              <AvForm className="auth__form" onSubmit={signup} model={defaultValues}>
+              <AvForm className="auth__form"
+                encType="multipart/form-data"
+                onValidSubmit={signup}
+                model={defaultValues}>
                 <h5 className="text-white mb-3">1. Thông tin khách hàng</h5>
                 <AvGroup>
                   <Label className="text-right text-white mx-2">
@@ -185,7 +191,6 @@ const Signup = () => {
                     Email <span className="text-danger">*</span>
                   </Label>
                   <AvField name="email" type="email"
-
                     placeholder="email@gmail.com"
                     validate={{
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
@@ -197,7 +202,6 @@ const Signup = () => {
                     Số điện thoại <span className="text-danger">*</span>
                   </Label>
                   <AvField name="phonenumber" type="text"
-
                     placeholder="Số điện thoại"
                     validate={{
                       pattern: { value: /((09|03|07|08|05)+([0-9]{8})\b)/, errorMessage: 'Vui lòng nhập đúng định dạng.' },
@@ -277,7 +281,6 @@ const Signup = () => {
                     Tên đăng nhập <span className="text-danger">*</span>
                   </Label>
                   <AvField name="username" type="text"
-
                     placeholder="Tên đăng nhập"
                     validate={{
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
@@ -291,7 +294,7 @@ const Signup = () => {
                   </Label>
                   <div className="position-relative">
                     <AvField name="password" type="password"
-                      innerRef = {passwordRef}
+                      innerRef={passwordRef}
                       placeholder="Nhập mật khẩu"
                       validate={{
                         required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
@@ -307,7 +310,7 @@ const Signup = () => {
                   </Label>
                   <div className="position-relative">
                     <AvField name="password2" type="password"
-                      innerRef = {passwordRef2}
+                      innerRef={passwordRef2}
                       placeholder="Nhập lại mật khẩu"
                       validate={{
                         match: { value: 'password', errorMessage: 'Mật khẩu không trùng khớp' },
@@ -319,16 +322,16 @@ const Signup = () => {
                       ref={eyeRef2} onClick={() => eyeToggle(eyeRef2, passwordRef2)}></i>
                   </div>
                 </AvGroup>
-                <FormGroup>
-                  <label className="text-right text-white mx-2">
+
+                <AvGroup>
+                  <Label className="text-right text-white mx-2">
                     Ảnh đại diện
-                  </label>
-                  <Input
-                    id="avatar"
-                    type="file"
+                  </Label>
+                  <AvInput name="avatar" type="file" accept="image/*"
                     onChange={(e) => setFile(e.target.files[0])}
-                  />
-                </FormGroup>
+                    validate={{ async: validate }} />
+                  <AvFeedback>Dung lượng tối đa là 2 Mb.</AvFeedback>
+                </AvGroup>
                 <FormGroup className="text-center">
                   <button className="buy__btn auth__btn" type="submit">
                     Tạo tài khoản

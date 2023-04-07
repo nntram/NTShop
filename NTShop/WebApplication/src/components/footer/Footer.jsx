@@ -100,11 +100,6 @@ const Footer = () => {
             </div>
           </Col>
 
-          <Col lg='12'>
-            <p className="mt-5 text-center footer__copyright">
-              Copyright @{year} developed by Nari Cosmetic. All rights reserved
-            </p>
-          </Col>
         </Row>
       </Container>
     </footer>
