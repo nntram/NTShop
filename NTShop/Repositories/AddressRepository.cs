@@ -1,7 +1,7 @@
 ﻿using Arch.EntityFrameworkCore.UnitOfWork;
 using AutoMapper;
 using NTShop.Entities;
-using NTShop.Models.AddressModel;
+using NTShop.Models.AddressModels;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Repositories

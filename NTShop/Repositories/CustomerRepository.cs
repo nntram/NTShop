@@ -1,8 +1,10 @@
 ﻿using Arch.EntityFrameworkCore.UnitOfWork;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using NTShop.Entities;
 using NTShop.Models;
-using NTShop.Models.AuthModel;
+using NTShop.Models.AuthModels;
+using NTShop.Models.CreateModels;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Repositories
@@ -17,6 +19,7 @@ namespace NTShop.Repositories
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+      
 
         public async Task<List<CustomerModel>> GetAllAsync()
         {
@@ -73,13 +76,17 @@ namespace NTShop.Repositories
                 _unitOfWork.GetRepository<Customer>().Update(data);
                 _unitOfWork.SaveChanges();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 return false;
             }
 
-            return true;
-          
+            return true;         
+        }
+
+        public async Task<CustomerCreateModel> CreatetAsync(CustomerCreateModel model)
+        {
+            return model;
         }
     }
 }

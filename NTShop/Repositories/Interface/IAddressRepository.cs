@@ -1,5 +1,5 @@
 ﻿using NTShop.Models;
-using NTShop.Models.AddressModel;
+using NTShop.Models.AddressModels;
 
 namespace NTShop.Repositories.Interface
 {

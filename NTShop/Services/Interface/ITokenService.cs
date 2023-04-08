@@ -1,6 +1,5 @@
-﻿using NTShop.Entities;
-using NTShop.Models;
-using NTShop.Models.AuthModel;
+﻿
+using NTShop.Models.AuthModels;
 using System.Security.Claims;
 
 namespace NTShop.Services.Interface

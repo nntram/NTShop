@@ -2,7 +2,7 @@
 using AutoMapper;
 using NTShop.Entities;
 using NTShop.Models;
-using NTShop.Models.AddressModel;
+using NTShop.Models.AddressModels;
 
 namespace B1809531_EShop_MVC6.Helpers
 {

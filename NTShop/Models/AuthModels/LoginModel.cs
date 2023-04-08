@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NTShop.Models.AuthModel
+namespace NTShop.Models.AuthModels
 {
     public class LoginModel
     {

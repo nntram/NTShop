@@ -37,7 +37,7 @@ const Login = () => {
     handleReCaptchaVerify();
   }, [navigate, handleReCaptchaVerify, error]);
 
-  const fetchLogin = async (formData) => {
+  const postLogin = async (formData) => {
     try {
       const response = await authApi.customerLogin(formData);
       return response;
@@ -48,7 +48,7 @@ const Login = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: (formData) => fetchLogin(formData),
+    mutationFn: (formData) => postLogin(formData),
   });
 
   const signIn = async (e) => {

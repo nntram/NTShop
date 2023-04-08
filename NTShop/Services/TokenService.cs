@@ -1,7 +1,7 @@
 ﻿using Abp.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using NTShop.Models.AuthModel;
+using NTShop.Models.AuthModels;
 using NTShop.Services.Interface;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

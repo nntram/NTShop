@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NTShop.Models.CreateModels;
 using NTShop.Repositories.Interface;
 namespace NTShop.Controllers
 {
@@ -31,6 +32,12 @@ namespace NTShop.Controllers
             }
             return Ok(data);
         }
-        
+        [HttpPost("")]
+        public async Task<IActionResult> Create([FromForm] CustomerCreateModel model)
+        {
+            var data = await _customerRepository.CreatetAsync(model);
+            return Ok(data);
+        }
+
     }
 }

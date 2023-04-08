@@ -1,5 +1,7 @@
-﻿using NTShop.Models;
-using NTShop.Models.AuthModel;
+﻿using Microsoft.AspNetCore.Mvc;
+using NTShop.Models;
+using NTShop.Models.AuthModels;
+using NTShop.Models.CreateModels;
 
 namespace NTShop.Repositories.Interface
 {
@@ -9,6 +11,7 @@ namespace NTShop.Repositories.Interface
         public Task<CustomerModel> GetByIdAsync(string id);
         public Task<AccountModel> GetByUserName(string username);
         public Task<bool> UpdateAccountAsync(AccountModel model);
+        public Task<CustomerCreateModel> CreatetAsync(CustomerCreateModel model);
     }
 
 }

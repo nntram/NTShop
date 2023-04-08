@@ -1,4 +1,4 @@
-﻿namespace NTShop.Models.AddressModel
+﻿namespace NTShop.Models.AddressModels
 {
     public class WardModel
     {

@@ -1,6 +1,6 @@
 ﻿using Abp.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using NTShop.Models.AuthModel;
+using NTShop.Models.AuthModels;
 using NTShop.Repositories.Interface;
 using NTShop.Services.Interface;
 using BC = BCrypt.Net.BCrypt;
