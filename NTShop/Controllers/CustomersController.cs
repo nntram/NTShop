@@ -39,5 +39,12 @@ namespace NTShop.Controllers
             return Ok(data);
         }
 
+        [HttpGet("username/{username}")]
+        public async Task<IActionResult> IsUsernameExist([FromRoute] string username)
+        {
+            var data = await _customerRepository.IsUsernameExist(username);
+            return Ok(data);
+        }
+
     }
 }

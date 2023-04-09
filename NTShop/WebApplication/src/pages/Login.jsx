@@ -143,7 +143,7 @@ const Login = () => {
                     </label>
                   </FormGroup>
                   
-                  {error && <p className="text-warning">{error}</p>}
+                  {error && <p className="text-danger">{error}</p>}
                   <button className="buy__btn auth__btn" type="submit">
                     Đăng nhập
                   </button>

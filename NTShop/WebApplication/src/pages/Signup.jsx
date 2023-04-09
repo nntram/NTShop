@@ -11,6 +11,7 @@ import { useQuery, useMutation } from "react-query";
 import Loading from "../components/loading/Loading";
 import { AvForm, AvField, AvGroup, AvRadioGroup, AvRadio, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 import customerApi from "../api/CustomerApi";
+import useDebounce from "../custom-hooks/useDebounce";
 
 const Signup = () => {
 
@@ -22,6 +23,9 @@ const Signup = () => {
   const [district, setDistrict] = useState("");
   const [ward, setWard] = useState("");
   const [file, setFile] = useState(null);
+
+  const [username, setUsername] = useState(null);
+  const debouncedUsername = useDebounce(username, 500);
 
   const navigate = useNavigate();
   const postSignup = async (formData) => {
@@ -43,17 +47,29 @@ const Signup = () => {
 
       formData.append(key, values[key]);
     }
-    if(file){
+    if (file) {
       formData.append("Avatar", file)
     }
-    const gender = values.gender == 'male'? true : false
+    const gender = values.gender == 'male' ? true : false
     formData.append("Customergender", gender)
     formData.append("Token", "notoken")
     const result = await mutation.mutateAsync(formData);
 
 
   };
-
+  const isUsernameExist = async () => {
+    try {
+      const response = await customerApi.isUsernameExist(username)
+      return (response);
+    } catch (error) {
+      console.log('Failed to fetch: ', error);
+    }
+  }
+  const checkUsernameExist = useQuery(['username', debouncedUsername],
+    isUsernameExist,
+    {
+      enabled: Boolean(debouncedUsername),
+    })
   const fetchProvinces = async () => {
     try {
       const response = await AddressApi.getProvince();
@@ -135,6 +151,7 @@ const Signup = () => {
     setWard(value)
   }
 
+
   if (provinceResults.isLoading) {
     return <Loading />
   }
@@ -160,7 +177,7 @@ const Signup = () => {
     }
   };
 
-  const validate = () => {
+  const validateImage = () => {
     if (file && file.size) {
       const max_size = 2000000;
       if (file.size > max_size)
@@ -170,6 +187,12 @@ const Signup = () => {
   }
 
 
+  const validateUsername = () => {
+    if(checkUsernameExist.data){
+      return "Tên đăng nhập đã tồn tại."
+    }
+    return true;
+  }
 
 
   return (
@@ -307,7 +330,9 @@ const Signup = () => {
                   </Label>
                   <AvField name="Customerusername" type="text"
                     placeholder="Tên đăng nhập"
+                    onChange = {(e) => setUsername(e.target.value)}
                     validate={{
+                      checkExist: validateUsername, 
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
                       maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
                     }} />
@@ -354,7 +379,7 @@ const Signup = () => {
                   </Label>
                   <AvInput name="avatar" type="file" accept="image/*"
                     onChange={(e) => setFile(e.target.files[0])}
-                    validate={{ async: validate }} />
+                    validate={{ checkCapacity: validateImage }} />
                   <AvFeedback>Dung lượng tối đa là 2 Mb.</AvFeedback>
                 </AvGroup>
                 <FormGroup className="text-center">

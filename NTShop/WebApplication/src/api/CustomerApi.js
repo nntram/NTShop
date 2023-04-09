@@ -19,6 +19,12 @@ class CustomerApi {
             }          
         });
     }
+
+    isUsernameExist =  async (username) => {
+        const url = '/customers/username/' + username;
+        return await axiosClient.get(url);
+    };
+
 }
 
 const customerApi = new CustomerApi();

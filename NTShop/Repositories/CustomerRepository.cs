@@ -88,5 +88,12 @@ namespace NTShop.Repositories
         {
             return model;
         }
+
+        public async Task<bool> IsUsernameExist(string username)
+        {
+            var data = await _unitOfWork.GetRepository<Customer>().GetFirstOrDefaultAsync(
+                predicate: p => p.Customerusername == username);
+            return data != null;
+        }
     }
 }

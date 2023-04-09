@@ -37,10 +37,7 @@ const processQueue = (error, token = null) => {
 
 axiosClient.interceptors.response.use(
   function (response) {
-    if (response && response.data) {
-      return response.data;
-    }
-    return response;
+    return response.data
   },
   function (error) {
     const accessToken = sessionStorage.getItem("userAuth");
