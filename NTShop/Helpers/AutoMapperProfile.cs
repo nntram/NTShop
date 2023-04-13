@@ -3,8 +3,9 @@ using AutoMapper;
 using NTShop.Entities;
 using NTShop.Models;
 using NTShop.Models.AddressModels;
+using NTShop.Models.CreateModels;
 
-namespace B1809531_EShop_MVC6.Helpers
+namespace NTShop.Helpers
 {
     public class AutoMapperProfile : Profile
     {
@@ -22,6 +23,7 @@ namespace B1809531_EShop_MVC6.Helpers
             CreateMap<Brand, BrandModel>().ReverseMap();
             CreateMap<Category, CategoryModel>().ReverseMap();
             CreateMap<Customer, CustomerModel>().ReverseMap();
+            CreateMap<Customer, CustomerCreateModel>().ReverseMap();
             CreateMap<IPagedList<Product>, PagedList<ProductCardModel>>();
 
             CreateMap<Province, ProvinceModel>().ReverseMap();

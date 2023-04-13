@@ -28,9 +28,10 @@ namespace NTShop.Services
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUnixTimestamp().ToString()),
                         new Claim(JwtRegisteredClaimNames.Name, account.UserName),
                         new Claim(JwtRegisteredClaimNames.NameId, account.UserId),
-                        new Claim(JwtRegisteredClaimNames.Email, account.Email),
+                        new Claim(JwtRegisteredClaimNames.Email, account.Email),                       
                         new Claim(ClaimTypes.Role, account.Role),                        
                         new Claim("Role", account.Role),
+                        new Claim("Avatar", account.Avatar != null ? account.Avatar : ""),
                         new Claim("DisplayName", account.DisplayName),
                         new Claim("RefreshTokenExpire", DateTime.Now.AddDays(7).ToUnixTimestamp().ToString()),
                     };

@@ -8,6 +8,7 @@ using NTShop.Repositories;
 using NTShop.Repositories.Interface;
 using NTShop.Services;
 using NTShop.Services.Interface;
+using NTShop.Services.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -51,6 +52,7 @@ builder.Services.AddTransient<IBrandRepository, BrandRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
+builder.Services.AddTransient<IFileManagerServies, FileManagerServies>();
 
 //Config database
 builder.Services.AddDbContext<NIENLUANContext>(

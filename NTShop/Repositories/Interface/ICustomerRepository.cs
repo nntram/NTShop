@@ -11,7 +11,7 @@ namespace NTShop.Repositories.Interface
         public Task<CustomerModel> GetByIdAsync(string id);
         public Task<AccountModel> GetByUserName(string username);
         public Task<bool> UpdateAccountAsync(AccountModel model);
-        public Task<CustomerCreateModel> CreatetAsync(CustomerCreateModel model);
+        public Task<string> CreatetAsync(CustomerCreateModel model);
         public Task<bool> IsUsernameExist(string username);
     }
 

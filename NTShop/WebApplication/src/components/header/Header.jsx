@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect} from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Container, Row } from "reactstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./header.css";
@@ -38,7 +38,7 @@ const Header = () => {
   const logout = () => {
     sessionStorage.removeItem("userAuth");
     sessionStorage.removeItem("currentUser");
-    
+
     localStorage.removeItem("remember");
     localStorage.removeItem("userAuth");
     localStorage.removeItem("currentUser");
@@ -55,9 +55,9 @@ const Header = () => {
   useEffect(() => {
     const parseCurrentUser = () => {
       const user = sessionStorage.getItem("currentUser");
-      
+
       try {
-        if(user !== JSON.stringify(currentUser)){
+        if (user !== JSON.stringify(currentUser)) {
           setCurrentUser(JSON.parse(user))
         }
       } catch (error) {
@@ -111,8 +111,14 @@ const Header = () => {
               </span>
               <div className="profile dropdown">
                 <div className='d-flex gap-2 align-items-center'>
-                  <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />
-                  {currentUser ? <p className='username'>{currentUser.DisplayName}</p> : ""}
+
+                  {currentUser ?
+                    <>
+                      <motion.img whileTap={{ scale: 1.2 }} 
+                        src={currentUser.Avatar ? require('../../assets/image_data/avatar/' + currentUser.Avatar) : userIcon}/>
+                      <p className='username'>{currentUser.DisplayName}</p>
+                    </>
+                    : <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />}
                 </div>
                 <div className="dropdown-content">
                   {currentUser ? (
@@ -128,13 +134,13 @@ const Header = () => {
                     </>
                   ) : (
                     <>
-                      <Link to="/signup" className="d-flex gap-3">
-                        <i className="ri-account-circle-line"></i>
-                        <span>Đăng ký</span>
-                      </Link>
                       <Link to="/login" className="d-flex gap-3">
                         <i className="ri-login-box-line"></i>
                         <span>Đăng nhập</span>
+                      </Link>
+                      <Link to="/signup" className="d-flex gap-3">
+                        <i className="ri-account-circle-line"></i>
+                        <span>Đăng ký</span>
                       </Link>
                       <Link to="/dashboard" className="d-flex gap-3">
                         <i className="ri-dashboard-line"></i>

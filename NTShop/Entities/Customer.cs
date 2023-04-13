@@ -42,7 +42,7 @@ namespace NTShop.Entities
         public string? Customeremail { get; set; }
         [Column("CUSTOMEREMAILCONFIRM")]
         [StringLength(128)]
-        public string? Customeremailconfirm { get; set; }
+        public bool? Customeremailconfirm { get; set; }
         [Column("CUSTOMERUSERNAME")]
         [StringLength(128)]
         public string? Customerusername { get; set; }

@@ -39,13 +39,19 @@ namespace NTShop.Controllers
             if (area == "customer")
             {
                 var data = await _customerRepository.GetByUserName(loginModel.UserName);
-                if (data == null || data.IsActive == false)
+                if (data == null)
                 {
                     return NotFound("Tài khoản không tồn tại.");
                 }
+                
 
                 if (BC.Verify(loginModel.Password, data.Password))
                 {
+                    if (data.IsActive == false)
+                    {
+                        return NotFound("Tài khoản đã bị vô hiệu hoặc chưa được xác nhận.");
+                    }
+
                     var accessToken = _tokenService.GenerateAccessToken(data);
                     var refreshToken = _tokenService.GenerateRefreshToken();
 
