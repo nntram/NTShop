@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NTShop.Models.AuthModels;
 using NTShop.Models.CreateModels;
 using NTShop.Repositories.Interface;
+using NTShop.Services.Interface;
+
 namespace NTShop.Controllers
 {
     [ApiController]
@@ -9,10 +12,12 @@ namespace NTShop.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly ITokenService _tokenService;
 
-        public CustomersController(ICustomerRepository customerRepository)
+        public CustomersController(ICustomerRepository customerRepository, ITokenService tokenService)
         {
             _customerRepository = customerRepository;
+            _tokenService = tokenService;
         }
 
         [HttpGet("")]
@@ -35,8 +40,23 @@ namespace NTShop.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Create([FromForm] CustomerCreateModel model)
         {
+            var captchaVerify = _tokenService.VerifyReCaptcha(model.Token);
+
+            if (captchaVerify == null || !captchaVerify.Result.success)
+            {
+                return BadRequest("Lỗi Google reCaptcha.");
+            }
+
+            if (captchaVerify.Result.score < 0.5)
+            {
+                return BadRequest("Thao tác bị chặn bởi Google reCaptcha.");
+            }
             var data = await _customerRepository.CreatetAsync(model);
-            return Ok(data);
+            if(data == "Ok")
+            {
+                return Ok();
+            }
+            return BadRequest(data);
         }
 
         [HttpGet("username/{username}")]

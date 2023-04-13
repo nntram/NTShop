@@ -92,6 +92,7 @@ namespace NTShop.Repositories
 
         public async Task<string> CreatetAsync(CustomerCreateModel model)
         {
+
             if (model.Avatar != null && !FileValid.IsImageValid(model.Avatar))
             {
                 return "Định dạng file không được chấp nhận.";

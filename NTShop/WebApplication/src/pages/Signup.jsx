@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Helmet from "../components/helmet/Helmet";
 import { Container, Row, Col, FormGroup, Input, Label } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -12,9 +12,11 @@ import Loading from "../components/loading/Loading";
 import { AvForm, AvField, AvGroup, AvRadioGroup, AvRadio, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 import customerApi from "../api/CustomerApi";
 import useDebounce from "../custom-hooks/useDebounce";
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const Signup = () => {
-
+  const [token, setToken] = useState();
+  const [error, setError] = useState();
   const eyeRef = useRef(null);
   const eyeRef2 = useRef(null);
   const passwordRef = useRef(null);
@@ -32,14 +34,30 @@ const Signup = () => {
     try {
       const response = await customerApi.create(formData);
       return response;
-    } catch (error) {
-      console.log("Failed to sign up: ", error);
+    } catch (e) {
+      toast.error(e.response.data)
+      setError(e)
+      console.log("Failed to sign up: ", e);
     }
   };
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const handleReCaptchaVerify = useCallback(async () => {
+    if (!executeRecaptcha) {
+      return;
+    }
+    const token = await executeRecaptcha('signup');
+    setToken(token)
+  }, [executeRecaptcha, error, navigate]);
+
+
 
   const mutation = useMutation({
     mutationFn: (formData) => postSignup(formData),
   });
+
+  useEffect(() => {
+    handleReCaptchaVerify();
+  }, [handleReCaptchaVerify, error]);
 
   const signup = async (event, values) => {
     const formData = new FormData()
@@ -52,10 +70,14 @@ const Signup = () => {
     }
     const gender = values.gender == 'male' ? true : false
     formData.append("Customergender", gender)
-    formData.append("Token", "notoken")
+    formData.append("Token", token)
+
     const result = await mutation.mutateAsync(formData);
-
-
+    console.log(result)
+    if(mutation.isSuccess){
+      toast.success("Đăng ký thành công. Vui lòng xác nhận email để đăng nhập.")
+    }
+    
   };
   const isUsernameExist = async () => {
     try {
@@ -188,7 +210,7 @@ const Signup = () => {
 
 
   const validateUsername = () => {
-    if(checkUsernameExist.data){
+    if (checkUsernameExist.data) {
       return "Tên đăng nhập đã tồn tại."
     }
     return true;
@@ -330,9 +352,9 @@ const Signup = () => {
                   </Label>
                   <AvField name="Customerusername" type="text"
                     placeholder="Tên đăng nhập"
-                    onChange = {(e) => setUsername(e.target.value)}
+                    onChange={(e) => setUsername(e.target.value)}
                     validate={{
-                      checkExist: validateUsername, 
+                      checkExist: validateUsername,
                       required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
                       maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
                     }} />
