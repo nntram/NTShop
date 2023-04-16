@@ -2,10 +2,10 @@
 
 namespace NTShop.Services
 {
-    public class FileManagerServies : IFileManagerServies
+    public class FileManagerService : IFileManagerService
     {
 
-        public FileManagerServies()
+        public FileManagerService()
         {
 
         }

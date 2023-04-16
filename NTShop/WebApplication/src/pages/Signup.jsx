@@ -15,8 +15,6 @@ import useDebounce from "../custom-hooks/useDebounce";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const Signup = () => {
-  const [token, setToken] = useState();
-  const [error, setError] = useState();
   const eyeRef = useRef(null);
   const eyeRef2 = useRef(null);
   const passwordRef = useRef(null);
@@ -36,7 +34,6 @@ const Signup = () => {
       return response;
     } catch (e) {
       toast.error(e.response.data)
-      setError(e)
       console.log("Failed to sign up: ", e);
     }
   };
@@ -46,38 +43,33 @@ const Signup = () => {
       return;
     }
     const token = await executeRecaptcha('signup');
-    setToken(token)
-  }, [executeRecaptcha, error, navigate]);
-
-
+    return token
+  }, [executeRecaptcha]);
 
   const mutation = useMutation({
     mutationFn: (formData) => postSignup(formData),
   });
 
-  useEffect(() => {
-    handleReCaptchaVerify();
-  }, [handleReCaptchaVerify, error]);
-
   const signup = async (event, values) => {
-    const formData = new FormData()
-    for (var key in values) {
+    handleReCaptchaVerify().then(async (token) => {
+      const formData = new FormData()
+      for (var key in values) {
+        formData.append(key, values[key]);
+      }
+      if (file) {
+        formData.append("Avatar", file)
+      }
+      const gender = values.gender === 'male' ? true : false
+      formData.append("Customergender", gender)
+      formData.append("Token", token)
 
-      formData.append(key, values[key]);
-    }
-    if (file) {
-      formData.append("Avatar", file)
-    }
-    const gender = values.gender == 'male' ? true : false
-    formData.append("Customergender", gender)
-    formData.append("Token", token)
+      const result = await mutation.mutateAsync(formData);
+      if (result) {
+        toast.success(result)
+        navigate('/login')
+      }
+    });
 
-    const result = await mutation.mutateAsync(formData);
-    console.log(result)
-    if(mutation.isSuccess){
-      toast.success("Đăng ký thành công. Vui lòng xác nhận email để đăng nhập.")
-    }
-    
   };
   const isUsernameExist = async () => {
     try {

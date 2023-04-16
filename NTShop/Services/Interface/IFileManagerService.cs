@@ -1,6 +1,6 @@
 ﻿namespace NTShop.Services.Interfaces
 {
-    public interface IFileManagerServies
+    public interface IFileManagerService
     {
         public Task<List<string>> UploadMultipleImages(IEnumerable<IFormFile> postedFiles, string path);
         public Task<string> UploadSingleImage(IFormFile postedFile, string path);

@@ -17,9 +17,9 @@ namespace NTShop.Repositories
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IFileManagerServies _fileManagerService;
+        private readonly IFileManagerService _fileManagerService;
 
-        public CustomerRepository(IUnitOfWork unitOfWork, IMapper mapper, IFileManagerServies fileManagerService)
+        public CustomerRepository(IUnitOfWork unitOfWork, IMapper mapper, IFileManagerService fileManagerService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -67,15 +67,13 @@ namespace NTShop.Repositories
             return (account);
         }
 
-        public async Task<bool> UpdateAccountAsync(AccountModel model)
+        public async Task<bool> UpdateTokenAsync(AccountModel model)
         {
             var data = await _unitOfWork.GetRepository<Customer>().FindAsync(model.UserId);
             if(data is null) return false;
 
             data.Customerrefreshtoken = model.RefreshToken;
             data.Customertokenexpirytime = model.TokenExpiryTime;
-            data.Customerpassword = model.Password;
-            data.Customerisactive= model.IsActive;
 
             try
             {
@@ -125,10 +123,10 @@ namespace NTShop.Repositories
 
             }
 
-            await _unitOfWork.GetRepository<Customer>().InsertAsync(customer);
+            var result = await _unitOfWork.GetRepository<Customer>().InsertAsync(customer);
             _unitOfWork.SaveChanges();
 
-            return "Ok";
+            return "Ok:"+ result.Entity.Customerid;
         }
 
         public async Task<bool> IsUsernameExist(string username)
@@ -136,6 +134,28 @@ namespace NTShop.Repositories
             var data = await _unitOfWork.GetRepository<Customer>().GetFirstOrDefaultAsync(
                 predicate: p => p.Customerusername == username);
             return data != null;
+        }
+
+        public async Task<bool> ConfirmEmail(string id)
+        {
+            var data = await _unitOfWork.GetRepository<Customer>().FindAsync(id);
+            if (data is null) return false;
+
+            data.Customeremailconfirm = true;
+            data.Customerisactive = true;
+
+            try
+            {
+                _unitOfWork.GetRepository<Customer>().Update(data);
+                _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+
         }
     }
 }

@@ -58,7 +58,7 @@ namespace NTShop.Controllers
                     data.RefreshToken = refreshToken;
                     data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
 
-                    var update = await _customerRepository.UpdateAccountAsync(data);
+                    var update = await _customerRepository.UpdateTokenAsync(data);
                     if (update is true)
                     {
                         Response.Cookies.Append("refreshToken", refreshToken, HttpOnlyCookieOptions());
@@ -105,7 +105,7 @@ namespace NTShop.Controllers
             data.RefreshToken = newRefreshToken;
             data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
 
-            var update = await _customerRepository.UpdateAccountAsync(data);
+            var update = await _customerRepository.UpdateTokenAsync(data);
             if (update is true)
             {
                 Response.Cookies.Append("refreshToken", newRefreshToken, HttpOnlyCookieOptions());

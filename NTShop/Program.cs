@@ -52,7 +52,8 @@ builder.Services.AddTransient<IBrandRepository, BrandRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
-builder.Services.AddTransient<IFileManagerServies, FileManagerServies>();
+builder.Services.AddTransient<IFileManagerService, FileManagerService>(); 
+builder.Services.AddTransient<IMailService, MailService>();
 
 //Config database
 builder.Services.AddDbContext<NIENLUANContext>(
