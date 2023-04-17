@@ -8,8 +8,8 @@ namespace NTShop.Services.Interface
     {
         Task<string> SendMail(MailClass mailClass);
 
-        string GetMailBody(string id, string name);
+        string GetMailBody(string id, string username);
 
-        //string GetMailBodyToForgotPassword(CustomerCreateModel model);
+        string GetMailBodyToForgotPassword(string username, string token);
     }
 }

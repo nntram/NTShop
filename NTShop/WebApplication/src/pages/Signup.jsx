@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Helmet from "../components/helmet/Helmet";
-import { Container, Row, Col, FormGroup, Input, Label } from "reactstrap";
+import { Container, Row, Col, FormGroup, Label } from "reactstrap";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
-
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import AddressApi from "../api/AddressApi"
@@ -15,9 +14,9 @@ import useDebounce from "../custom-hooks/useDebounce";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const Signup = () => {
-  const eyeRef = useRef(null);
+  const eyeRef1 = useRef(null);
   const eyeRef2 = useRef(null);
-  const passwordRef = useRef(null);
+  const passwordRef1 = useRef(null);
   const passwordRef2 = useRef(null);
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
@@ -33,7 +32,7 @@ const Signup = () => {
       const response = await customerApi.create(formData);
       return response;
     } catch (e) {
-      toast.error(e.response.data)
+      toast.error(e.response.data, { autoClose: false })
       console.log("Failed to sign up: ", e);
     }
   };
@@ -65,7 +64,7 @@ const Signup = () => {
 
       const result = await mutation.mutateAsync(formData);
       if (result) {
-        toast.success(result)
+        toast.success(result, { autoClose: false })
         navigate('/login')
       }
     });
@@ -179,15 +178,15 @@ const Signup = () => {
     gender: 'male',
   };
 
-  const eyeToggle = (eye, pass) => {
-    eye.current.classList.toggle("ri-eye-close-line");
-    eye.current.classList.toggle("ri-eye-line");
+  const eyeToggle = (eyeRef, passRef) => {
+    eyeRef.current.classList.toggle("ri-eye-close-line");
+    eyeRef.current.classList.toggle("ri-eye-line");
 
-    if (eye.current.classList.contains("ri-eye-close-line")) {
-      pass.current.type = 'password'
+    if (eyeRef.current.classList.contains("ri-eye-close-line")) {
+      passRef.current.type = 'password'
     }
     else {
-      pass.current.type = 'text'
+      passRef.current.type = 'text'
     }
   };
 
@@ -210,12 +209,13 @@ const Signup = () => {
 
 
   return (
-    <Helmet title="Signup">
+    <Helmet title="Đăng ký">
+
       <section className="auth__background">
         <Container>
           <Row>
             <Col lg="6" className="m-auto">
-              <h3 className="fw-bold mb-4 text-center">Đăng ký tài khoản</h3>
+              <h3 className="fw-bold mb-4 text-center auth__title">Đăng ký tài khoản</h3>
 
               <AvForm className="auth__form"
                 encType="multipart/form-data"
@@ -358,14 +358,14 @@ const Signup = () => {
                   </Label>
                   <div className="position-relative">
                     <AvField name="Customerpassword" type="password"
-                      innerRef={passwordRef}
+                      innerRef={passwordRef1}
                       placeholder="Nhập mật khẩu"
                       validate={{
                         required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
                         maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
                       }} />
                     <i className="ri-eye-close-line signup__eye__button"
-                      ref={eyeRef} onClick={() => eyeToggle(eyeRef, passwordRef)}></i>
+                      ref={eyeRef1} onClick={() => eyeToggle(eyeRef1, passwordRef1)}></i>
                   </div>
                 </AvGroup>
                 <AvGroup >
@@ -396,14 +396,18 @@ const Signup = () => {
                     validate={{ checkCapacity: validateImage }} />
                   <AvFeedback>Dung lượng tối đa là 2 Mb.</AvFeedback>
                 </AvGroup>
-                <FormGroup className="text-center">
-                  <button className="buy__btn auth__btn" type="submit">
-                    Tạo tài khoản
-                  </button>
-                  <p>
-                    Bạn đã có tài khoản? <Link to="/login">Đăng nhập</Link>
-                  </p>
-                </FormGroup>
+                {
+                  mutation.isLoading ? <Loading />:
+                    <FormGroup className="text-center">
+                      <button className="buy__btn auth__btn" type="submit">
+                        Tạo tài khoản
+                      </button>
+                      <p>
+                        Bạn đã có tài khoản? <Link to="/login">Đăng nhập</Link>
+                      </p>
+                    </FormGroup>
+                }
+
               </AvForm>
 
             </Col>

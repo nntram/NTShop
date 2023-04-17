@@ -75,7 +75,7 @@ const Login = () => {
           toast.success("Đã đăng nhập thành công.");
           navigate("/checkout");
         } catch {
-          toast.error("Đã xảy ra lỗi.");
+          toast.error("Đã xảy ra lỗi.", { autoClose: false });
         }
       }
     } catch (error) {
@@ -96,70 +96,72 @@ const Login = () => {
   };
 
   return (
-    <Helmet title="Login">
-      {mutation.isLoading ? (
-        <Loading />
-      ) : (
-        <section className="auth__background">
-          <Container>
-            <Row>
-              <Col lg="6" className="m-auto text-center">
-                <h3 className="fw-bold mb-4">Đăng nhập</h3>
+    <Helmet title="Đăng nhập">
+      <section className="auth__background">
+        <Container>
+          <Row>
+            <Col lg="6" className="m-auto text-center">
+              <h3 className="fw-bold mb-4 auth__title">
+                Đăng nhập
+              </h3>
 
-                <Form className="auth__form" onSubmit={signIn}>
-                  <FormGroup>
-                    <Input
-                      required
-                      type="text"
-                      placeholder="Tên đăng nhập"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Input
-                      required
-                      type="password"
-                      placeholder="Mật khẩu"
-                      value={password}
-                      innerRef={passwordRef}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="d-inline-block"
-                    />
-                    <i className="eye__button ri-eye-off-line"
-                      ref={eyeRef} onClick={eyeToggle}></i>
-                  </FormGroup>
-                  <FormGroup>
-                    <Input                      
-                      type="checkbox"
-                      className="form-check-Input"
-                      id="remember"
-                      checked={remember}
-                      onChange={() => setRemember(!remember)}
-                    />
-                    <label className="text-white mx-2" htmlFor="remember">
-                      {" "}
-                      Ghi nhớ đăng nhập?
-                    </label>
-                  </FormGroup>
-                  
-                  {error && <p className="text-danger">{error}</p>}
-                  <button className="buy__btn auth__btn" type="submit">
-                    Đăng nhập
-                  </button>
-                  <p>
-                    Bạn chưa có tài khoản?{" "}
-                    <Link to="/signup">Đăng ký tài khoản ngay</Link>
-                  </p>
-                  <p className="mt-2">
-                    <Link to="/signup">Quên mật khẩu</Link>
-                  </p>
-                </Form>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-      )}
+              <Form className="auth__form" onSubmit={signIn}>
+                <FormGroup>
+                  <Input
+                    required
+                    type="text"
+                    placeholder="Tên đăng nhập"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Input
+                    required
+                    type="password"
+                    placeholder="Mật khẩu"
+                    value={password}
+                    innerRef={passwordRef}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="d-inline-block"
+                  />
+                  <i className="eye__button ri-eye-off-line"
+                    ref={eyeRef} onClick={eyeToggle}></i>
+                </FormGroup>
+                <FormGroup>
+                  <Input
+                    type="checkbox"
+                    className="form-check-Input"
+                    id="remember"
+                    checked={remember}
+                    onChange={() => setRemember(!remember)}
+                  />
+                  <label className="text-white mx-2" htmlFor="remember">
+                    {" "}
+                    Ghi nhớ đăng nhập?
+                  </label>
+                </FormGroup>
+
+                {error && <p className="text-danger">{error}</p>}
+                {mutation.isLoading ? <Loading /> :
+                  <>
+                    <button className="buy__btn auth__btn" type="submit">
+                      Đăng nhập
+                    </button>
+                    <p>
+                      Bạn chưa có tài khoản?{" "}
+                      <Link to="/signup">Đăng ký tài khoản ngay</Link>
+                    </p>
+                    <p className="mt-2">
+                      <Link to="/forgot-password">Quên mật khẩu</Link>
+                    </p>
+                  </>
+                }
+              </Form>
+            </Col>
+          </Row>
+        </Container>
+      </section>
     </Helmet>
   );
 };

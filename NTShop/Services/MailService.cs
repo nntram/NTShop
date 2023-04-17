@@ -3,6 +3,7 @@ using NTShop.Models.CreateModels;
 using NTShop.Models.SendMail;
 using NTShop.Services.Interface;
 using System.Net.Mail;
+using System.Xml.Linq;
 
 namespace NTShop.Services
 {
@@ -15,7 +16,7 @@ namespace NTShop.Services
             _configuration = configuration;
         }
 
-        public string GetMailBody(string id, string name)
+        public string GetMailBody(string id, string username)
         {
             string url = _configuration["DomainName"] + "customers/confirm-mail?id=" + id;
             return string.Format(@"<div style='text-align:center;'>
@@ -35,17 +36,31 @@ namespace NTShop.Services
                                         Xác nhận mail
                                       </button>
                                     </form>
-                                </div>", name, url);
+                                </div>", username, url);
         }
 
-        //public string GetMailBodyToForgotPassword(CustomerCreateModel model)
-        //{
-        //    return string.Format(@"<div style='text-align:center;'>
-        //                            <h1>Hello {0}, Welcome to our Web Site</h1>
-        //                            <h3>This mail contains a confirmation code for forgetting your password.</h3>
-        //                            <p>Your code validation: <b>{1}</b></p>
-        //                        </div>", model.Customername, "chua biet nua");
-        //}
+        public string GetMailBodyToForgotPassword(string username, string token)
+        {
+            string url = _configuration["WebApplication"] + "reset-password/"+ token ;
+            return string.Format(@"<div style='text-align:center;'>
+                                    <h1>Nari Cosmetic kính chào bạn {0},</h1>
+                                    <h3>Bấm vào nút bên dưới để thay đổi mật khẩu (Hiệu lực trong 30 phút.).</h3>
+                                    
+                                      <a href = {1} style=' display: block;
+                                                                    text-align: center;
+                                                                    font-weight: bold;
+                                                                    background-color: #008CBA;
+                                                                    font-size: 16px;
+                                                                    border-radius: 10px;
+                                                                    color:#ffffff;
+                                                                    cursor:pointer;
+                                                                    width:100%;
+                                                                    padding:10px;'>
+                                        Đổi mật khẩu
+                                      </a>
+                                    
+                                </div>", username, url);
+        }
 
         public async Task<string> SendMail(MailClass mailClass)
         {

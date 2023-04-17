@@ -92,7 +92,7 @@ const Home = () => {
   }
 
   return (
-    <Helmet title={"Home"}>
+    <Helmet title="Trang chủ">
 
       <HeroSection />
 

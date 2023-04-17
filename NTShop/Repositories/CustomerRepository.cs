@@ -157,5 +157,51 @@ namespace NTShop.Repositories
             return true;
 
         }
+
+        public async Task<AccountModel> GetByEmail(string email)
+        {
+            var data = await _unitOfWork.GetRepository<Customer>().GetFirstOrDefaultAsync
+                            (predicate: p => p.Customeremail == email);
+
+            var account = new AccountModel();
+            if (data is null)
+            {
+                return null;
+            }
+
+            account.UserName = data.Customerusername;
+            account.UserId = data.Customerid;
+            account.Email = data.Customeremail;
+            account.Avatar = data.Customeravatar;
+            account.RefreshToken = data.Customerrefreshtoken;
+            account.TokenExpiryTime = data.Customertokenexpirytime;
+            account.Password = data.Customerpassword;
+            account.DisplayName = data.Customername;
+            account.IsActive = data.Customerisactive;
+            account.Role = "Customer";
+
+            return (account);
+        }
+
+        public async Task<bool> ResetPasswordAsync(AccountModel model)
+        {
+            var data = await _unitOfWork.GetRepository<Customer>().FindAsync(model.UserId);
+            if (data is null) return false;
+
+            var password = BC.HashPassword(model.Password);
+            data.Customerpassword = password;
+            
+            try
+            {
+                _unitOfWork.GetRepository<Customer>().Update(data);
+                _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

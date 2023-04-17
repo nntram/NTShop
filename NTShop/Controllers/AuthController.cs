@@ -1,6 +1,8 @@
 ﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NTShop.Models.AuthModels;
+using NTShop.Models.SendMail;
 using NTShop.Repositories.Interface;
 using NTShop.Services.Interface;
 using BC = BCrypt.Net.BCrypt;
@@ -13,11 +15,14 @@ namespace NTShop.Controllers
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly ITokenService _tokenService;
+        private readonly IMailService _mailService;
 
-        public AuthController(ICustomerRepository customerRepository, ITokenService tokenService)
+        public AuthController(ICustomerRepository customerRepository, 
+                ITokenService tokenService, IMailService mailService)
         {
             _customerRepository = customerRepository;
             _tokenService = tokenService;
+            _mailService = mailService;
         }
 
         [Route("{area}/login")]
@@ -26,12 +31,12 @@ namespace NTShop.Controllers
         {
             var captchaVerify = _tokenService.VerifyReCaptcha(loginModel.Token);
 
-            if(captchaVerify == null || !captchaVerify.Result.success)
+            if (captchaVerify == null || !captchaVerify.Result.success)
             {
                 return BadRequest("Lỗi Google reCaptcha.");
             }
 
-            if(captchaVerify.Result.score < 0.5)
+            if (captchaVerify.Result.score < 0.5)
             {
                 return BadRequest("Thao tác bị chặn bởi Google reCaptcha.");
             }
@@ -43,7 +48,7 @@ namespace NTShop.Controllers
                 {
                     return NotFound("Tài khoản không tồn tại.");
                 }
-                
+
 
                 if (BC.Verify(loginModel.Password, data.Password))
                 {
@@ -126,6 +131,83 @@ namespace NTShop.Controllers
             };
 
             return cookieOptions;
+        }
+
+        [Route("{area}/forgot-password")]
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model, [FromRoute] string area)
+        {
+            if (area == "customer")
+            {
+                var data = await _customerRepository.GetByUserName(model.Username);
+                if (data == null)
+                {
+                    return NotFound("Tài khoản không tồn tại.");
+                }
+
+                if (data.IsActive == false)
+                {
+                    return NotFound("Tài khoản đã bị vô hiệu hoặc chưa được xác nhận.");
+                }
+
+                var accessToken = _tokenService.GenerateAccessToken(data);
+                var refreshToken = _tokenService.GenerateRefreshToken();
+
+                data.RefreshToken = refreshToken;
+                data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
+
+                var update = await _customerRepository.UpdateTokenAsync(data);
+                if (update is true)
+                {
+                    var hiddenMail = data.Email;
+                    var index = hiddenMail.IndexOf("@");
+                    for(int i = 2; i < index - 2; i++)
+                    {
+                        hiddenMail = hiddenMail.Remove(i, 1).Insert(i, "*");
+                    }
+                    var mailClass = GetForotPasswordMailObject(data.UserName, accessToken, data.Email);
+                    var mailSend = await _mailService.SendMail(mailClass);
+                    if(mailSend == MessageMail.MailSent)
+                    {
+                        return Ok("Chúng tôi đã gửi xác nhận về địa chỉ " + hiddenMail + ". Vui lòng kiểm tra mail.");
+                    }
+                }
+
+                return StatusCode(500);
+
+            }
+
+
+            return StatusCode(500);
+        }
+
+        private MailClass GetForotPasswordMailObject(string username, string token, string email)
+        {
+            MailClass mailClass = new MailClass();
+            mailClass.Subject = "Quên mật khẩu";
+            mailClass.Body = _mailService.GetMailBodyToForgotPassword(username, token);
+            mailClass.ToMails = new List<string>()
+            {
+                email
+            };
+
+            return mailClass;
+        }
+
+        [Authorize]
+        [Route("{area}/reset-password")]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model, 
+                    [FromHeader] string authorization, [FromRoute] string area)
+        {
+            if (area == "customer")
+            {
+               
+
+            }
+
+
+            return Ok("hi");
         }
 
     }

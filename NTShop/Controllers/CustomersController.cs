@@ -61,7 +61,7 @@ namespace NTShop.Controllers
             if(data.StartsWith("Ok:"))
             {
                 var id = data.Substring(3);
-                var mailCalss = GetMailObject(id, model.Customername, model.Customeremail);
+                var mailCalss = GetMailObject(id, model.Customerusername, model.Customeremail);
                 var mailSend = await _mailService.SendMail(mailCalss);
                 if(mailSend == MessageMail.MailSent)
                 {
@@ -83,11 +83,11 @@ namespace NTShop.Controllers
             return Ok(data);
         }
 
-        private MailClass GetMailObject(string id, string name,string email)
+        private MailClass GetMailObject(string id, string username,string email)
         {
             MailClass mailClass = new MailClass();
-            mailClass.Subject = "Mail Confirmation";
-            mailClass.Body = _mailService.GetMailBody(id, name);
+            mailClass.Subject = "Xác nhận email";
+            mailClass.Body = _mailService.GetMailBody(id, username);
             mailClass.ToMails = new List<string>()
             {
                 email
