@@ -2,12 +2,13 @@ import React, { useRef } from 'react'
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Helmet from "../components/helmet/Helmet";
 import { Container, Row, Col, Label, FormGroup } from "reactstrap";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import authApi from '../api/AuthApi';
 import { useMutation } from 'react-query';
 import { toast } from "react-toastify";
 
 const ResetPassword = () => {
+    const navigate = useNavigate();
     const { accessToken } = useParams()
     const eyeRef1 = useRef(null);
     const eyeRef2 = useRef(null);
@@ -45,6 +46,7 @@ const ResetPassword = () => {
         const password = values["Customerpassword"]
         const result = await mutation.mutateAsync(password);
         if (result) {
+            navigate('/login')
             toast.success(result, { autoClose: false })
         }
     }

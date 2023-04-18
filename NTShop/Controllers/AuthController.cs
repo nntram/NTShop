@@ -200,14 +200,29 @@ namespace NTShop.Controllers
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model, 
                     [FromHeader] string authorization, [FromRoute] string area)
         {
+            var token = authorization.Substring(7);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(token);
+            var userName = principal.Identity.Name;
+
             if (area == "customer")
             {
-               
+                var data = await _customerRepository.GetByUserName(userName);
+                if (data == null)
+                {
+                    return NotFound("Tài khoản không tồn tại.");
+                }
+
+                data.Password = model.Password;
+                var result = await _customerRepository.ResetPasswordAsync(data);
+                if (result)
+                {
+                    return Ok("Đặt lại mật khẩu thành công. Hãy đăng nhập với mật khẩu mới.");
+                }
 
             }
 
 
-            return Ok("hi");
+            return StatusCode(500);
         }
 
     }
