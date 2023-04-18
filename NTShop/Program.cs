@@ -47,13 +47,15 @@ builder.Services.AddSwaggerGen(options =>
 
 //Add My services
 builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IFileManagerService, FileManagerService>();
+builder.Services.AddTransient<IMailService, MailService>();
+
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IBrandRepository, BrandRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
-builder.Services.AddTransient<IFileManagerService, FileManagerService>(); 
-builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<ICartRepository, CartRepository>();
 
 //Config database
 builder.Services.AddDbContext<NIENLUANContext>(

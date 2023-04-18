@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using NTShop.Models.AuthModels;
 using NTShop.Services.Interface;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -27,9 +28,9 @@ namespace NTShop.Services
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUnixTimestamp().ToString()),
                         new Claim(JwtRegisteredClaimNames.Name, account.UserName),
-                        new Claim(JwtRegisteredClaimNames.NameId, account.UserId),
                         new Claim(JwtRegisteredClaimNames.Email, account.Email),                       
-                        new Claim(ClaimTypes.Role, account.Role),                        
+                        new Claim(ClaimTypes.Role, account.Role),
+                        new Claim("Id", account.UserId),
                         new Claim("Role", account.Role),
                         new Claim("Avatar", account.Avatar != null ? account.Avatar : ""),
                         new Claim("DisplayName", account.DisplayName),
@@ -102,5 +103,13 @@ namespace NTShop.Services
             return verify;
         }
 
+        public string GetUserIdFromToken(string authorization)
+        {
+            var token = authorization.Substring(7);
+            var principal = GetPrincipalFromExpiredToken(token);
+            var userId = principal.Claims.First(p => p.Type == "Id").Value;
+
+            return userId;
+        }
     }
 }

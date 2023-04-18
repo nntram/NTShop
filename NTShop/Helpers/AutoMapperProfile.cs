@@ -30,6 +30,9 @@ namespace NTShop.Helpers
             CreateMap<District, DistrictModel>().ReverseMap();
             CreateMap<Ward, WardModel>().ReverseMap();
 
+            CreateMap<Cart, CartModel>().ReverseMap();
+            CreateMap<Cartdetail, CartDetailModel>().ReverseMap();
+
         }
     }
 }
