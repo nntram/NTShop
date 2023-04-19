@@ -35,15 +35,15 @@ const Header = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
   const closeRef = useRef(null);
-  const totalQuantity =  useSelector(state => state.cart.totalQuantity)
+  const totalQuantity = useSelector(state => state.cart.totalQuantity)
   const currentUser = useGetCurrentUser()
   const currentTotalQuantity = useGetQuantity()
   const dispatch = useDispatch()
-  
-  // useEffect(() => {
-  //   dispatch(cartActions.setTotalQuatity(currentTotalQuantity))
-  // })
-  
+
+  useEffect(() => {
+    dispatch(cartActions.setTotalQuatity(currentTotalQuantity))
+  }, [currentTotalQuantity])
+
 
   const logout = () => {
     sessionStorage.removeItem("userAuth");
@@ -109,8 +109,8 @@ const Header = () => {
 
                   {currentUser ?
                     <>
-                      <motion.img whileTap={{ scale: 1.2 }} 
-                        src={currentUser.Avatar ? require('../../assets/image_data/avatar/' + currentUser.Avatar) : userIcon}/>
+                      <motion.img whileTap={{ scale: 1.2 }}
+                        src={currentUser.Avatar ? require('../../assets/image_data/avatar/' + currentUser.Avatar) : userIcon} />
                       <p className='username'>{currentUser.DisplayName}</p>
                     </>
                     : <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />}

@@ -17,7 +17,7 @@ import { useMutation } from 'react-query';
 import cartApi from '../api/CartApi'
 import useGetCurrentUser from '../custom-hooks/useGetCurrentUser'
 import useGetQuantity from '../custom-hooks/useGetQuantity'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { cartActions } from '../redux/slices/cartSlice'
 
 const ProductDetails = () => {
@@ -28,7 +28,7 @@ const ProductDetails = () => {
   const reviewMsg = useRef('')
   const currentUser = useGetCurrentUser()
   const [quantity, setQuantity] = useState('1')
-  const currentTotalQuantity = useGetQuantity()
+  const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
   const dispatch = useDispatch()
 
   const submitHandler = (e) => {
@@ -141,18 +141,17 @@ const ProductDetails = () => {
       toast.info(CustomToastWithLink, { autoClose: false })
       return;
     }
-    const  data = {
+    const data = {
       productId,
       quantity
     }
-    
-    const result =  await mutation.mutateAsync(data)
-    if(result)
-    {
+
+    const result = await mutation.mutateAsync(data)
+    if (result) {
       dispatch(cartActions.setTotalQuatity(currentTotalQuantity + Number(quantity)))
       toast.success(result)
     }
-   
+
   }
 
 
@@ -215,38 +214,45 @@ const ProductDetails = () => {
                   </span>
                 </div>
 
-                <div className="product__quantity d-flex align-items-center
+                {product.productquantity ?
+                  <div className="product__quantity d-flex align-items-center
                                 gap-3 mt-5">
-                  <span>Số lượng:</span>
-                  <div className="input-group w-25">
-                    <div className="input-group-prepend">
-                      <motion.button className="quantity__btn" whileTap={{ opacity: 0.5 }}
-                        onClick={decrementQuantity}>
-                        -
-                      </motion.button>
+                    <span>Số lượng:</span>
+                    <div className="input-group w-25">
+                      <div className="input-group-prepend">
+                        <motion.button className="quantity__btn" whileTap={{ opacity: 0.5 }}
+                          onClick={decrementQuantity}>
+                          -
+                        </motion.button>
+                      </div>
+                      <input type="text"
+                        className="form-control text-center"
+                        pattern="[0-9]*"
+                        value={quantity}
+                        onChange={(e) => handleQuantity(e)} />
+                      <div className="input-group-prepend">
+                        <motion.button className="quantity__btn" whileTap={{ opacity: 0.5 }}
+                          onClick={incrementQuantity}>
+                          +
+                        </motion.button>
+                      </div>
                     </div>
-                    <input type="text"
-                      className="form-control text-center"
-                      pattern="[0-9]*"
-                      value={quantity}
-                      onChange={(e) => handleQuantity(e)} />
-                    <div className="input-group-prepend">
-                      <motion.button className="quantity__btn" whileTap={{ opacity: 0.5 }}
-                        onClick={incrementQuantity}>
-                        +
-                      </motion.button>
-                    </div>
-                  </div>
 
 
-                </div>
+                  </div> : <h4 className="mt-5">Sản phẩm tạm hết hàng</h4>
+                }
                 <div className="d-flex gap-2">
-                  <motion.button className='buy__btn'
-                    whileTap={{ scale: 1.2 }}
-                    onClick={addToCart}>
-                    <i className="ri-shopping-cart-2-line"> </i>
-                    Thêm vào giỏ hàng
-                  </motion.button>
+                  {
+                    product.productquantity ?
+                      <motion.button className='buy__btn'
+                        whileTap={{ scale: 1.2 }}
+                        onClick={addToCart}>
+                        <i className="ri-shopping-cart-2-line"> </i>
+                        Thêm vào giỏ hàng
+                      </motion.button>
+                      : ""
+                  }
+
 
                   <motion.button className="buy__btn" type="button"
                     whileTap={{ scale: 1.2 }}>

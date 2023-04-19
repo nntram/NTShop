@@ -32,7 +32,7 @@ const useGetQuantity = () => {
         }
         updateQuatity()
         
-    })
+    }, [queryQuantity])
 
     return totalQuantity;
 
