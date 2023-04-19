@@ -12,3 +12,17 @@ td,
 th{
  color: var(--primary-color);
 }
+
+.cart__btn{
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.remove__cartItem{
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.td__remove{
+    vertical-align: middle;
+}

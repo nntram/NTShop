@@ -87,7 +87,10 @@ namespace NTShop.Repositories
             }
             var cart = await _unitOfWork.GetRepository<Cart>().GetFirstOrDefaultAsync(
                         predicate: p => p.Customerid == cusomterId,
-                        include: p => p.Include(n => n.Cartdetails));
+                        include: p => p.Include(n => n.Cartdetails)
+                                        .ThenInclude(n => n.Product)
+                                        .ThenInclude(n => n.Productimages)
+                                        );
             if(cart == null)
             {
                 var createCart = new Cart();

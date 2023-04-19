@@ -9,6 +9,10 @@ class CartApi {
         const url = '/cart/quantity';
         return await axiosClient.get(url);
     };
+    getCart =  async () => {
+        const url = '/cart';
+        return await axiosClient.get(url);
+    };
 
 
 }
