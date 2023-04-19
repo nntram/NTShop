@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import CommonSection from '../components/UI/CommonSection'
 import Helmet from '../components/helmet/Helmet'
 import { Container, Row, Col } from 'reactstrap'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import '../styles/product-details.css'
 import { motion } from 'framer-motion'
 import ProductList from '../components/UI/ProductList'
@@ -13,6 +13,12 @@ import { useQuery } from 'react-query'
 import NotFound from '../components/UI/NotFound'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import { useMutation } from 'react-query';
+import cartApi from '../api/CartApi'
+import useGetCurrentUser from '../custom-hooks/useGetCurrentUser'
+import useGetQuantity from '../custom-hooks/useGetQuantity'
+import { useDispatch } from 'react-redux'
+import { cartActions } from '../redux/slices/cartSlice'
 
 const ProductDetails = () => {
   const { productId } = useParams()
@@ -20,8 +26,10 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(null)
   const reviewUser = useRef('')
   const reviewMsg = useRef('')
-
+  const currentUser = useGetCurrentUser()
   const [quantity, setQuantity] = useState('1')
+  const currentTotalQuantity = useGetQuantity()
+  const dispatch = useDispatch()
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -38,16 +46,13 @@ const ProductDetails = () => {
     toast.success('Review submited.')
   }
 
-  const addToCart = () => {
-    // dispatch(cartActions.addItem({
-    //   id: id,
-    //   productName: productName,
-    //   price: price,
-    //   image: imgUrl
-    // }))
-
-    toast.success('Product added to cart.')
-  }
+  const CustomToastWithLink = () => (
+    <div>
+      Vui lòng
+      <Link to="/login" className='text-info'> Đăng nhập </Link>
+      để tiếp tục.
+    </div>
+  );
 
   const fetchProductById = async (id) => {
     try {
@@ -90,19 +95,20 @@ const ProductDetails = () => {
   const relatedProducts = queryRelatedProducts.data
 
   const validQuantity = (value) => {
-    if(value < 1 || !value){
+    if (value < 1 || !value) {
       setQuantity(1)
       return;
     }
-    if(product && value > product.productquantity ){
+    if (product && value > product.productquantity) {
       setQuantity(product.productquantity)
       toast.warning('Vượt quá số lượng sản phẩm.')
       return;
     }
-     setQuantity(value) 
+    setQuantity(value)
   }
+
   const handleQuantity = (e) => {
-    if (!e.target.validity.valid){
+    if (!e.target.validity.valid) {
       return;
     }
     validQuantity(e.target.value)
@@ -116,6 +122,39 @@ const ProductDetails = () => {
     const newValue = parseInt(quantity) - 1
     validQuantity(newValue)
   }
+  const postAddToCart = async (data) => {
+    try {
+      const response = await cartApi.addToCart(data)
+      return response;
+    } catch (error) {
+      toast.error(error.response.data, { autoClose: false })
+      console.log("Failed to add product to cart: ", error);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: (data) => postAddToCart(data)
+  });
+
+  const addToCart = async () => {
+    if (!currentUser) {
+      toast.info(CustomToastWithLink, { autoClose: false })
+      return;
+    }
+    const  data = {
+      productId,
+      quantity
+    }
+    
+    const result =  await mutation.mutateAsync(data)
+    if(result)
+    {
+      dispatch(cartActions.setTotalQuatity(currentTotalQuantity + Number(quantity)))
+      toast.success(result)
+    }
+   
+  }
+
 
   if (queryProduct.isLoading) {
     return <Loading />
@@ -181,18 +220,18 @@ const ProductDetails = () => {
                   <span>Số lượng:</span>
                   <div className="input-group w-25">
                     <div className="input-group-prepend">
-                      <motion.button className="quantity__btn" whileTap={{opacity: 0.5}}
+                      <motion.button className="quantity__btn" whileTap={{ opacity: 0.5 }}
                         onClick={decrementQuantity}>
                         -
                       </motion.button>
                     </div>
-                    <input type="text"                      
-                      className="form-control text-center" 
+                    <input type="text"
+                      className="form-control text-center"
                       pattern="[0-9]*"
-                      value={quantity} 
+                      value={quantity}
                       onChange={(e) => handleQuantity(e)} />
                     <div className="input-group-prepend">
-                      <motion.button className="quantity__btn" whileTap={{opacity: 0.5}}
+                      <motion.button className="quantity__btn" whileTap={{ opacity: 0.5 }}
                         onClick={incrementQuantity}>
                         +
                       </motion.button>
@@ -217,9 +256,9 @@ const ProductDetails = () => {
 
                 <div className="d-flex align-items-center gap-3 mt-5">
                   Chia sẻ:
-                  <a href="#" className ="fa-facebook"><i className = "fa ri-facebook-line"></i></a>
-                  <a href="#" className ="fa-twitter"><i className ="fa ri-twitter-line"></i></a>
-                  <a href="#" className ="fa-google"><i className = "fa ri-google-fill"></i></a>
+                  <a href="#" className="fa-facebook"><i className="fa ri-facebook-line"></i></a>
+                  <a href="#" className="fa-twitter"><i className="fa ri-twitter-line"></i></a>
+                  <a href="#" className="fa-google"><i className="fa ri-google-fill"></i></a>
                 </div>
 
               </Col>

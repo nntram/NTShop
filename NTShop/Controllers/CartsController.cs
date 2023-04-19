@@ -37,6 +37,18 @@ namespace NTShop.Controllers
             }
             return Ok(data);
         }
+        [HttpGet("quantity")]
+        public async Task<IActionResult> GetCartQuantity([FromHeader] string authorization)
+        {
+            var userId = _tokenService.GetUserIdFromToken(authorization);
+
+            var data = await _cartRepository.GetCartQuantity(userId);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
 
         [HttpPost("")]
         public async Task<IActionResult> AddToCart([FromHeader] string authorization, 

@@ -5,9 +5,12 @@ import "./header.css";
 import { motion } from "framer-motion";
 import logo from "../../assets/images/logo5.png";
 import userIcon from "../../assets/images/user-icon.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import useGetCurrentUser from "../../custom-hooks/useGetCurrentUser";
+import useGetQuantity from "../../custom-hooks/useGetQuantity";
+import { cartActions } from "../../redux/slices/cartSlice";
 
 const nav__links = [
   {
@@ -32,8 +35,15 @@ const Header = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
   const closeRef = useRef(null);
-  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const [currentUser, setCurrentUser] = useState()
+  const totalQuantity =  useSelector(state => state.cart.totalQuantity)
+  const currentUser = useGetCurrentUser()
+  const currentTotalQuantity = useGetQuantity()
+  const dispatch = useDispatch()
+  
+  // useEffect(() => {
+  //   dispatch(cartActions.setTotalQuatity(currentTotalQuantity))
+  // })
+  
 
   const logout = () => {
     sessionStorage.removeItem("userAuth");
@@ -52,20 +62,6 @@ const Header = () => {
     closeRef.current.classList.toggle("active__menu");
   };
 
-  useEffect(() => {
-    const parseCurrentUser = () => {
-      const user = sessionStorage.getItem("currentUser");
-
-      try {
-        if (user !== JSON.stringify(currentUser)) {
-          setCurrentUser(JSON.parse(user))
-        }
-      } catch (error) {
-        setCurrentUser(null)
-      }
-    }
-    parseCurrentUser()
-  })
   return (
     <header className="header sticky__header" ref={headerRef}>
       <Container>
@@ -103,7 +99,6 @@ const Header = () => {
             <div className="nav__icons">
               <span className="fav__icon">
                 <i className="ri-heart-line"></i>
-                <span className="badge">1</span>
               </span>
               <span className="cart__icon" onClick={navigateToCart}>
                 <i className="ri-shopping-cart-2-line"></i>

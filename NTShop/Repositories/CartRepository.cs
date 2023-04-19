@@ -66,6 +66,17 @@ namespace NTShop.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<int?> GetCartQuantity(string cusomterId)
+        {
+            var cart = await GetCart(cusomterId);
+            if(cart != null)
+            {
+                return cart.Cartquantity;
+            }
+
+            return null;
+        }
+
         public async Task<CartModel> GetCustomerCart(string cusomterId)
         {
             var customer = await _unitOfWork.GetRepository<Customer>().GetFirstOrDefaultAsync(
