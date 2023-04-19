@@ -13,7 +13,10 @@ class CartApi {
         const url = '/cart';
         return await axiosClient.get(url);
     };
-
+    removeFromCart = async (data) => {
+        const url = '/cart/remove';
+        return await axiosClient.post(url, data)
+    };
 
 }
 

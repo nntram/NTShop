@@ -25,7 +25,7 @@ namespace NTShop.Repositories
             var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
                             predicate: p => (p.Productid == model.ProductId && p.Productisacitve == true));
 
-            if (product == null || cart == null || model.Quantity < 1 ||
+            if (product == null || cart == null ||
                 (product != null && model.Quantity > product.Productquantity))
             {
                 return "Yêu cầu không hợp lệ.";
@@ -37,9 +37,13 @@ namespace NTShop.Repositories
             var isInCart = cartDetail.FirstOrDefault(n => n.Productid == model.ProductId);
             if (isInCart != null)
             {
-                if (model.Quantity + isInCart.Cartdetailquantity > product.Productquantity)
+                if (model.Quantity > 0 && model.Quantity + isInCart.Cartdetailquantity > product.Productquantity)
                 {
                     return "Vượt quá số sản phẩm trong kho.";
+                }
+                if (model.Quantity < 0 && model.Quantity + isInCart.Cartdetailquantity < 1)
+                {
+                    return "Số lượng sản phẩm phải lớn hơn 1 hoặc xóa sản phẩm.";
                 }
                 isInCart.Cartdetailquantity += model.Quantity;
                 _unitOfWork.GetRepository<Cartdetail>().Update(isInCart);
@@ -59,12 +63,7 @@ namespace NTShop.Repositories
             await _unitOfWork.SaveChangesAsync();
 
             return "success";
-        }
-
-        public Task<string> DecreaseOne(string cartDetailtId)
-        {
-            throw new NotImplementedException();
-        }
+        }  
 
         public async Task<int?> GetCartQuantity(string cusomterId)
         {
@@ -106,14 +105,37 @@ namespace NTShop.Repositories
             return _mapper.Map<CartModel>(cart);
         }
 
-        public Task<string> IncreaseOne(string cartDetailtId)
+     
+        public async Task<string> Remove(string cartDetailtId)
         {
-            throw new NotImplementedException();
-        }
+            var cartDetail = await _unitOfWork.GetRepository<Cartdetail>().FindAsync(cartDetailtId);
 
-        public Task<string> Remove(string cartDetailtId)
-        {
-            throw new NotImplementedException();
+            if (cartDetail == null)
+            {
+                return "Không tìm thấy thông tin phù hợp.";
+            }
+
+            var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
+                    predicate: p => (p.Productisacitve == true && p.Productid == cartDetail.Productid));
+            var cart = await _unitOfWork.GetRepository<Cart>().FindAsync(cartDetail.Cartid);
+
+            if (cart == null)
+            {
+                return "Giỏ hàng không tồn tại.";
+            }
+            if (product == null)
+            {
+                return "Sản phẩm hiện không có trong giỏ hàng.";
+            }
+
+            var quantity = cartDetail.Cartdetailquantity;
+            _unitOfWork.GetRepository<Cartdetail>().Delete(cartDetail);
+            await _unitOfWork.SaveChangesAsync();
+
+            cart.Cartquantity -= quantity;
+            _unitOfWork.GetRepository<Cart>().Update(cart);
+            await _unitOfWork.SaveChangesAsync();
+            return "success";
         }
 
         private async Task<Cart> GetCart(string cusomterId)

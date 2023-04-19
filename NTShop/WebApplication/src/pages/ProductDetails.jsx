@@ -30,6 +30,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState('1')
   const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
   const dispatch = useDispatch()
+  const [validInput, setValidInput] = useState(true)
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -80,13 +81,13 @@ const ProductDetails = () => {
   }
 
   const queryProduct = useQuery(
-    { queryKey: 'product', queryFn: ({ id = productId }) => fetchProductById(id) },
+    { queryKey: ['product', productId], queryFn: ({ id = productId }) => fetchProductById(id) },
   )
   const product = queryProduct.data
 
   const queryRelatedProducts = useQuery(
     {
-      queryKey: 'relatedProducts',
+      queryKey: ['relatedProducts', productId],
       queryFn: ({ categoryid = product ? product.categoryid : "",
         brandid = product ? product.brandid : "" }) =>
         fetchProducts(categoryid, brandid)
@@ -97,21 +98,24 @@ const ProductDetails = () => {
   const validQuantity = (value) => {
     if (value < 1 || !value) {
       setQuantity(1)
+      setValidInput(false)
       return;
     }
     if (product && value > product.productquantity) {
       setQuantity(product.productquantity)
+      setValidInput(false)
       toast.warning('Vượt quá số lượng sản phẩm.')
       return;
     }
     setQuantity(value)
+    setValidInput(true)
   }
 
   const handleQuantity = (e) => {
     if (!e.target.validity.valid) {
       return;
     }
-    validQuantity(e.target.value)
+    setQuantity(e.target.value)
   }
   const incrementQuantity = () => {
     const newValue = parseInt(quantity) + 1
@@ -136,11 +140,19 @@ const ProductDetails = () => {
     mutationFn: (data) => postAddToCart(data)
   });
 
-  const addToCart = async () => {
+  const addToCart = async (e) => {
+    e.preventDefault()
+
     if (!currentUser) {
       toast.info(CustomToastWithLink, { autoClose: false })
       return;
     }
+
+    if(!validInput){     
+      setValidInput(true)
+      return;
+    }
+    
     const data = {
       productId,
       quantity
@@ -229,7 +241,8 @@ const ProductDetails = () => {
                         className="form-control text-center"
                         pattern="[0-9]*"
                         value={quantity}
-                        onChange={(e) => handleQuantity(e)} />
+                        onChange={(e) => handleQuantity(e)}
+                        onBlur={(e) => validQuantity(e.target.value)} />
                       <div className="input-group-prepend">
                         <motion.button className="quantity__btn" whileTap={{ opacity: 0.5 }}
                           onClick={incrementQuantity}>

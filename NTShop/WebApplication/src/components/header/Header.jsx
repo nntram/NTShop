@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import useGetCurrentUser from "../../custom-hooks/useGetCurrentUser";
 import useGetQuantity from "../../custom-hooks/useGetQuantity";
 import { cartActions } from "../../redux/slices/cartSlice";
+import { useQueryClient } from "react-query";
 
 const nav__links = [
   {
@@ -39,9 +40,10 @@ const Header = () => {
   const currentUser = useGetCurrentUser()
   const currentTotalQuantity = useGetQuantity()
   const dispatch = useDispatch()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
-    dispatch(cartActions.setTotalQuatity(currentTotalQuantity))
+     dispatch(cartActions.setTotalQuatity(currentTotalQuantity))
   }, [currentTotalQuantity])
 
 
@@ -53,6 +55,7 @@ const Header = () => {
     localStorage.removeItem("userAuth");
     localStorage.removeItem("currentUser");
     toast.success("Đã đăng xuất khỏi tài khoản.");
+    queryClient.clear();
     navigate("/home");
   };
 

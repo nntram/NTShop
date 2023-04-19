@@ -18,7 +18,7 @@ const useGetQuantity = () => {
     };
 
     const queryQuantity = useQuery(
-        { queryKey: 'cartQuantity', queryFn: () => getCartQuantity(), enabled: Boolean(currentUser) },
+        { queryKey: ['cartQuantity', currentUser], queryFn: () => getCartQuantity(), enabled: Boolean(currentUser) },
     )
 
     useEffect(() => {

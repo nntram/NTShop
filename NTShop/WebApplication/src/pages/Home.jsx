@@ -74,7 +74,7 @@ const Home = () => {
 
 
   const queryResults = useQueries([
-    { queryKey: 'products', queryFn: fetchProductList },
+    { queryKey: 'hotproducts', queryFn: fetchProductList },
     { queryKey: 'categories', queryFn: fetchCategoryList },
     { queryKey: 'brands', queryFn: fetchBrandList },
   ])

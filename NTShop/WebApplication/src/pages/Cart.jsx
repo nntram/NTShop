@@ -1,19 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles/cart.css'
 import Helmet from '../components/helmet/Helmet'
 import CommonSection from '../components/UI/CommonSection'
 import { Col, Row, Container } from 'reactstrap'
-import { motion } from 'framer-motion'
-import { cartActions } from '../redux/slices/cartSlice'
-import { useSelector, useDispatch } from 'react-redux'
+
 import { Link } from 'react-router-dom'
-import { useQuery } from 'react-query'
+import { useQuery} from 'react-query'
 import cartApi from '../api/CartApi'
 import Loading from '../components/loading/Loading'
+import CartDetail from './CartDetail'
+import { useSelector } from 'react-redux'
+
 
 const Cart = () => {
-
-  const fetchCart = async (categoryid, brandid) => {
+  let totalAmount =0
+  const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
+  const fetchCart = async () => {
     try {
       const response = await cartApi.getCart();
       return (response);
@@ -22,20 +24,26 @@ const Cart = () => {
     }
   }
 
-  const queryCart = useQuery(
-    { queryKey: 'cart', queryFn: fetchCart },
-  )
+  const queryCart = useQuery( { queryKey: ['cart', currentTotalQuantity], 
+  queryFn: fetchCart, enabled: Boolean(currentTotalQuantity)})
 
   if (queryCart.isLoading) {
     return <Loading />
   }
-  const cart = queryCart.data
-  let totalAmount = 0;
-  if (cart.cartdetails.length > 0) {
-    cart.cartdetails.map(item => {
-      totalAmount += item.product.productsaleprice
-    })
+
+  if(queryCart.isSuccess){
+    if (queryCart.data && queryCart.data.cartdetails.length > 0) {
+      let sum = 0;
+      queryCart.data.cartdetails.map(item => {
+       sum += item.cartdetailquantity*item.product.productsaleprice
+      })
+      totalAmount = sum
+    }
+    else{
+      totalAmount = 0
+    }
   }
+
   return (
     <Helmet title='Giỏ hàng'>
       <CommonSection title='Giỏ hàng' />
@@ -44,7 +52,7 @@ const Cart = () => {
           <Row>
             <Col lg='9'>
               {
-                cart.cartdetails === 0 ?
+                queryCart.data && queryCart.data.cartdetails === 0 ?
                   (<h2 className='fs-4 text-center'>Bạn chưa thêm sản phẩm vào giỏ hàng.</h2>)
                   :
                   (<table className='table bodered'>
@@ -60,8 +68,8 @@ const Cart = () => {
 
                     <tbody>
                       {
-                        cart.cartdetails.map((item, index) => (
-                          <Tr item={item} key={index} />
+                       queryCart.data && queryCart.data.cartdetails.map((item, index) => (
+                          <CartDetail item={item} key={item.cartdetailid} />
 
                         ))
                       }
@@ -99,49 +107,5 @@ const Cart = () => {
   )
 }
 
-const Tr = ({ item }) => {
-  const dispatch = useDispatch()
 
-  const deleteProduct = () => {
-    //dispatch(cartActions.deleteItem(item.id))
-  }
-
-  return (
-    <tr>
-      <td> <img
-        src={require(`../assets/image_data/products/${item.product.productimages[0].productimageurl}`)} alt="" />
-      </td>
-      <td>{item.product.productname} </td>
-      <td className='text-center'>{item.product.productsaleprice.toLocaleString()} VNĐ</td>
-      {/* <td className='text-center'>{item.cartdetailquantity}</td> */}
-      <td>
-        <div className='w-25 m-auto'>
-          <motion.button whileTap={{ opacity: 0.5 }} className='w-100 cart__btn'
-          >
-            <i className="ri-arrow-up-s-fill"></i>
-          </motion.button>
-
-          <input type="text"
-            className="w-100 text-center"
-            value={item.cartdetailquantity}
-          />
-
-          <motion.button whileTap={{ opacity: 0.5 }} className='w-100 cart__btn'
-          >
-             <i className="ri-arrow-down-s-fill"></i>
-          </motion.button>
-        </div>
-
-      </td>
-      <td className='text-center td__remove'>
-        <motion.div className='text-danger remove__cartItem'  whileTap={{ scale: 1.2 }}>
-          <i 
-            className="ri-delete-bin-line"
-            onClick={deleteProduct}>
-          </i>
-        </motion.div>
-      </td>
-    </tr>
-  )
-}
 export default Cart

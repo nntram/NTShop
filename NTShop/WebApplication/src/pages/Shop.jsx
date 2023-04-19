@@ -97,7 +97,7 @@ const Shop = () => {
 
 
   const productResults = useInfiniteQuery(
-    ['products', brandOption, categoryOption, sortOption, debouncedFilter],
+    ['shop_products', brandOption, categoryOption, sortOption, debouncedFilter],
     ({ pageParam = 0 }) => fetchProductList(pageParam),
     {
       getNextPageParam: (lastPage) =>
