@@ -9,13 +9,13 @@ const Checkout = () => {
   const totalQty = useSelector(state => state.cart.totalQuantity)
   const totalAmount = useSelector(state => state.cart.totalAmount)
   return (
-   <Helmet title='Checkout'>
-    <CommonSection title='Checkout'/>
+   <Helmet title='Đặt hàng'>
+    <CommonSection title='Đặt hàng'/>
     <section>
       <Container>
         <Row>
           <Col lg='8'>
-            <h6 className='mb-4 fw-bold'>Billing Information</h6>
+            <h6 className='mb-4 fw-bold'>Thông tin giao hàng</h6>
             <Form className='billing__form'>
               <FormGroup className='form__group'>
                 <input type="text" placeholder='Enter your name'/>
@@ -43,10 +43,10 @@ const Checkout = () => {
 
           <Col lg='4'>
             <div className="checkout__cart">
-              <h6>Total Qty: <span>{totalQty} items</span></h6>
-              <h6>Subtotal: <span>${totalAmount}</span></h6>
-              <h6>Shipping: <br/> Free shipping<span>$0</span></h6>
-              <h4>Total Cost: <span>${totalAmount}</span></h4>
+              <h6>Số sản phẩm: <span>{totalQty} sản phẩm</span></h6>
+              <h6>Số tiền: <span>{totalAmount.toLocaleString()} VNĐ</span></h6>
+              <h6>Phí giao hàng:  <span>Miễn phí</span></h6>
+              <h4>Thành tiền: <span>{totalAmount.toLocaleString()} VNĐ</span></h4>
 
             <button className='buy__btn auth__btn w-100'>Place an order</button>
 

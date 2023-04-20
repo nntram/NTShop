@@ -9,5 +9,6 @@ namespace NTShop.Repositories.Interface
         public Task<int?> GetCartQuantity(string cusomterId);
         public Task<string> AddToCart(string cartId, AddToCartModel model);
         public Task<string> Remove(string cartDetailtId);
+        public Task<int?> CheckAndUpdateCart(string customerId);
     }
 }

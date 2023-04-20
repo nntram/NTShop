@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { useMutation } from 'react-query'
 import cartApi from '../api/CartApi'
 import { toast } from 'react-toastify'
-import { useEffect } from 'react'
+
 
 const CartDetail = ({ item }) => {
     const dispatch = useDispatch()

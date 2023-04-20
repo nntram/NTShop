@@ -18,6 +18,11 @@ class CartApi {
         return await axiosClient.post(url, data)
     };
 
+    check =  async () => {
+        const url = '/cart/check';
+        return await axiosClient.get(url);
+    };
+
 }
 
 const cartApi = new CartApi();

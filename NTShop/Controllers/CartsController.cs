@@ -82,5 +82,20 @@ namespace NTShop.Controllers
             return Ok("Cập nhật giỏ hàng thành công.");
 
         }
+
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckAndUpdateCart([FromHeader] string authorization)
+        {
+            var userId = _tokenService.GetUserIdFromToken(authorization);
+
+            var data = await _cartRepository.CheckAndUpdateCart(userId);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
+
     }
 }

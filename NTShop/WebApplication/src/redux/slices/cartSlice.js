@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    totalQuantity: 0
+    totalQuantity: -100,
+    totalAmount: 0
 }
 
 const cartSlice = createSlice({
@@ -12,6 +13,11 @@ const cartSlice = createSlice({
         const quantity = action.payload        
         state.totalQuantity = quantity                     
     },
+
+    setTotalAmount: (state, action) => {
+      const amount = action.payload        
+      state.totalAmount = amount                     
+  },
 
   }
 });

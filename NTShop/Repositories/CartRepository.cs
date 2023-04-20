@@ -63,7 +63,50 @@ namespace NTShop.Repositories
             await _unitOfWork.SaveChangesAsync();
 
             return "success";
-        }  
+        }
+
+        public async Task<int?> CheckAndUpdateCart(string customerId)
+        {
+            int result = 0;
+            var cart = await GetCart(customerId);
+            if (cart == null)
+            {
+                return null;
+            }
+
+            foreach(var item in cart.Cartdetails)
+            {
+                var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
+                    predicate: p => p.Productisacitve == true 
+                        && p.Productid == item.Productid 
+                        && p.Productquantity > 0);
+
+                if(product == null)
+                {
+                    var sub = item.Cartdetailquantity;
+                    result += sub?? 0;
+                    cart.Cartquantity -= sub;
+                    _unitOfWork.GetRepository<Cartdetail>().Delete(item);
+                    _unitOfWork.GetRepository<Cart>().Update(cart);
+                    _unitOfWork.SaveChanges();
+                    continue;
+                }
+
+                if(item.Cartdetailquantity > product.Productquantity)
+                {
+                    var sub = item.Cartdetailquantity - product.Productquantity;
+                    result += sub?? 0;
+                    cart.Cartquantity -= sub;
+                    item.Cartdetailquantity = product.Productquantity;                    
+                    _unitOfWork.GetRepository<Cartdetail>().Update(item);
+                    _unitOfWork.GetRepository<Cart>().Update(cart);
+                    _unitOfWork.SaveChanges();
+                }
+
+            }
+
+            return result;
+        }
 
         public async Task<int?> GetCartQuantity(string cusomterId)
         {
