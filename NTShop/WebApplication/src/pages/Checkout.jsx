@@ -5,38 +5,22 @@ import CommonSection from '../components/UI/CommonSection'
 import '../styles/checkout.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { cartActions } from '../redux/slices/cartSlice'
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useMutation, useQueries } from 'react-query'
 import cartApi from '../api/CartApi'
 import Loading from '../components/loading/Loading'
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import addressApi from '../api/AddressApi'
 import OrderDetail from './OrderDetail'
+import customerApi from '../api/CustomerApi'
 
 const Checkout = () => {
   const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
+  const currentUser = useSelector(state => state.customer.currentUser)
   let totalAmount = 0
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [ward, setWard] = useState("");
 
-  
-  const fetchCart = async () => {
-    try {
-      const response = await cartApi.getCart();
-      return (response);
-    } catch (error) {
-      console.log('Failed to fetch cart: ', error)
-    }
-  }
-
-  const queryCart = useQuery({
-    queryKey: ['cart', currentTotalQuantity],
-    queryFn: fetchCart, enabled: Boolean(currentTotalQuantity >= 0)
-  })
-
-  const mutation = useMutation({
-    mutationFn: null,
-  });
 
   const fetchProvinces = async () => {
     try {
@@ -62,48 +46,56 @@ const Checkout = () => {
       console.log('Failed to fetch wards: ', error);
     }
   }
-  const provinceResults = useQuery('provinces', fetchProvinces)
+
+  const fetchCustomerInfo = async () => {
+    try {
+      const response = await customerApi.getById(currentUser.Id)
+      return (response);
+    } catch (error) {
+      console.log('Failed to fetch cart: ', error)
+    }
+  }
+
+  const fetchCart = async () => {
+    try {
+      const response = await cartApi.getCart();
+      return (response);
+    } catch (error) {
+      console.log('Failed to fetch cart: ', error)
+    }
+  }
+
+  const fetchFullAddress = async (wardId) => {
+    try {
+      const response = await addressApi.getFullAddress(wardId);
+      return (response);
+    } catch (error) {
+      console.log('Failed to fetch cart: ', error)
+    }
+  }
+
+  const queryResults = useQueries([
+    {
+      queryKey: ['cart', currentTotalQuantity],
+      queryFn: fetchCart, enabled: Boolean(currentTotalQuantity >= 0)
+    },
+    {
+      queryKey: ['customerInfo', currentUser],
+      queryFn: fetchCustomerInfo
+    }
+  ])
+
+
+  const fullAddressResults = useQuery({
+    queryKey: ['full-address'],
+    queryFn: ({ wardId = queryResults[1].data.wardid }) => fetchFullAddress(wardId),
+    enabled: queryResults[1].data != null
+  })
+
   let provinceOptions = []
-  if (provinceResults.isSuccess && provinceResults.data) {
-    const data = [...provinceResults.data.map((item) => (
-      {
-        value: item.provinceid, label: item.provincename
-      }
-    ))]
-    provinceOptions = [...data]
-  }
-
-  const districtResults = useQuery(['districts', province],
-    ({ provinceId = province }) => fetchDistricts(provinceId),
-    {
-      enabled: Boolean(province),
-    })
-
   let districtOptions = []
-  if (districtResults.isSuccess && districtResults.data) {
-    const data = [...districtResults.data.map((item) => (
-      {
-        value: item.districtid, label: item.districtname
-      }
-    ))]
-    districtOptions = [...data]
-  }
-
-  const wardResults = useQuery(['wards', district],
-    ({ districtId = district }) => fetchWards(districtId),
-    {
-      enabled: Boolean(district),
-    })
-
   let wardOptions = []
-  if (wardResults.isSuccess && wardResults.data) {
-    const data = [...wardResults.data.map((item) => (
-      {
-        value: item.wardid, label: item.wardname
-      }
-    ))]
-    wardOptions = [...data]
-  }
+
   const handleProvinceSelect = (value) => {
     setProvince(value)
 
@@ -119,11 +111,13 @@ const Checkout = () => {
     setWard(value)
   }
 
-  if (!queryCart.isSuccess) {
-    return <Loading />
-  }
+  const isLoading = queryResults.some(query => query.isLoading) || fullAddressResults.isLoading
+  const isSucess = queryResults.every(query => query.isSuccess) && fullAddressResults.isSuccess
 
-  if (queryCart.isSuccess) {
+  let queryCart
+  let defaultValues
+  if (isSucess) {
+    queryCart = queryResults[0]
     if (queryCart.data && queryCart.data.cartdetails.length > 0) {
       let sum = 0;
       queryCart.data.cartdetails.map(item => {
@@ -134,28 +128,76 @@ const Checkout = () => {
     else {
       totalAmount = 0
     }
+
+    provinceOptions = [...fullAddressResults.data.provinces.map((item) => (
+      {
+        value: item.provinceid, label: item.provincename
+      }
+    ))]
+
+    districtOptions = [...fullAddressResults.data.districts.map((item) => (
+      {
+        value: item.districtid, label: item.districtname
+      }
+    ))]
+    wardOptions = [...fullAddressResults.data.wards.map((item) => (
+      {
+        value: item.wardid, label: item.wardname
+      }
+    ))]
+    defaultValues = {
+      Customername: queryResults[1].data.customername,
+      Customerphonenumber: queryResults[1].data.customerphonenumber,
+      Customeraddress: queryResults[1].data.customeraddress,
+      province: fullAddressResults.data.provinceId,
+      district: fullAddressResults.data.districtId,
+      Wardid: fullAddressResults.data.wardId
+    }
+
   }
 
+  const districtResults = useQuery(['districts', province],
+    ({ provinceId = province }) => fetchDistricts(provinceId),
+    {
+      enabled: Boolean(province),
+    })
 
-  if (provinceResults.isLoading) {
-    return <Loading />
+
+  if (districtResults.isSuccess && districtResults.data) {
+    const data = [...districtResults.data.map((item) => (
+      {
+        value: item.districtid, label: item.districtname
+      }
+    ))]
+    districtOptions = [...data]
   }
 
-  if (provinceResults.isError) {
-    console.log('fetch error')
-    return <h6>Đã xảy ra lỗi.</h6>
+  const wardResults = useQuery(['wards', district],
+    ({ districtId = district }) => fetchWards(districtId),
+    {
+      enabled: Boolean(district),
+    })
+
+  if (wardResults.isSuccess && wardResults.data) {
+    const data = [...wardResults.data.map((item) => (
+      {
+        value: item.wardid, label: item.wardname
+      }
+    ))]
+    wardOptions = [...data]
   }
+
   return (
     <Helmet title='Đặt hàng'>
       <CommonSection title='Đặt hàng' />
       <section>
         {
-          mutation.isLoading ? <Loading /> :
+          isLoading ? <Loading /> :
             <Container>
               <AvForm className="auth__form bg-white"
                 encType="multipart/form-data"
                 onValidSubmit={null}
-                model={null}>
+                model={defaultValues}>
                 <Row>
                   <Col lg='8'>
                     <h5 className="mb-3"> Thông tin giao hàng</h5>
@@ -230,6 +272,7 @@ const Checkout = () => {
                             </option>
                           ))
                         }
+                        <option value="myval">Hello</option>
                       </AvField>
                     </AvGroup>
 

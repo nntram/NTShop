@@ -31,10 +31,10 @@ namespace NTShop.Repositories
                 return null;
             }
             fullAddress.DistrictId = data.Districtid;
-            fullAddress.ProviceId = data.District.Provinceid;
+            fullAddress.ProvinceId = data.District.Provinceid;
 
             fullAddress.Provinces = await GetProvinceAsync();
-            fullAddress.Districts = await GetDistrictAsync(fullAddress.ProviceId);
+            fullAddress.Districts = await GetDistrictAsync(fullAddress.ProvinceId);
             fullAddress.Wards = await GetWardAsync(fullAddress.DistrictId);
 
             return fullAddress;

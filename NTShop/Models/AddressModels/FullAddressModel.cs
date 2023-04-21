@@ -2,7 +2,7 @@
 {
     public class FullAddressModel
     { 
-        public string? ProviceId { get; set; }
+        public string? ProvinceId { get; set; }
         public string? DistrictId { get; set; }
         public string? WardId { get; set; }
         public List<ProvinceModel> Provinces { get; set; }

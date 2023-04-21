@@ -15,6 +15,11 @@ class AddressApi {
         return await axiosClient.get(url);
     };
 
+    getFullAddress =  async (id) => {
+        const url = '/address/full-address/' + id;
+        return await axiosClient.get(url);
+    };
+
 }
 
 const addressApi = new AddressApi();
