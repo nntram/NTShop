@@ -41,7 +41,6 @@ namespace NTShop.Entities
         [StringLength(128)]
         public string? Customeremail { get; set; }
         [Column("CUSTOMEREMAILCONFIRM")]
-        [StringLength(128)]
         public bool? Customeremailconfirm { get; set; }
         [Column("CUSTOMERUSERNAME")]
         [StringLength(128)]

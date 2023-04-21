@@ -7,7 +7,7 @@ import Checkout from '../pages/Checkout'
 import Login from '../pages/Login'
 import Signup from '../pages/Signup'
 import ProductDetails from '../pages/ProductDetails'
-
+import NotFound from '../components/UI/NotFound'
 import AddProduct from '../admin/AddProduct'
 import AllProducts from '../admin/AllProducts'
 import Dashboard from '../admin/Dashboard'
@@ -22,7 +22,6 @@ const Routers = () => {
     <Route path='loading' element={<Loading />} />
     <Route path='home' element={<Home />} />
     <Route path='shop' element={<Shop />} />
-    <Route path='cart' element={<Cart />} />
     <Route path='shop/:productId' element={<ProductDetails key={window.location.pathname} />} />
 
     <Route path='login' element={<Login />} />
@@ -31,6 +30,7 @@ const Routers = () => {
     <Route path='signup' element={<Signup />} />
 
     <Route element={<ProtectedRoute />}>
+      <Route path='cart' element={<Cart />} />
       <Route path='reset-password' element={<ResetPassword />} />
       <Route path='checkout' element={<Checkout />} />
       <Route path='dashboard' element={<Dashboard />} />
@@ -38,7 +38,7 @@ const Routers = () => {
       <Route path='dashboard/add-product' element={<AddProduct />} />
       <Route path='dashboard/users' element={<Users />} />
     </Route>
-
+    <Route path="*" element={<NotFound />} />
 
   </Routes>
 }

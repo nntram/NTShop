@@ -15,8 +15,6 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 import { useMutation } from 'react-query';
 import cartApi from '../api/CartApi'
-import useGetCurrentUser from '../custom-hooks/useGetCurrentUser'
-import useGetQuantity from '../custom-hooks/useGetQuantity'
 import { useDispatch, useSelector } from 'react-redux'
 import { cartActions } from '../redux/slices/cartSlice'
 
@@ -26,9 +24,9 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(null)
   const reviewUser = useRef('')
   const reviewMsg = useRef('')
-  const currentUser = useGetCurrentUser()
   const [quantity, setQuantity] = useState('1')
   const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
+  const currentUser = useSelector(state => state.customer.currentUser)
   const dispatch = useDispatch()
   const [validInput, setValidInput] = useState(true)
 

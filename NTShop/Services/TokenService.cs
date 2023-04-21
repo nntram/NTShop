@@ -13,11 +13,13 @@ namespace NTShop.Services
 {
     public class TokenService : ITokenService
     {
-        public IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public string GenerateAccessToken(AccountModel account)
@@ -110,6 +112,12 @@ namespace NTShop.Services
             var userId = principal.Claims.First(p => p.Type == "Id").Value;
 
             return userId;
+        }
+
+        public string GetIpAddress()
+        {
+            string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            return ipAddress;
         }
     }
 }

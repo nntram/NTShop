@@ -11,5 +11,6 @@ namespace NTShop.Services.Interface
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
         public Task<RecaptchaResponseModel> VerifyReCaptcha(string token);
         public string GetUserIdFromToken(string authorization);
+        public string GetIpAddress();
     }
 }

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import AddressApi from "../api/AddressApi"
+import addressApi from "../api/AddressApi"
 import { useQuery, useMutation } from "react-query";
 import Loading from "../components/loading/Loading";
 import { AvForm, AvField, AvGroup, AvRadioGroup, AvRadio, AvInput, AvFeedback } from 'availity-reactstrap-validation';
@@ -85,7 +85,7 @@ const Signup = () => {
     })
   const fetchProvinces = async () => {
     try {
-      const response = await AddressApi.getProvince();
+      const response = await addressApi.getProvince();
       return (response);
     } catch (error) {
       console.log('Failed to fetch provinces: ', error);
@@ -93,7 +93,7 @@ const Signup = () => {
   }
   const fetchDistricts = async (prodvinceId) => {
     try {
-      const response = await AddressApi.getDistrict(prodvinceId);
+      const response = await addressApi.getDistrict(prodvinceId);
       return (response);
     } catch (error) {
       console.log('Failed to fetch districts: ', error);
@@ -101,7 +101,7 @@ const Signup = () => {
   }
   const fetchWards = async (districtId) => {
     try {
-      const response = await AddressApi.getWard(districtId);
+      const response = await addressApi.getWard(districtId);
       return (response);
     } catch (error) {
       console.log('Failed to fetch wards: ', error);

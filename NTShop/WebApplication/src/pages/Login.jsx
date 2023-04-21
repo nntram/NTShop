@@ -9,6 +9,8 @@ import { useMutation } from "react-query";
 import authApi from "../api/AuthApi.js";
 import jwt_decode from "jwt-decode";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useDispatch, useSelector } from 'react-redux'
+import { customerActions } from "../redux/slices/customerSlice";
 
 const Login = () => {
   const [token, setToken] = useState();
@@ -19,6 +21,8 @@ const Login = () => {
   const navigate = useNavigate();
   const eyeRef = useRef(null);
   const passwordRef = useRef(null);
+  const currentUser = useSelector(state => state.customer.currentUser)
+  const dispatch = useDispatch()
 
   const { executeRecaptcha } = useGoogleReCaptcha();
   const handleReCaptchaVerify = useCallback(async () => {
@@ -30,7 +34,6 @@ const Login = () => {
   }, [executeRecaptcha]);
 
   useEffect(() => {
-    const currentUser = window.localStorage.getItem("currentUser");
     if (currentUser) {
       navigate("/home");
     }
@@ -59,21 +62,22 @@ const Login = () => {
       formData.append("UserName", username);
       formData.append("Password", password);
       formData.append("Token", token);
-      const user = await mutation.mutateAsync(formData);
+      const userToken = await mutation.mutateAsync(formData);
 
-      if (user) {
+      if (userToken) {
         try {
-          const decode = JSON.stringify(jwt_decode(user))
+          const decode = JSON.stringify(jwt_decode(userToken))
           sessionStorage.setItem("currentUser", decode);
-          sessionStorage.setItem("userAuth", user);
+          sessionStorage.setItem("userAuth", userToken);
           localStorage.setItem("remember", remember);
-
+          dispatch(customerActions.setCurrentUser(JSON.parse(decode)))
           if (remember) {
             localStorage.setItem("currentUser", decode);
-            localStorage.setItem("userAuth", user);
+            localStorage.setItem("userAuth", userToken);
           }
+
           toast.success("Đã đăng nhập thành công.");
-          navigate("/checkout");
+          navigate("/cart");
         } catch {
           toast.error("Đã xảy ra lỗi.", { autoClose: false });
         }

@@ -8,10 +8,10 @@ import userIcon from "../../assets/images/user-icon.png";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import useGetCurrentUser from "../../custom-hooks/useGetCurrentUser";
 import useGetQuantity from "../../custom-hooks/useGetQuantity";
-import { cartActions } from "../../redux/slices/cartSlice";
 import { useQueryClient } from "react-query";
+import { customerActions } from "../../redux/slices/customerSlice";
+import { cartActions } from "../../redux/slices/cartSlice";
 
 const nav__links = [
   {
@@ -37,14 +37,10 @@ const Header = () => {
   const menuRef = useRef(null);
   const closeRef = useRef(null);
   const totalQuantity = useSelector(state => state.cart.totalQuantity)
-  const currentUser = useGetCurrentUser()
+  const currentUser = useSelector(state => state.customer.currentUser)
   const currentTotalQuantity = useGetQuantity()
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
-
-  useEffect(() => {
-     dispatch(cartActions.setTotalQuatity(currentTotalQuantity))
-  }, [currentTotalQuantity])
 
 
   const logout = () => {
@@ -54,6 +50,8 @@ const Header = () => {
     localStorage.removeItem("remember");
     localStorage.removeItem("userAuth");
     localStorage.removeItem("currentUser");
+
+    dispatch(customerActions.setCurrentUser(null))
     toast.success("Đã đăng xuất khỏi tài khoản.");
     queryClient.clear();
     navigate("/home");
@@ -64,6 +62,11 @@ const Header = () => {
     menuRef.current.classList.toggle("active__menu");
     closeRef.current.classList.toggle("active__menu");
   };
+
+  useEffect(() => {
+      dispatch(cartActions.setTotalQuatity(currentTotalQuantity)) 
+  }, [currentTotalQuantity])
+
 
   return (
     <header className="header sticky__header" ref={headerRef}>

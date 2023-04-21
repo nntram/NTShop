@@ -24,16 +24,27 @@ namespace NTShop.Controllers
         }
 
         [HttpGet("districts/{provinceId}")]
-        public async Task<IActionResult> GetDistrict(string provinceId)
+        public async Task<IActionResult> GetDistrict([FromRoute] string provinceId)
         {
             var data = await _addressRepository.GetDistrictAsync(provinceId);
             return Ok(data);
         }
 
         [HttpGet("wards/{districtId}")]
-        public async Task<IActionResult> GetWard(string districtId)
+        public async Task<IActionResult> GetWard([FromRoute] string districtId)
         {
             var data = await _addressRepository.GetWardAsync(districtId);
+            return Ok(data);
+        }
+
+        [HttpGet("full-address/{wardId}")]
+        public async Task<IActionResult> GetFullAdress([FromRoute] string wardId)
+        {
+            var data = await _addressRepository.GetFullAddressAsync(wardId);
+            if(data == null)
+            {
+                return NotFound();
+            }
             return Ok(data);
         }
     }

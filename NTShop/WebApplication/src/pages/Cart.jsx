@@ -38,7 +38,7 @@ const Cart = () => {
       console.log('Failed to fetch cart: ', error)
     }
   }
-  
+
   const queryCart = useQuery({
     queryKey: ['cart', currentTotalQuantity, mutation],
     queryFn: fetchCart, enabled: Boolean(currentTotalQuantity >= 0)
@@ -72,11 +72,12 @@ const Cart = () => {
 
     const result = await mutation.mutateAsync()
     if(result === 0){
-      navigate('/checkout')
+      navigate('/checkout', {state: {totalAmount: totalAmount}})
     }
     else{
       dispatch(cartActions.setTotalQuatity(currentTotalQuantity - Number(result)))
-      toast.warning('Chúng tôi đã cập nhật giỏ hàng của bạn cho phù hợp với lượng hàng trong kho. Vui lòng kiểm tra lại.')
+      toast.warning('Chúng tôi đã cập nhật giỏ hàng của bạn cho phù hợp với lượng hàng trong kho. Vui lòng kiểm tra lại.',
+      {autoClose: false})
     }
 
   }

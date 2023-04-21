@@ -3,6 +3,7 @@ using AutoMapper;
 using NTShop.Entities;
 using NTShop.Models.AddressModels;
 using NTShop.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace NTShop.Repositories
 {
@@ -15,6 +16,28 @@ namespace NTShop.Repositories
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<FullAddressModel?> GetFullAddressAsync(string wardId)
+        {
+            var fullAddress = new FullAddressModel();
+            fullAddress.WardId = wardId;
+
+            var data = await _unitOfWork.GetRepository<Ward>().GetFirstOrDefaultAsync(
+                predicate: p => p.Wardid == wardId,
+                include: p => p.Include(n => n.District).ThenInclude(m => m.Province));
+            if(data == null)
+            {
+                return null;
+            }
+            fullAddress.DistrictId = data.Districtid;
+            fullAddress.ProviceId = data.District.Provinceid;
+
+            fullAddress.Provinces = await GetProvinceAsync();
+            fullAddress.Districts = await GetDistrictAsync(fullAddress.ProviceId);
+            fullAddress.Wards = await GetWardAsync(fullAddress.DistrictId);
+
+            return fullAddress;
         }
 
         public async Task<List<DistrictModel>> GetDistrictAsync(string provinceId)

@@ -57,6 +57,8 @@ builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
 builder.Services.AddTransient<ICartRepository, CartRepository>();
 
+builder.Services.AddHttpContextAccessor();
+
 //Config database
 builder.Services.AddDbContext<NIENLUANContext>(
                x => x.UseSqlServer(builder.Configuration.GetConnectionString("eshop")));
