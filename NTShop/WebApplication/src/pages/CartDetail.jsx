@@ -97,7 +97,7 @@ const CartDetail = ({ item }) => {
         mutationFn: (data) => postRemoveFromCart(data)
     });
 
-    const removeFromCart = async (e, id, value) => {
+    const removeFromCart = async (e, id) => {
         e.preventDefault()
 
         const data = {
@@ -106,7 +106,7 @@ const CartDetail = ({ item }) => {
 
         const result = await mutationRemove.mutateAsync(data)
         if (result) {
-            dispatch(cartActions.setTotalQuatity(currentTotalQuantity - Number(value)))
+            dispatch(cartActions.setTotalQuatity(currentTotalQuantity - Number(quantity)))
             toast.success(result, { autoClose: 1000 })
         }
     }
@@ -147,7 +147,7 @@ const CartDetail = ({ item }) => {
                 <motion.div className='text-danger remove__cartItem' whileTap={{ scale: 1.2 }}>
                     <i
                         className="ri-delete-bin-line"
-                        onClick={(e) => removeFromCart(e, item.cartdetailid, item.cartdetailquantity)}>
+                        onClick={(e) => removeFromCart(e, item.cartdetailid)}>
                     </i>
                 </motion.div>
             </td>

@@ -56,7 +56,8 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
 builder.Services.AddTransient<ICartRepository, CartRepository>();
-
+builder.Services.AddTransient<ICartRepository, CartRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddHttpContextAccessor();
 
 //Config database

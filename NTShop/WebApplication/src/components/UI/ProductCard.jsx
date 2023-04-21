@@ -11,9 +11,9 @@ import { toast } from 'react-toastify'
 
 const ProductCard = ({ item }) => {
     const dispatch = useDispatch()
-    const [quantity, setQuantity] = useState(item.cartdetailquantity)
     const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
-
+    const currentUser = useSelector(state => state.customer.currentUser)
+    
     const postAddToCart = async (data) => {
         try {
             const response = await cartApi.addToCart(data)
@@ -23,6 +23,13 @@ const ProductCard = ({ item }) => {
             console.log("Failed to add product to cart: ", error);
         }
     };
+    const CustomToastWithLink = () => (
+        <div>
+          Vui lòng
+          <Link to="/login" className='text-info'> Đăng nhập </Link>
+          để tiếp tục.
+        </div>
+      );
 
     const mutationAdd = useMutation({
         mutationFn: (data) => postAddToCart(data)
@@ -31,10 +38,19 @@ const ProductCard = ({ item }) => {
     const addToCart = async (e, value) => {
         e.preventDefault()
 
-        if (quantity + value > item.productquantity || quantity + value < 1) {
+        if (!currentUser) {
+            toast.info(CustomToastWithLink, { autoClose: false })
+            return;
+          }
+
+        if (value > item.productquantity || value < 1) {
             return;
         }
 
+        if(item.productquantity < 1){
+            toast.warning('Sản phẩm tạm hết hàng.')
+            return ;
+        }
         const data = {
             productid: item.productid,
             quantity: value

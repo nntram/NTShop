@@ -27,3 +27,13 @@ secretkey
 6Ldd_lkjAAAAAKP5fkz4iyqAbVm0w9uceLwgYto8
 
 --legacy-peer-deps
+
+Thông tin thẻ test
+Để thực hiện giao dịch thành công trên môi trường test. Quý khách vui lòng sử dụng thông tin thẻ sau:
+
+Ngân hàng: NCB
+Số thẻ: 9704198526191432198
+Tên chủ thẻ:NGUYEN VAN A
+Ngày phát hành:07/15
+Mật khẩu OTP:123456
+Quý khách có thể sử dụng thêm thẻ test tại đây

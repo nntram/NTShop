@@ -15,6 +15,7 @@ import Users from '../admin/Users'
 import Loading from '../components/loading/Loading'
 import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
+import Response from '../pages/Response'
 
 const Routers = () => {
   return <Routes>
@@ -28,6 +29,7 @@ const Routers = () => {
     <Route path='forgot-password' element={<ForgotPassword />} />
     <Route path='reset-password/:accessToken' element={<ResetPassword />} />
     <Route path='signup' element={<Signup />} />
+    <Route path='response/:result' element={<Response />} />
 
     <Route element={<ProtectedRoute />}>
       <Route path='cart' element={<Cart />} />

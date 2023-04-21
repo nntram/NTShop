@@ -12,5 +12,6 @@
         public string Categoryname { get; set; } = null!;
         public string Brandname { get; set; } = null!;
         public string Productimages { get; set; } = null!;
+        public int? Productquantity { get; set; }
     }
 }

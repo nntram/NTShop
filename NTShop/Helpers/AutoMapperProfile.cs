@@ -32,6 +32,8 @@ namespace NTShop.Helpers
 
             CreateMap<Cart, CartModel>().ReverseMap();
             CreateMap<Cartdetail, CartDetailModel>().ReverseMap();
+            CreateMap<Order, OrderModel>().ReverseMap();
+            CreateMap<Orderdetail, OrderDetailModel>().ReverseMap();
 
         }
     }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Row, Col, Label, FormGroup } from 'reactstrap'
+import { Container, Row, Col, Label } from 'reactstrap'
 import Helmet from '../components/helmet/Helmet'
 import CommonSection from '../components/UI/CommonSection'
 import '../styles/checkout.css'
@@ -8,19 +8,37 @@ import { cartActions } from '../redux/slices/cartSlice'
 import { useQuery, useMutation, useQueries } from 'react-query'
 import cartApi from '../api/CartApi'
 import Loading from '../components/loading/Loading'
-import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
+import { AvForm, AvField, AvGroup, AvRadio, AvRadioGroup } from 'availity-reactstrap-validation';
 import addressApi from '../api/AddressApi'
 import OrderDetail from './OrderDetail'
 import customerApi from '../api/CustomerApi'
+import vnpayLogo from '../assets/images/vnpay-logo.jpg'
+import codLogo from '../assets/images/cod-logo.jpg'
+import checkoutApi from '../api/CheckoutApi'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const Checkout = () => {
   const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
   const currentUser = useSelector(state => state.customer.currentUser)
+  const dispatch = useDispatch()
   let totalAmount = 0
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [ward, setWard] = useState("");
+  const navigate = useNavigate()
 
+  const postCheckout = async (formData) => {
+    try {
+      const response = await checkoutApi.checkout(formData);
+      return (response);
+    } catch (error) {
+      console.log('Failed to fetch provinces: ', error);
+    }
+  }
+  const mutation = useMutation({
+    mutationFn: (formData) => postCheckout(formData),
+  });
 
   const fetchProvinces = async () => {
     try {
@@ -151,7 +169,8 @@ const Checkout = () => {
       Customeraddress: queryResults[1].data.customeraddress,
       province: fullAddressResults.data.provinceId,
       district: fullAddressResults.data.districtId,
-      Wardid: fullAddressResults.data.wardId
+      Wardid: fullAddressResults.data.wardId,
+      PaymentType: 'COD'
     }
 
   }
@@ -187,6 +206,37 @@ const Checkout = () => {
     wardOptions = [...data]
   }
 
+  const submit = async (event, values) => {
+    event.preventDefault();
+
+    if (queryCart.data.cartdetails.length < 1) {
+      toast.warning('Giỏ hàng rỗng.')
+      return;
+    }
+    const formData = new FormData()
+    for (var key in values) {
+      formData.append(key, values[key]);
+    }
+    formData.append("Customerid", currentUser.Id)
+
+    console.log(values)
+    const result = await mutation.mutateAsync(formData);
+    if (result) {
+      dispatch(cartActions.setTotalQuatity(0))
+      if (values.PaymentType === "COD") {
+        toast.success(result, { autoClose: false })
+        navigate('/home')
+      }
+      else{
+        const win = window.open(result, '_self');
+      }
+
+      
+
+    }
+
+  }
+
   return (
     <Helmet title='Đặt hàng'>
       <CommonSection title='Đặt hàng' />
@@ -196,7 +246,7 @@ const Checkout = () => {
             <Container>
               <AvForm className="auth__form bg-white"
                 encType="multipart/form-data"
-                onValidSubmit={null}
+                onValidSubmit={submit}
                 model={defaultValues}>
                 <Row>
                   <Col lg='8'>
@@ -272,7 +322,6 @@ const Checkout = () => {
                             </option>
                           ))
                         }
-                        <option value="myval">Hello</option>
                       </AvField>
                     </AvGroup>
 
@@ -297,9 +346,27 @@ const Checkout = () => {
                       <h6>Số tiền: <span>{totalAmount.toLocaleString()} VNĐ</span></h6>
                       <h6>Phí giao hàng:  <span>Miễn phí</span></h6>
                       <h4>Thành tiền: <span>{totalAmount.toLocaleString()} VNĐ</span></h4>
-
-                      <button className='buy__btn auth__btn w-100'>Xác nhận đặt hàng</button>
-
+                      <AvRadioGroup className='radio__group' inline name="PaymentType" required>
+                        <div className="d-flex gap-2">
+                          <div className='buy__btn auth__btn w-100'>
+                            <AvRadio label="COD"
+                              className="mx-2"
+                              value="COD"
+                            />
+                            <img src={codLogo} alt="" />
+                          </div>
+                          <div className='buy__btn auth__btn w-100'>
+                            <AvRadio label="VNPay" name="Customergender"
+                              className="mx-2"
+                              value="VNPay"
+                            />
+                            <img src={vnpayLogo} alt="" />
+                          </div>
+                        </div>
+                      </AvRadioGroup>
+                      <button className='buy__btn auth__btn w-100'>
+                        Xác nhận đặt hàng
+                      </button>
                     </div>
                   </Col>
                 </Row>
