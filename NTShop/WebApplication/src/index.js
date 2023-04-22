@@ -18,7 +18,7 @@ root.render(
           <ToastContainer
             theme="dark"
             position="bottom-right"
-            autoClose={2000}
+            autoClose={3000}
             closeOnClick
             pauseOnHover={false}
           />

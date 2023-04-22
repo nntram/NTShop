@@ -30,6 +30,7 @@ namespace NTShop.Repositories
             order.Orderid = Guid.NewGuid().ToString();
             order.Orderstatusid = "0";
             order.Orderispaid = false;
+            order.Ordercustomername = model.Ordercustomername;
             try
             {
                 List<Product> products = new List<Product>();
@@ -48,7 +49,7 @@ namespace NTShop.Repositories
                 }
 
                 _unitOfWork.GetRepository<Order>().Insert(order);
-                _unitOfWork.SaveChanges();
+                //_unitOfWork.SaveChanges();
 
                 result.OrderId = order.Orderid;                
                 int n = cart.Cartdetails.Count;
@@ -61,7 +62,7 @@ namespace NTShop.Repositories
                     orderdetail.Orderid = order.Orderid;
                     orderdetail.Productid = item.Productid;
                     orderdetail.Orderdetailquantity = item.Cartdetailquantity;
-                    orderdetail.Orderdetailprice = product.Productprice;
+                    orderdetail.Orderdetailprice = product.Productsaleprice;
                     _unitOfWork.GetRepository<Orderdetail>().Insert(orderdetail);;
 
                     var cartDetail = _unitOfWork.GetRepository<Cartdetail>().Find(item.Cartdetailid);
@@ -97,9 +98,18 @@ namespace NTShop.Repositories
                         pageSize: int.MaxValue,
                         predicate: p => p.Customerid == cusomterId,
                         include: p => p.Include(m => m.Orderdetails)
-                                        .ThenInclude(m => m.Product))).Items;
+                                        .ThenInclude(m => m.Product),
+                        orderBy: p => p.OrderByDescending(m => m.Ordercreateddate))).Items;
 
             return _mapper.Map<List<OrderModel>>(data);
+        }
+
+        public async Task<List<OrderStatusModel>> GetOrderStatus()
+        {
+            var data = (await _unitOfWork.GetRepository<Orderstatus>().GetPagedListAsync(
+                        pageSize: int.MaxValue)).Items;
+
+            return _mapper.Map<List<OrderStatusModel>>(data);
         }
 
         public async Task<bool> UpdateOrderPaidStatus(string orderId)
@@ -108,8 +118,16 @@ namespace NTShop.Repositories
             if(data == null) return false;
 
             data.Orderispaid = true;
-            _unitOfWork.GetRepository<Order>().Update(data);
-            _unitOfWork.SaveChanges();
+            try
+            {
+                _unitOfWork.GetRepository<Order>().Update(data);
+                _unitOfWork.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+           
             return true;
         }
     }

@@ -8,5 +8,6 @@ namespace NTShop.Repositories.Interface
         public Task<CheckoutResponse> CreatetAsync(OrderModel model, CartModel cart);
         public Task<List<OrderModel>> GetCustomerOrders(string cusomterId);
         public Task<bool> UpdateOrderPaidStatus(string orderId);
+        public Task<List<OrderStatusModel>> GetOrderStatus();
     }
 }

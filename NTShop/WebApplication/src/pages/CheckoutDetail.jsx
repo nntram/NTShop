@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const OrderDetail = ({item}) => {
+const CheckoutDetail = ({item}) => {
   
     return (
         <tr>
@@ -15,4 +15,4 @@ const OrderDetail = ({item}) => {
     )
 }
 
-export default OrderDetail
+export default CheckoutDetail

@@ -76,7 +76,8 @@ const CartDetail = ({ item }) => {
 
         const result = await mutationAdd.mutateAsync(data)
         if (result) {
-            dispatch(cartActions.setTotalQuatity(currentTotalQuantity + Number(value)))
+            const totalQuantity = currentTotalQuantity + Number(value)
+            dispatch(cartActions.setTotalQuatity(totalQuantity))
             toast.success(result, { autoClose: 1000 })
         }
 
@@ -106,7 +107,8 @@ const CartDetail = ({ item }) => {
 
         const result = await mutationRemove.mutateAsync(data)
         if (result) {
-            dispatch(cartActions.setTotalQuatity(currentTotalQuantity - Number(quantity)))
+            const totalQuantity = currentTotalQuantity - Number(quantity)
+            dispatch(cartActions.setTotalQuatity(totalQuantity))
             toast.success(result, { autoClose: 1000 })
         }
     }
@@ -118,7 +120,7 @@ const CartDetail = ({ item }) => {
             </td>
             <td><Link to={`/shop/${item.product.productid}`}>{item.product.productname}</Link> </td>
             <td className='text-center'>{item.product.productsaleprice.toLocaleString()} VNĐ</td>
-            {/* <td className='text-center'>{item.cartdetailquantity}</td> */}
+            
             <td>
                 <div className='w-25 m-auto'>
                     <motion.button whileTap={{ opacity: 0.5 }} className='w-100 cart__btn'

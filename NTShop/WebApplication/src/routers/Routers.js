@@ -16,6 +16,7 @@ import Loading from '../components/loading/Loading'
 import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
 import Response from '../pages/Response'
+import Orders from '../pages/Orders'
 
 const Routers = () => {
   return <Routes>
@@ -33,6 +34,7 @@ const Routers = () => {
 
     <Route element={<ProtectedRoute />}>
       <Route path='cart' element={<Cart />} />
+      <Route path='orders' element={<Orders/>} />
       <Route path='reset-password' element={<ResetPassword />} />
       <Route path='checkout' element={<Checkout />} />
       <Route path='dashboard' element={<Dashboard />} />

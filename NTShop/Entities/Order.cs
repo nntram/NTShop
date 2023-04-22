@@ -46,6 +46,9 @@ namespace NTShop.Entities
         public string? Orderphonenumber { get; set; }
         [Column("ORDERISPAID")]
         public bool? Orderispaid { get; set; }
+        [Column("ORDERCUSTOMERNAME")]
+        [StringLength(128)]
+        public string? Ordercustomername { get; set; }
 
         [ForeignKey("Customerid")]
         [InverseProperty("Orders")]

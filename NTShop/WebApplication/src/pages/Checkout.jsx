@@ -10,7 +10,7 @@ import cartApi from '../api/CartApi'
 import Loading from '../components/loading/Loading'
 import { AvForm, AvField, AvGroup, AvRadio, AvRadioGroup } from 'availity-reactstrap-validation';
 import addressApi from '../api/AddressApi'
-import OrderDetail from './OrderDetail'
+import CheckoutDetail from './CheckoutDetail'
 import customerApi from '../api/CustomerApi'
 import vnpayLogo from '../assets/images/vnpay-logo.jpg'
 import codLogo from '../assets/images/cod-logo.jpg'
@@ -40,14 +40,6 @@ const Checkout = () => {
     mutationFn: (formData) => postCheckout(formData),
   });
 
-  const fetchProvinces = async () => {
-    try {
-      const response = await addressApi.getProvince();
-      return (response);
-    } catch (error) {
-      console.log('Failed to fetch provinces: ', error);
-    }
-  }
   const fetchDistricts = async (prodvinceId) => {
     try {
       const response = await addressApi.getDistrict(prodvinceId);
@@ -218,21 +210,26 @@ const Checkout = () => {
       formData.append(key, values[key]);
     }
     formData.append("Customerid", currentUser.Id)
-
-    console.log(values)
+    formData.append("Orderphonenumber", values["Customerphonenumber"])
+    formData.append("Ordercustomername", values["Customername"])
+    const ward = wardOptions.find((item) => item.value === values["Wardid"]).label
+    const district = districtOptions.find((item) => item.value === values["district"]).label
+    const province = provinceOptions.find((item) => item.value === values["province"]).label
+    const address = values["Customeraddress"] + ', ' + ward + ', ' + district + ', ' + province
+    formData.append("Orderadress", address )
+    
     const result = await mutation.mutateAsync(formData);
     if (result) {
       dispatch(cartActions.setTotalQuatity(0))
-      if (values.PaymentType === "COD") {
+      
+      navigate('/orders')
+      if (values.PaymentType === "COD") {       
         toast.success(result, { autoClose: false })
-        navigate('/home')
       }
       else{
-        const win = window.open(result, '_self');
+        console.log('Đặt hàng thành công.')
+        const win = window.open(result, '_blank');
       }
-
-      
-
     }
 
   }
@@ -392,7 +389,7 @@ const Checkout = () => {
                         <tbody>
                           {
                             queryCart.data && queryCart.data.cartdetails.map((item, index) => (
-                              <OrderDetail item={item} key={item.cartdetailid} />
+                              <CheckoutDetail item={item} key={item.cartdetailid} />
 
                             ))
                           }

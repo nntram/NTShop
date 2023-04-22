@@ -40,6 +40,14 @@ namespace NTShop.Entities
         public string? Invoiceadress { get; set; }
         [Column("INVOICESHIPCOST")]
         public int? Invoiceshipcost { get; set; }
+        [Column("INVOICEPHONENUMBER")]
+        [StringLength(16)]
+        public string? Invoicephonenumber { get; set; }
+        [Column("INVOICECUSTOMERNAME")]
+        [StringLength(128)]
+        public string? Invoicecustomername { get; set; }
+        [Column("INVOICETOTALAMOUNT")]
+        public int? Invoicetotalamount { get; set; }
 
         [ForeignKey("Customerid")]
         [InverseProperty("Invoices")]

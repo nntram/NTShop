@@ -106,8 +106,8 @@ const Cart = () => {
 
                     <tbody>
                       {
-                        queryCart.data && queryCart.data.cartdetails.map((item, index) => (
-                          <CartDetail item={item} key={item.cartdetailid} />
+                        queryCart.data && queryCart.data.cartdetails.map((item) => (
+                          <CartDetail item={item} key={item.cartdetailid}/>
 
                         ))
                       }

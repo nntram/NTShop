@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import '../../styles/product-card.css'
 import { Col } from 'reactstrap'
-import { Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { cartActions } from '../../redux/slices/cartSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useMutation } from 'react-query'
@@ -13,7 +13,7 @@ const ProductCard = ({ item }) => {
     const dispatch = useDispatch()
     const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
     const currentUser = useSelector(state => state.customer.currentUser)
-    
+
     const postAddToCart = async (data) => {
         try {
             const response = await cartApi.addToCart(data)
@@ -25,11 +25,11 @@ const ProductCard = ({ item }) => {
     };
     const CustomToastWithLink = () => (
         <div>
-          Vui lòng
-          <Link to="/login" className='text-info'> Đăng nhập </Link>
-          để tiếp tục.
+            Vui lòng
+            <Link to="/login" className='text-info'> Đăng nhập </Link>
+            để tiếp tục.
         </div>
-      );
+    );
 
     const mutationAdd = useMutation({
         mutationFn: (data) => postAddToCart(data)
@@ -41,16 +41,12 @@ const ProductCard = ({ item }) => {
         if (!currentUser) {
             toast.info(CustomToastWithLink, { autoClose: false })
             return;
-          }
+        }
 
-        if (value > item.productquantity || value < 1) {
+        if (value < 1 || value > item.productquantity) {
             return;
         }
 
-        if(item.productquantity < 1){
-            toast.warning('Sản phẩm tạm hết hàng.')
-            return ;
-        }
         const data = {
             productid: item.productid,
             quantity: value
@@ -74,9 +70,9 @@ const ProductCard = ({ item }) => {
 
                 <div className="p-2 product__info">
                     <h3 className='product__name'>
-                        <Link to={`/shop/${item.productid}`} 
+                        <Link to={`/shop/${item.productid}`}
                             data-toggle="tooltip" title={item.productname}>
-                                {item.productname}
+                            {item.productname}
                         </Link>
                     </h3>
                     <span>{item.categoryname}</span>
@@ -96,10 +92,13 @@ const ProductCard = ({ item }) => {
                 </div>
                 <div className="product__card-bottom d-flex 
                         align-items-center justify-content-center gap-3 p-2">
-                    <motion.span whileHover={{ scale: 1.2 }} 
-                    onClick={(e) => addToCart(e, 1)}>
-                        <i className="ri-shopping-cart-2-line"></i>
-                    </motion.span>
+                    {item.productquantity > 1 ?
+                        <motion.span whileHover={{ scale: 1.2 }}
+                            onClick={(e) => addToCart(e, 1)}>
+                            <i className="ri-shopping-cart-2-line"></i>
+                        </motion.span> : ""
+                    }
+
                     <motion.span whileHover={{ scale: 1.2 }} >
                         <i className="ri-heart-line"></i>
                     </motion.span>

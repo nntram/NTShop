@@ -55,7 +55,7 @@ namespace NTShop.Controllers
             return paymentUrl;
         }
         [HttpGet("payment-confirm")]
-        public IActionResult PaymentConfirm()
+        public async Task<IActionResult> PaymentConfirm()
         {
             string result = "Lỗi không xác định được yêu cầu.";
             if (Request.Query.Count > 0)
@@ -85,9 +85,18 @@ namespace NTShop.Controllers
                 {
                     if (vnp_ResponseCode == "00")
                     {
-                        var update = _orderRepository.UpdateOrderPaidStatus(orderId);
+                        var update = await _orderRepository.UpdateOrderPaidStatus(orderId);
                         //Thanh toán thành công
-                        result = "Thanh toán thành công hóa đơn " + orderId + " | Mã giao dịch: " + vnpayTranId;
+                        if (update == true)
+                        {
+                            result = "Thanh toán thành công hóa đơn " + orderId + " | Mã giao dịch: " + vnpayTranId;
+                        }
+                        else
+                        {
+                            result = "Thanh toán thành công hóa đơn " + orderId + " | Mã giao dịch: " + vnpayTranId +
+                                ". Nhưng cập nhật trạng thái thanh toán đơn hàng thất bại. Liên hệ chúng tôi để hoàn tiền ngay cho bạn.";
+                        }
+                        
                     }
                     else
                     {

@@ -64,7 +64,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-      dispatch(cartActions.setTotalQuatity(currentTotalQuantity)) 
+    dispatch(cartActions.setTotalQuatity(currentTotalQuantity))
   }, [currentTotalQuantity])
 
 
@@ -124,14 +124,23 @@ const Header = () => {
                 <div className="dropdown-content">
                   {currentUser ? (
                     <>
+                      <Link to="/orders" className="d-flex gap-3">
+                        <i className="ri-dashboard-line"></i>
+                        <span>Đơn hàng</span>
+                      </Link>
+                      <Link to="/change-password" className="d-flex gap-3">
+                        <i className="ri-key-fill"></i>
+                        <span>Đổi mật khẩu</span>
+                      </Link>
+                      <Link to="/account" className="d-flex gap-3">
+                        <i className="ri-user-line"></i>
+                        <span>Tài khoản</span>
+                      </Link>
                       <a href="#" onClick={logout} className="d-flex gap-3" >
                         <i className="ri-logout-box-line"></i>
                         <span>Đăng xuất</span>
                       </a>
-                      <Link to="/dashboard" className="d-flex gap-3">
-                        <i className="ri-dashboard-line"></i>
-                        <span>Dashboard</span>
-                      </Link>
+
                     </>
                   ) : (
                     <>

@@ -47,7 +47,7 @@ namespace NTShop.Repositories
                 }
                 isInCart.Cartdetailquantity += model.Quantity;
                 _unitOfWork.GetRepository<Cartdetail>().Update(isInCart);
-                await _unitOfWork.SaveChangesAsync();
+                _unitOfWork.SaveChanges();
             }
             else
             {
@@ -55,12 +55,12 @@ namespace NTShop.Repositories
                 item.Productid = model.ProductId;
                 item.Cartdetailquantity = model.Quantity;
                 item.Cartid = cart.Cartid;
-                await _unitOfWork.GetRepository<Cartdetail>().InsertAsync(item);
+                _unitOfWork.GetRepository<Cartdetail>().Insert(item);
                 _unitOfWork.SaveChanges();
             }
             cart.Cartquantity += model.Quantity;
             _unitOfWork.GetRepository<Cart>().Update(cart);
-            await _unitOfWork.SaveChangesAsync();
+            _unitOfWork.SaveChanges();
 
             return "success";
         }

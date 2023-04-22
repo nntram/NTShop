@@ -23,6 +23,8 @@ namespace NTShop.Models
         [StringLength(16)]
         public string? Orderphonenumber { get; set; }
         public bool? Orderispaid { get; set; }
+        [StringLength(128)]
+        public string? Ordercustomername { get; set; }
         public List<OrderDetailModel>? Orderdetails { get; set; }
         [Required]
         public string PaymentType { get; set; } = null!;
