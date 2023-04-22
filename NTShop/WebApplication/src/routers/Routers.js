@@ -17,6 +17,8 @@ import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
 import Response from '../pages/Response'
 import Orders from '../pages/Orders'
+import Order from '../pages/Order'
+import AdLogin from '../admin/AdLogin'
 
 const Routers = () => {
   return <Routes>
@@ -32,9 +34,13 @@ const Routers = () => {
     <Route path='signup' element={<Signup />} />
     <Route path='response/:result' element={<Response />} />
 
+    <Route path='ad-login' element={<AdLogin/>} />
+
+
     <Route element={<ProtectedRoute />}>
       <Route path='cart' element={<Cart />} />
       <Route path='orders' element={<Orders/>} />
+      <Route path='order/:orderId' element={<Order/>} />
       <Route path='reset-password' element={<ResetPassword />} />
       <Route path='checkout' element={<Checkout />} />
       <Route path='dashboard' element={<Dashboard />} />

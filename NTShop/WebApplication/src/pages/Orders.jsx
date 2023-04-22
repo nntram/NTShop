@@ -6,12 +6,12 @@ import { useQueries, useQuery } from 'react-query'
 import orderApi from '../api/OrderApi'
 import Loading from '../components/loading/Loading'
 import { Link } from 'react-router-dom'
-
+import { ToDateTimeString } from '../utils/Helpers'
 const Orders = () => {
 
   const fetchOrder = async () => {
     try {
-      const response = await orderApi.getOrder()
+      const response = await orderApi.getOrders()
       return (response);
     } catch (error) {
       console.log('Failed to fetch orders: ', error)
@@ -39,15 +39,7 @@ const Orders = () => {
     }
     if (queryOrder[0].data !== null) {
       orders = queryOrder[0].data
-      console.log(orders)
-      orders.forEach((item, index) => {
-        orders[index].TotalAmount = item.orderdetails.reduce((accumulator, detailItem) => {
-          return accumulator + (Number)(detailItem.orderdetailquantity) * (Number)(detailItem.orderdetailprice)
-        }, 0)
-      })
     }
-
-    console.log(orders)
 
   }
 
@@ -76,18 +68,17 @@ const Orders = () => {
                       orders.map(item =>
                         <tr key={item.orderid}>
                           <td>
-                            {new Date(item.ordercreateddate).toLocaleDateString()
-                              + ' ' + (new Date(item.ordercreateddate).toLocaleTimeString())}
+                            {ToDateTimeString(item.ordercreateddate)}
                           </td>
-                          <td>{item.TotalAmount.toLocaleString()} VNĐ</td>
+                          <td>{item.ordertotalamount.toLocaleString()} VNĐ</td>
                           <td>
-                            {orderStatus.find(item => item.orderstatusid === item.orderstatusid).orderstatusname}
+                            {orderStatus.find(status => status.orderstatusid === item.orderstatusid).orderstatusname}
                           </td>
                           <td>
                             {item.orderispaid ? "Đã thanh toán" : "Chưa thanh toán"}
                           </td>
                           <td className='text-center text-info'>
-                            <Link to=''>Chi tiết</Link>
+                            <Link to={`/order/${item.orderid}`}>Chi tiết</Link>
                           </td>
                         </tr>
 

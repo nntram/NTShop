@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import '../styles/cart.css'
 import { motion } from 'framer-motion'
-import { cartActions } from '../redux/slices/cartSlice'
+import { cartActions } from '../../redux/slices/cartSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useMutation } from 'react-query'
-import cartApi from '../api/CartApi'
+import cartApi from '../../api/CartApi'
 import { toast } from 'react-toastify'
 
 
@@ -116,7 +115,7 @@ const CartDetail = ({ item }) => {
     return (
         <tr>
             <td> <img
-                src={require(`../assets/image_data/products/${item.product.productimages[0].productimageurl}`)} alt="" />
+                src={require(`../../assets/image_data/products/${item.product.productimages[0].productimageurl}`)} alt="" />
             </td>
             <td><Link to={`/shop/${item.product.productid}`}>{item.product.productname}</Link> </td>
             <td className='text-center'>{item.product.productsaleprice.toLocaleString()} VNĐ</td>

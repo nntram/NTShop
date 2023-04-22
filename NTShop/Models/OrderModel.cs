@@ -28,5 +28,6 @@ namespace NTShop.Models
         public List<OrderDetailModel>? Orderdetails { get; set; }
         [Required]
         public string PaymentType { get; set; } = null!;
+        public int Ordertotalamount { get; set; }
     }
 }

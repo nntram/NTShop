@@ -7,7 +7,7 @@ import '../styles/product-details.css'
 import { motion } from 'framer-motion'
 import ProductList from '../components/UI/ProductList'
 import { toast } from 'react-toastify'
-import ProductApi from '../api/ProductApi'
+import productApi from '../api/ProductApi'
 import Loading from '../components/loading/Loading'
 import { useQuery } from 'react-query'
 import NotFound from '../components/UI/NotFound'
@@ -55,7 +55,7 @@ const ProductDetails = () => {
 
   const fetchProductById = async (id) => {
     try {
-      const response = await ProductApi.getById(id);
+      const response = await productApi.getById(id);
 
       return (response);
     } catch (error) {
@@ -65,7 +65,7 @@ const ProductDetails = () => {
 
   const fetchProducts = async (categoryid, brandid) => {
     try {
-      const response = await ProductApi.getAllCard({
+      const response = await productApi.getAllCard({
         params: {
           pageSize: 8,
           brandid: brandid,

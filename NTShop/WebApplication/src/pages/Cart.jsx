@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-query'
 import cartApi from '../api/CartApi'
 import Loading from '../components/loading/Loading'
-import CartDetail from './CartDetail'
+import CartDetail from '../components/UI/CartDetail'
 import { useSelector, useDispatch } from 'react-redux'
 import { cartActions } from '../redux/slices/cartSlice'
 

@@ -46,10 +46,10 @@ namespace NTShop.Repositories
                         return result;
                     }
                     products.Add(product);
+                    totalPrice += (int)item.Cartdetailquantity * (int)product.Productsaleprice;
                 }
-
+                order.Ordertotalamount = totalPrice;
                 _unitOfWork.GetRepository<Order>().Insert(order);
-                //_unitOfWork.SaveChanges();
 
                 result.OrderId = order.Orderid;                
                 int n = cart.Cartdetails.Count;
@@ -70,9 +70,7 @@ namespace NTShop.Repositories
 
                     //update product quantity
                     product.Productquantity -= item.Cartdetailquantity;
-                    _unitOfWork.GetRepository<Product>().Update(product);
-
-                    totalPrice += (int)item.Cartdetailquantity * (int)product.Productsaleprice;
+                    _unitOfWork.GetRepository<Product>().Update(product);                    
                 }
                 var updateCart = await _unitOfWork.GetRepository<Cart>().FindAsync(cart.Cartid);
                 updateCart.Cartquantity = 0;
@@ -90,6 +88,17 @@ namespace NTShop.Repositories
             result.Status = "success";
             return result;
 
+        }
+
+        public async Task<OrderModel> GetByIdAsync(string id)
+        {
+            var data = await _unitOfWork.GetRepository<Order>().GetFirstOrDefaultAsync(
+                        predicate: x => x.Orderid == id,
+                        include: p => p.Include(m => m.Orderdetails)
+                                       .ThenInclude(n => n.Product)
+                                       .ThenInclude(q => q.Productimages));
+
+            return _mapper.Map<OrderModel>(data);
         }
 
         public async Task<List<OrderModel>> GetCustomerOrders(string cusomterId)

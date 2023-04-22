@@ -9,5 +9,6 @@ namespace NTShop.Repositories.Interface
         public Task<List<OrderModel>> GetCustomerOrders(string cusomterId);
         public Task<bool> UpdateOrderPaidStatus(string orderId);
         public Task<List<OrderStatusModel>> GetOrderStatus();
+        public Task<OrderModel> GetByIdAsync(string id);
     }
 }

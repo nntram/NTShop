@@ -33,6 +33,18 @@ namespace NTShop.Controllers
             return Ok(data);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] string id)
+        {
+            
+            var data = await _orderRepository.GetByIdAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
         [HttpGet("order-status")]
         public async Task<IActionResult> GetOderStatus()
         {

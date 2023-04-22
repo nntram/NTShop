@@ -1,7 +1,7 @@
 import axiosClient from './axiosClient'
 
 class OrderApi {
-    getOrder =  async () => {
+    getOrders =  async () => {
         const url = '/orders';
         return await axiosClient.get(url);
     };
@@ -9,7 +9,10 @@ class OrderApi {
         const url = '/orders/order-status';
         return await axiosClient.get(url);
     };
-
+    getOrder =  async (id) => {
+        const url = '/orders/' + id;
+        return await axiosClient.get(url);
+    };
 
 }
 

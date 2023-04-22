@@ -10,7 +10,7 @@ import cartApi from '../api/CartApi'
 import Loading from '../components/loading/Loading'
 import { AvForm, AvField, AvGroup, AvRadio, AvRadioGroup } from 'availity-reactstrap-validation';
 import addressApi from '../api/AddressApi'
-import CheckoutDetail from './CheckoutDetail'
+import CheckoutDetail from '../components/UI/CheckoutDetail'
 import customerApi from '../api/CustomerApi'
 import vnpayLogo from '../assets/images/vnpay-logo.jpg'
 import codLogo from '../assets/images/cod-logo.jpg'
