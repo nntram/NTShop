@@ -17,7 +17,7 @@ const admin__nav = [
     },
     {
         display: "Đơn hàng",
-        path: "/dashboard/orders"
+        path: "/dashboard/all-orders"
     },
     {
         display: "Nhập hàng",
@@ -52,8 +52,8 @@ const AdminNav = () => {
     const toggle = () => setIsOpen(!isOpen);
 
     return (      
-        <div>
-            <Navbar className='admin__menu' dark expand='lg' fixed="true">
+        <div className='sticky-top'>
+            <Navbar className='admin__menu' dark expand='lg'>
                 <NavbarToggler onClick={toggle}  className="nav__toogle"/>
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="admin__menu-list" navbar>

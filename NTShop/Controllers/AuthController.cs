@@ -124,34 +124,71 @@ namespace NTShop.Controllers
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(authorization);
             var userName = principal.Identity.Name;
+            var role = principal.Claims.First(p => p.Type == "Role").Value;
 
-            var data = await _customerRepository.GetByUserName(userName);
-            if (data == null)
+            if (role == "Customer")
             {
-                return NotFound("Tài khoản không tồn tại.");
-            }
-            if (data.RefreshToken != refreshToken)
-            {
-                return NotFound("Refresh token không đúng.\n data:" + data.RefreshToken + "\n cookie: \n " + refreshToken);
-            }
-            if (data.TokenExpiryTime <= DateTime.Now.ToUnixTimestamp())
-            {
-                return NotFound("Refresh token hết hạn.");
-            }
+                var data = await _customerRepository.GetByUserName(userName);
+                if (data == null)
+                {
+                    return NotFound("Tài khoản không tồn tại.");
+                }
+                if (data.RefreshToken != refreshToken)
+                {
+                    return NotFound("Refresh token không đúng.\n data:" + data.RefreshToken + "\n cookie: \n " + refreshToken);
+                }
+                if (data.TokenExpiryTime <= DateTime.Now.ToUnixTimestamp())
+                {
+                    return NotFound("Refresh token hết hạn.");
+                }
 
-            var newAccessToken = _tokenService.GenerateAccessToken(data);
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
+                var newAccessToken = _tokenService.GenerateAccessToken(data);
+                var newRefreshToken = _tokenService.GenerateRefreshToken();
 
-            data.RefreshToken = newRefreshToken;
-            data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
+                data.RefreshToken = newRefreshToken;
+                data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
 
-            var update = await _customerRepository.UpdateTokenAsync(data);
-            if (update is true)
-            {
-                Response.Cookies.Append("refreshToken", newRefreshToken, HttpOnlyCookieOptions());
-                return Ok(newAccessToken);
+                var update = await _customerRepository.UpdateTokenAsync(data);
+                if (update is true)
+                {
+                    Response.Cookies.Append("refreshToken", newRefreshToken, HttpOnlyCookieOptions());
+                    return Ok(newAccessToken);
+                }
+                return StatusCode(500);
             }
-            return StatusCode(500);
+            else if(role == "Admin" || role == "Staff")
+            {
+                var data = await _staffRepository.GetByUserName(userName);
+                if (data == null)
+                {
+                    return NotFound("Tài khoản không tồn tại.");
+                }
+                if (data.RefreshToken != refreshToken)
+                {
+                    return NotFound("Refresh token không đúng.\n data:" + data.RefreshToken + "\n cookie: \n " + refreshToken);
+                }
+                if (data.TokenExpiryTime <= DateTime.Now.ToUnixTimestamp())
+                {
+                    return NotFound("Refresh token hết hạn.");
+                }
+
+                var newAccessToken = _tokenService.GenerateAccessToken(data);
+                var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+                data.RefreshToken = newRefreshToken;
+                data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
+
+                var update = await _staffRepository.UpdateTokenAsync(data);
+                if (update is true)
+                {
+                    Response.Cookies.Append("refreshToken", newRefreshToken, HttpOnlyCookieOptions());
+                    return Ok(newAccessToken);
+                }
+                return StatusCode(500);
+
+            }
+           return BadRequest("Quyền người dùng không hợp lệ.");
+           
         }
 
 

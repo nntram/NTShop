@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NTShop.Models;
+using NTShop.Models.DeleteModels;
+using NTShop.Models.Filters;
 using NTShop.Repositories;
 using NTShop.Repositories.Interface;
 using NTShop.Services.Interface;
@@ -8,6 +12,7 @@ namespace NTShop.Controllers
 {
     [Route("orders")]
     [ApiController]
+    [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderRepository _orderRepository;
@@ -55,6 +60,35 @@ namespace NTShop.Controllers
                 return NotFound();
             }
             return Ok(data);
+        }
+        [Authorize(Roles = "Admin, Staff")]
+        [HttpGet("get-paged")]
+        public async Task<IActionResult> GetPagedOrders([FromQuery] OrderGetpagedModel model)
+        {
+            var data = await _orderRepository.GetPagedOrders(model);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+        [Authorize(Roles = "Admin, Staff")]
+        [HttpPost("update-status")]
+        public async Task<IActionResult> UpdateOrderStatus([FromHeader] string authorization,
+                               [FromBody] OrderStatusUpdateModel model)
+        {
+            var userId = _tokenService.GetUserIdFromToken(authorization);
+
+            model.StaffId = userId;
+
+            var data = await _orderRepository.UpdateOrderStatus(model);
+            if (!data)
+            {
+                return BadRequest("Chưa cập nhật được.");
+            }
+
+            return Ok("Cập nhật trạng thái đơn hàng thành công.");
+
         }
     }
 }

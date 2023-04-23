@@ -5,6 +5,8 @@ using NTShop.Models;
 using NTShop.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 using NTShop.Models.CheckoutModels;
+using NTShop.Models.Filters;
+using Abp.Linq.Expressions;
 
 namespace NTShop.Repositories
 {
@@ -121,6 +123,26 @@ namespace NTShop.Repositories
             return _mapper.Map<List<OrderStatusModel>>(data);
         }
 
+        public async Task<List<OrderModel>> GetPagedOrders(OrderGetpagedModel filter)
+        {
+            var predicate = PredicateBuilder.New<Order>(1==1);
+            if (filter.Orderispaid != null)
+            {
+                predicate = predicate.And(p => p.Orderispaid == filter.Orderispaid);
+            }
+            if (!string.IsNullOrEmpty(filter.Orderstatusid))
+            {
+                predicate = predicate.And(p => p.Orderstatusid == filter.Orderstatusid);
+            }
+
+            var data = (await _unitOfWork.GetRepository<Order>().GetPagedListAsync(
+                        pageSize: filter.PageSize,
+                        predicate: predicate,
+                        orderBy: p => p.OrderByDescending(m => m.Ordercreateddate))).Items;
+
+            return _mapper.Map<List<OrderModel>>(data);
+        }
+
         public async Task<bool> UpdateOrderPaidStatus(string orderId)
         {
             var data = await _unitOfWork.GetRepository<Order>().FindAsync(orderId);
@@ -137,6 +159,26 @@ namespace NTShop.Repositories
                 return false;
             }
            
+            return true;
+        }
+
+        public async Task<bool> UpdateOrderStatus(OrderStatusUpdateModel model)
+        {
+            var data = await _unitOfWork.GetRepository<Order>().FindAsync(model.OrderId);
+            if (data == null) return false;
+
+            data.Orderstatusid = model.OrderStatusId;
+            data.Staffid = model.StaffId;
+            try
+            {
+                _unitOfWork.GetRepository<Order>().Update(data);
+                _unitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
             return true;
         }
     }

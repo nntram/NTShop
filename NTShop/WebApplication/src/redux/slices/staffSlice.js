@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const user = sessionStorage.getItem("currentUser");
-let init = {}
+let init = null
 try {
   const obj = JSON.parse(user)
-  if(obj.Role === 'Customer')
+  if(obj.Role === 'Staff' || obj.Role === 'Admin')
   {
     init = obj;
   }
@@ -13,21 +13,21 @@ try {
 }
 
 const initialState = {
-  currentUser: init
+    currentStaff: init
 }
 
-const customerSlice = createSlice({
-  name: 'customer',
+const staffSlice = createSlice({
+  name: 'staff',
   initialState,
   reducers: {
-    setCurrentUser: (state, action) => {
+    setCurrentStaff: (state, action) => {
       const data = action.payload
-      state.currentUser = data
+      state.currentStaff = data
     }
 
   }
 });
 
-export const customerActions = customerSlice.actions
+export const staffActions = staffSlice.actions
 
-export default customerSlice.reducer
+export default staffSlice.reducer

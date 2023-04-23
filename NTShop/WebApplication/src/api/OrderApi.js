@@ -13,6 +13,14 @@ class OrderApi {
         const url = '/orders/' + id;
         return await axiosClient.get(url);
     };
+    getPaged = async ({params}) => {
+        const url = '/orders/get-paged';
+        return await axiosClient.get(url, {params});
+    };
+    updateOrderStatus = async (data) => {
+        const url = '/orders/update-status';
+        return await axiosClient.post(url, data)
+    };
 
 }
 

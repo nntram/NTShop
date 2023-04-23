@@ -19,10 +19,12 @@ import Response from '../pages/Response'
 import Orders from '../pages/Orders'
 import Order from '../pages/Order'
 import AdLogin from '../admin/pages/AdLogin'
+import AllOrders from '../admin/pages/AllOrders'
+import AdminRoute from './AdminRoute'
+import DbOrder from '../admin/pages/DbOrder'
 
 const Routers = () => {
-  return <Routes>
-    <Route path='/' element={<Navigate to="home" />} />
+  return <Routes>   
     <Route path='loading' element={<Loading />} />
     <Route path='home' element={<Home />} />
     <Route path='shop' element={<Shop />} />
@@ -34,8 +36,7 @@ const Routers = () => {
     <Route path='signup' element={<Signup />} />
     <Route path='response/:result' element={<Response />} />
 
-    <Route path='ad-login' element={<AdLogin/>} />
-
+    <Route path='admin-login' element={<AdLogin/>} />
 
     <Route element={<ProtectedRoute />}>
       <Route path='cart' element={<Cart />} />
@@ -45,13 +46,16 @@ const Routers = () => {
       <Route path='checkout' element={<Checkout />} />
     </Route>
 
-    <Route element={<ProtectedRoute />}>
+    <Route element={<AdminRoute />} >
       <Route path='dashboard/home' element={<Dashboard />} />
+      <Route path='dashboard/all-orders' element={<AllOrders />} />
+      <Route path='dashboard/order/:orderId' element={<DbOrder />} />
       <Route path='dashboard/all-products' element={<AllProducts />} />
       <Route path='dashboard/add-product' element={<AddProduct />} />
       <Route path='dashboard/users' element={<Users />} />
     </Route>
-    <Route path="*" element={<NotFound />} />
+
+    <Route path='/*' element={<Navigate to="home" />} />
 
   </Routes>
 }

@@ -10,7 +10,7 @@ import authApi from "../../api/AuthApi.js";
 import jwt_decode from "jwt-decode";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useDispatch, useSelector } from 'react-redux'
-import { customerActions } from "../../redux/slices/customerSlice";
+import { staffActions } from "../../redux/slices/staffSlice";
 
 const AdLogin = () => {
   const [token, setToken] = useState();
@@ -70,7 +70,7 @@ const AdLogin = () => {
           sessionStorage.setItem("currentUser", decode);
           sessionStorage.setItem("userAuth", userToken);
           localStorage.setItem("remember", remember);
-          dispatch(customerActions.setCurrentUser(JSON.parse(decode)))
+          dispatch(staffActions.setCurrentStaff(JSON.parse(decode)))
           if (remember) {
             localStorage.setItem("currentUser", decode);
             localStorage.setItem("userAuth", userToken);

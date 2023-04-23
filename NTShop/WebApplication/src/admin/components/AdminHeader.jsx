@@ -8,7 +8,7 @@ import logo from "../../assets/images/logo5.png";
 import AdminNav from "./AdminNav";
 
 const AdminHeader = () => {
-  const currentUser = useSelector(state => state.customer.currentUser)
+  const currentStaff = useSelector(state => state.staff.currentStaff)
   return (
     <>
     <header className='admin__header'>
@@ -28,10 +28,10 @@ const AdminHeader = () => {
               <div className="profile dropdown">
                 <div className='d-flex gap-2 align-items-center'>
                   <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />
-                  <p className='username'>{currentUser.DisplayName}</p>
+                  {currentStaff ? <p className='username'>{currentStaff.DisplayName}</p> : ""}
                 </div>
                 <div className="dropdown-content">
-                  {currentUser ? (
+                  {currentStaff ? (
                     <>
                       <Link to="/change-password" className="d-flex gap-3">
                         <i className="ri-key-fill"></i>
