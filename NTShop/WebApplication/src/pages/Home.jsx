@@ -77,13 +77,8 @@ const Home = () => {
     { queryKey: 'brands', queryFn: fetchBrandList },
   ])
 
-  const isLoading = queryResults.some(query => query.isLoading)
+  const isSuccess = queryResults.every(query => query.isSuccess)
   const isError = queryResults.some(query => query.isError)
-
-
-  if (isLoading) {
-    return <Loading />
-  }
 
   if (isError) {
     return <span>Error: {isError.message}</span>
@@ -96,44 +91,45 @@ const Home = () => {
 
       <Services />
 
-      <section className="brands">
-        <Container>
-          <Row>
-            <Col lg='12' className='text-center'>
-              <h2 className='section__title'>Thương hiệu</h2>
-            </Col>
+      {!isSuccess ? <Loading /> :
+        <>
+          <section className="brands">
+            <Container>
+              <Row>
+                <Col lg='12' className='text-center'>
+                  <h2 className='section__title'>Thương hiệu</h2>
+                </Col>
 
-            <Carouse4 data={queryResults[2].data} />
+                <Carouse4 data={queryResults[2].data} />
 
-          </Row>
-        </Container>
-      </section>
+              </Row>
+            </Container>
+          </section>
 
-      <section className="categories">
-      <Container>
-          <Row>
-            <Col lg='12' className='text-center'>
-              <h2 className='section__title'>Loại sản phẩm</h2>
-            </Col>
+          <section className="categories">
+            <Container>
+              <Row>
+                <Col lg='12' className='text-center'>
+                  <h2 className='section__title'>Loại sản phẩm</h2>
+                </Col>
 
-            <Carouse4 data={queryResults[1].data} />
+                <Carouse4 data={queryResults[1].data} />
 
-          </Row>
-        </Container>
-      </section>
-
+              </Row>
+            </Container>
+          </section>
+        </>
+      }
       <section className="timer__count">
         <Container>
           <Row>
-            <Col lg='6' md='12' className='count__down-col'>
-              <div className="clock__top-content">
-                <h4 className='text-white fs-6 mb-2'>Limited Offers</h4>
-                <h3 className='text-white fs-5 mb-3'>Quality Armchair</h3>
-              </div>
-              <Clock />
-              <Link to='/shop'>
+            <Col lg='6' md='12' className='count__down-col text-center mt-5 vert-move'>
+              <h3 className='timer__text text-white'>
+                Xem thêm nhiều sản phẩm hơn <i className="ri-arrow-down-s-line"></i>
+              </h3>
+              <Link to='/shop' className=''>
                 <motion.button className="buy__btn  auth__btn" whileHover={{ scale: 1.1 }}>
-                  Visit Store
+                  Tất cả sản phẩm
                 </motion.button>
               </Link>
             </Col>
@@ -143,17 +139,18 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-
-      <section className="trending__Products">
-        <Container>
-          <Row>
-            <Col lg='12' className='text-center'>
-              <h2 className='section__title'>Sản phẩm nổi bật</h2>
-            </Col>
-            <ProductList data={queryResults[0].data} />
-          </Row>
-        </Container>
-      </section>
+      {!isSuccess ? <Loading /> :
+        <section className="trending__Products">
+          <Container>
+            <Row>
+              <Col lg='12' className='text-center'>
+                <h2 className='section__title'>Sản phẩm nổi bật</h2>
+              </Col>
+              <ProductList data={queryResults[0].data} />
+            </Row>
+          </Container>
+        </section>
+      }
 
 
     </Helmet>

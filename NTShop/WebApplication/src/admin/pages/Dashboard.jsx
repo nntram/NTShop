@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Row, Col } from 'reactstrap'
-import '../styles/dashboard.css'
-import useGetData from '../custom-hooks/useGetData'
+import '../../styles/dashboard.css'
+import useGetData from '../../custom-hooks/useGetData'
 
 const Dashboard = () => {
   const { data: productsData} = useGetData("products")

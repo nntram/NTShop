@@ -45,10 +45,6 @@ const Cart = () => {
   })
 
 
-  if (!queryCart.isSuccess) {
-    return <Loading />
-  }
-
   if (queryCart.isSuccess) {
     if (queryCart.data && queryCart.data.cartdetails.length > 0) {
       let sum = 0;
@@ -86,7 +82,8 @@ const Cart = () => {
     <Helmet title='Giỏ hàng'>
       <CommonSection title='Giỏ hàng' />
       <section>
-        <Container>
+        { !queryCart.isSuccess? <Loading /> :
+          <Container>
           <Row>
             <Col lg='9'>
               {
@@ -137,6 +134,7 @@ const Cart = () => {
             </Col>
           </Row>
         </Container>
+        }
       </section>
 
     </Helmet>

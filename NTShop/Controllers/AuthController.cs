@@ -16,13 +16,15 @@ namespace NTShop.Controllers
         private readonly ICustomerRepository _customerRepository;
         private readonly ITokenService _tokenService;
         private readonly IMailService _mailService;
+        private readonly IStaffRepository _staffRepository;
 
-        public AuthController(ICustomerRepository customerRepository, 
-                ITokenService tokenService, IMailService mailService)
+        public AuthController(ICustomerRepository customerRepository, ITokenService tokenService, 
+                            IMailService mailService, IStaffRepository staffRepository)
         {
             _customerRepository = customerRepository;
             _tokenService = tokenService;
             _mailService = mailService;
+            _staffRepository = staffRepository;
         }
 
         [Route("{area}/login")]
@@ -49,7 +51,6 @@ namespace NTShop.Controllers
                     return NotFound("Tài khoản không tồn tại.");
                 }
 
-
                 if (BC.Verify(loginModel.Password, data.Password))
                 {
                     if (data.IsActive == false)
@@ -71,9 +72,43 @@ namespace NTShop.Controllers
                     }
                     return StatusCode(500);
                 }
+                return BadRequest("Sai mật khẩu.");
+            }
+            else if (area == "admin")
+            {
+                var data = await _staffRepository.GetByUserName(loginModel.UserName);
+                if (data == null)
+                {
+                    return NotFound("Tài khoản không tồn tại.");
+                }
+
+                if (BC.Verify(loginModel.Password, data.Password))
+                {
+                    if (data.IsActive == false)
+                    {
+                        return NotFound("Tài khoản đã bị vô hiệu hoặc chưa được xác nhận.");
+                    }
+
+                    var accessToken = _tokenService.GenerateAccessToken(data);
+                    var refreshToken = _tokenService.GenerateRefreshToken();
+
+                    data.RefreshToken = refreshToken;
+                    data.TokenExpiryTime = (long)DateTime.Now.AddDays(7).ToUnixTimestamp();
+
+                    var update = await _staffRepository.UpdateTokenAsync(data);
+                    if (update is true)
+                    {
+                        Response.Cookies.Append("refreshToken", refreshToken, HttpOnlyCookieOptions());
+                        return Ok(accessToken);
+                    }
+                    return StatusCode(500);
+                }
+                return BadRequest("Sai mật khẩu.");
             }
 
-            return BadRequest("Sai mật khẩu.");
+            return NotFound("Sai đường dẫn.");
+
+            
         }
 
         [HttpPost]

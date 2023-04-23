@@ -8,17 +8,17 @@ import Login from '../pages/Login'
 import Signup from '../pages/Signup'
 import ProductDetails from '../pages/ProductDetails'
 import NotFound from '../components/UI/NotFound'
-import AddProduct from '../admin/AddProduct'
-import AllProducts from '../admin/AllProducts'
-import Dashboard from '../admin/Dashboard'
-import Users from '../admin/Users'
+import AddProduct from '../admin/pages/AddProduct'
+import AllProducts from '../admin/pages/AllProducts'
+import Dashboard from '../admin/pages/Dashboard'
+import Users from '../admin/pages/Users'
 import Loading from '../components/loading/Loading'
 import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
 import Response from '../pages/Response'
 import Orders from '../pages/Orders'
 import Order from '../pages/Order'
-import AdLogin from '../admin/AdLogin'
+import AdLogin from '../admin/pages/AdLogin'
 
 const Routers = () => {
   return <Routes>
@@ -43,7 +43,10 @@ const Routers = () => {
       <Route path='order/:orderId' element={<Order/>} />
       <Route path='reset-password' element={<ResetPassword />} />
       <Route path='checkout' element={<Checkout />} />
-      <Route path='dashboard' element={<Dashboard />} />
+    </Route>
+
+    <Route element={<ProtectedRoute />}>
+      <Route path='dashboard/home' element={<Dashboard />} />
       <Route path='dashboard/all-products' element={<AllProducts />} />
       <Route path='dashboard/add-product' element={<AddProduct />} />
       <Route path='dashboard/users' element={<Users />} />

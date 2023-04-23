@@ -1,8 +1,8 @@
 import React from 'react'
 import { Container, Row, Col } from 'reactstrap'
-import useGetData from '../custom-hooks/useGetData'
+import useGetData from '../../custom-hooks/useGetData'
 import {toast} from 'react-toastify'
-import {db} from '../firebase.config'
+import {db} from '../../firebase.config'
 import { doc, deleteDoc } from 'firebase/firestore'
 
 const Users = () => {

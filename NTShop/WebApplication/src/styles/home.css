@@ -16,7 +16,8 @@
 }
 
 .timer__count {
-    background: var(--primary-color);
+    background: radial-gradient(circle, rgba(148,187,233,0.5) 50%, rgba(255, 255, 255, 0.5) 100%), 
+    url('../assets/images/common-section-bg.jpg') no-repeat center center;
     height: 300px;
 }
 
@@ -24,6 +25,11 @@
     width: 70% !important;
     height: 70% !important;
     object-fit: contain;
+}
+
+.timer__text{
+    background: rgba(17, 114, 183, 0.064);
+    padding: 15px;
 }
 
 .auth__btn {
@@ -34,6 +40,20 @@
 
 .auth__btn a:hover {
     color: var(--primary-color);
+}
+
+.vert-move {
+    -webkit-animation: mover 1s infinite  alternate;
+    animation: mover 1s infinite  alternate;
+}
+
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
 }
 
 @media only screen and (max-width: 992px) {

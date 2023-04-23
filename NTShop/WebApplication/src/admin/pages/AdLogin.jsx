@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Helmet from "../components/helmet/Helmet";
+import Helmet from "../../components/helmet/Helmet";
 import { Container, Row, Col, Form, FormGroup, Input } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/login.css";
+import "../../styles/login.css";
 import { toast } from "react-toastify";
-import Loading from "../components/loading/Loading";
+import Loading from "../../components/loading/Loading";
 import { useMutation } from "react-query";
-import authApi from "../api/AuthApi.js";
+import authApi from "../../api/AuthApi.js";
 import jwt_decode from "jwt-decode";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useDispatch, useSelector } from 'react-redux'
-import { customerActions } from "../redux/slices/customerSlice";
+import { customerActions } from "../../redux/slices/customerSlice";
 
 const AdLogin = () => {
   const [token, setToken] = useState();
@@ -35,14 +35,14 @@ const AdLogin = () => {
 
   useEffect(() => {
     if (currentUser) {
-      navigate("/home");
+      navigate("/dashboard");
     }
     handleReCaptchaVerify();
   }, [navigate, handleReCaptchaVerify, error]);
 
   const postLogin = async (formData) => {
     try {
-      const response = await authApi.customerLogin(formData);
+      const response = await authApi.adminLogin(formData);
       return response;
     } catch (error) {
       setError(error.response.data);
@@ -77,7 +77,7 @@ const AdLogin = () => {
           }
 
           toast.success("Đã đăng nhập thành công.");
-          navigate("/cart");
+          navigate("/dashboard/home");
         } catch {
           toast.error("Đã xảy ra lỗi.", { autoClose: false });
         }

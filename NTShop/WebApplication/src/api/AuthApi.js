@@ -9,6 +9,14 @@ class AuthApi {
             }
         });
     };
+    adminLogin = async (formData) => {
+        const url = '/auth/admin/login';
+        return await axiosClient.post(url, formData, {
+            headers: {
+                'content-type': 'multipart/form-data',
+            }
+        });
+    };
 
     forgotPassword = async (data) => {
         const url = '/auth/customer/forgot-password';
