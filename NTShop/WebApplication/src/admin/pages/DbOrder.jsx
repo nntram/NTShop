@@ -51,10 +51,10 @@ const DbOrder = () => {
     let orderStatus;
     let queryOrder;
     if (isSuccess) {
-        if (queryOrders[1].data !== null) {
+        if (queryOrders[1].data) {
             orderStatus = queryOrders[1].data
         }
-        if (queryOrders[0].data !== null) {
+        if (queryOrders[0].data) {
             queryOrder = queryOrders[0].data
         }
 
@@ -76,6 +76,14 @@ const DbOrder = () => {
           }
 
     }
+
+    const printOrder = () => {        
+        var myWindow = window.open("/home", "", "width=1000,height=1200");
+        myWindow.document.title = "Đơn hàng"
+        //myWindow.document.write("<head><title>your title</title></head> <p>This is 'MsgWindow'. I am 200px wide and 100px tall!</p>");
+        myWindow.print()
+    }
+
     return (
         <Helmet title='Đặt hàng'>
             <CommonSection title='Chi tiết đơn hàng' />
@@ -115,7 +123,7 @@ const DbOrder = () => {
 
                                         <tbody>
                                             {
-                                                queryOrder && queryOrder.orderdetails.map((item, index) => (
+                                                queryOrder.orderdetails && queryOrder.orderdetails.map((item, index) => (
                                                     <OrderDetail item={item} key={item.orderdetailid} />
 
                                                 ))
@@ -153,7 +161,7 @@ const DbOrder = () => {
                                 </FormGroup>
                             </Form>
                             <div className="text-center mt-3">
-                                <button className="btn btn-secondary" type="submit">
+                                <button className="btn btn-secondary" type="button" onClick={printOrder}>
                                 <i className="ri-printer-line"></i> In đơn hàng
                                 </button>
                             </div>

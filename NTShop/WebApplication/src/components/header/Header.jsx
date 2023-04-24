@@ -42,7 +42,6 @@ const Header = () => {
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
 
-console.log(currentUser)
   const logout = () => {
     sessionStorage.removeItem("userAuth");
     sessionStorage.removeItem("currentUser");

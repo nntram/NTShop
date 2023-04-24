@@ -21,7 +21,7 @@ const AdLogin = () => {
   const navigate = useNavigate();
   const eyeRef = useRef(null);
   const passwordRef = useRef(null);
-  const currentUser = useSelector(state => state.customer.currentUser)
+  const currentUser = useSelector(state => state.staff.currentStaff)
   const dispatch = useDispatch()
 
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -35,7 +35,7 @@ const AdLogin = () => {
 
   useEffect(() => {
     if (currentUser) {
-      navigate("/dashboard");
+      navigate("/dashboard/home");
     }
     handleReCaptchaVerify();
   }, [navigate, handleReCaptchaVerify, error]);

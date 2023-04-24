@@ -47,7 +47,8 @@ const AllOrders = () => {
 
     }]
   if (isSuccess) {
-    if (queryOrder[1].data !== null) {
+    
+    if (queryOrder[1].data) {
       orderStatus = queryOrder[1].data
       statusOptions = [...statusOptions, ...orderStatus.map((item) => (
         {
@@ -57,7 +58,7 @@ const AllOrders = () => {
       ))]
     }
 
-    if (queryOrder[0].data !== null) {
+    if (queryOrder[0].data) {
       orders = queryOrder[0].data
     }
   }

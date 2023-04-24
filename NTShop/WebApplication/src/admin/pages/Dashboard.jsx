@@ -1,12 +1,10 @@
 import React from 'react'
 import { Container, Row, Col } from 'reactstrap'
 import '../../styles/dashboard.css'
-import useGetData from '../../custom-hooks/useGetData'
 import Helmet from '../../components/helmet/Helmet'
 
 const Dashboard = () => {
-  const { data: productsData} = useGetData("products")
-  const { data: usersData} = useGetData("users")
+
   return (
     <Helmet title='Thống kê'>
       <section>
@@ -27,13 +25,13 @@ const Dashboard = () => {
             <Col className="lg-3">
               <div className="products__box">
                 <h5>Total Products</h5>
-                <span>{productsData.length}</span>
+                <span>10</span>
               </div>
             </Col>
             <Col className="lg-3">
               <div className="users__box">
                 <h5>Total Users</h5>
-                <span>{usersData.length}</span>
+                <span>10</span>
               </div>
             </Col>
           </Row>
