@@ -78,3 +78,8 @@ section{
   background: rgb(204, 196, 196);
   -webkit-border-radius: 1ex;
 }
+
+.text-right-column{
+  text-align: right !important;
+  padding-right: 1rem !important;
+}

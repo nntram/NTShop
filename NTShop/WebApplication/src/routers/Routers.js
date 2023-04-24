@@ -49,7 +49,7 @@ const Routers = () => {
     <Route element={<AdminRoute />} >
       <Route path='dashboard/home' element={<Dashboard />} />
       <Route path='dashboard/all-orders' element={<AllOrders />} />
-      <Route path='dashboard/order/:orderId' element={<DbOrder />} />
+      <Route path='dashboard/all-orders/order/:orderId' element={<DbOrder />} />
       <Route path='dashboard/all-products' element={<AllProducts />} />
       <Route path='dashboard/add-product' element={<AddProduct />} />
       <Route path='dashboard/users' element={<Users />} />

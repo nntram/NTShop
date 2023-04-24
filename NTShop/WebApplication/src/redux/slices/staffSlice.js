@@ -1,31 +1,43 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const user = sessionStorage.getItem("currentUser");
 let init;
 
 const rememberLogin = localStorage.getItem("remember");
-if (rememberLogin) {
+if (rememberLogin === "true") {
   const token = localStorage.getItem("userAuth");
   const user = localStorage.getItem("currentUser");
   try {
-    const userObj = JSON.parse(user);
-    if (token && user && userObj.RefreshTokenExpire <= Date.now()) {
+    let userObj 
+    if (token && user){
+      userObj = JSON.parse(user);
+    } 
+    if (userObj
+      && userObj.RefreshTokenExpire <= Date.now()
+      && (userObj.Role === "Admin" || userObj.Role === "Staff")) {
       sessionStorage.setItem("currentUser", user);
       sessionStorage.setItem("userAuth", token);
-
-      if (userObj.Role === "Admin" || userObj.Role === "Staff") {
-        init = userObj
-      }
-
     }
 
   } catch (error) {
-    console.log("Init currnet customer error: " + error)
+    console.log("Init currnet staff error: " + error)
   }
 }
 
+const user = sessionStorage.getItem("currentUser");
+try {
+  let userObj 
+  if (user){
+    userObj = JSON.parse(user);
+  } 
+  if (userObj && (userObj.Role === "Admin" || userObj.Role === "Staff")) {
+    init = userObj
+  }
+} catch (error) {
+  console.log("Init currnet staff error: " + error)
+}
+
 const initialState = {
-    currentStaff: init
+  currentStaff: init
 }
 
 const staffSlice = createSlice({

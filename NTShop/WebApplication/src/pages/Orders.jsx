@@ -57,9 +57,9 @@ const Orders = () => {
                   <thead>
                     <tr>
                       <th>Thời gian đặt hàng</th>
-                      <th>Thành tiền</th>
-                      <th>Trạng thái</th>
                       <th>Thanh toán</th>
+                      <th>Trạng thái</th>
+                      <th className='text-right-column'>Thành tiền</th>
                       <th className='text-center'>Xem chi tiết</th>
                     </tr>
                   </thead>
@@ -70,13 +70,13 @@ const Orders = () => {
                           <td>
                             {ToDateTimeString(item.ordercreateddate)}
                           </td>
-                          <td>{item.ordertotalamount.toLocaleString()} VNĐ</td>
+                          <td>
+                            {item.orderispaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                          </td>                   
                           <td>
                             {orderStatus.find(status => status.orderstatusid === item.orderstatusid).orderstatusname}
                           </td>
-                          <td>
-                            {item.orderispaid ? "Đã thanh toán" : "Chưa thanh toán"}
-                          </td>
+                          <td className='text-right-column'>{item.ordertotalamount.toLocaleString()} VNĐ</td>
                           <td className='text-center text-info'>
                             <Link to={`/order/${item.orderid}`}>Chi tiết</Link>
                           </td>

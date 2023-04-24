@@ -129,29 +129,29 @@ const AllOrders = () => {
                       <tr>
                         <th>Thời gian đặt hàng</th>
                         <th>Tên khách hàng</th>
-                        <th>Thành tiền</th>
-                        <th>Trạng thái</th>
                         <th>Thanh toán</th>
+                        <th>Trạng thái</th>                      
+                        <th className='text-right-column'>Thành tiền</th>
                         <th className='text-center'>Xem chi tiết</th>
                       </tr>
                     </thead>
                     <tbody>
                       {
-                        orders.map(item =>
+                        orders && orders.map(item =>
                           <tr key={item.orderid}>
                             <td>
                               {ToDateTimeString(item.ordercreateddate)}
                             </td>
                             <td>{item.ordercustomername}</td>
-                            <td>{item.ordertotalamount.toLocaleString()} VNĐ</td>
+                            <td>
+                              {item.orderispaid ? "Đã thanh toán" : "Thanh toán khi nhận hàng"}
+                            </td>
                             <td>
                               {orderStatus.find(status => status.orderstatusid === item.orderstatusid).orderstatusname}
                             </td>
-                            <td>
-                              {item.orderispaid ? "Đã thanh toán" : "Chưa thanh toán"}
-                            </td>
+                            <td className='text-right-column'>{item.ordertotalamount.toLocaleString()} VNĐ</td>
                             <td className='text-center text-info'>
-                              <Link to={`/dashboard/order/${item.orderid}`}>Chi tiết</Link>
+                              <Link to={`/dashboard/all-orders/order/${item.orderid}`}>Chi tiết</Link>
                             </td>
                           </tr>
 

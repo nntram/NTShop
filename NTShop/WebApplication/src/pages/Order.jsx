@@ -63,7 +63,7 @@ const Order = () => {
                                         <b> {' ' + ToDateTimeString(queryOrder.ordercreateddate)}
                                         </b>
                                     </p>
-                                    <p>Thanh toán: <b> {queryOrder.orderispaid ? "Đã thanh toán" : "Chưa thanh toán"}</b> </p>
+                                    <p>Thanh toán: <b> {queryOrder.orderispaid ? "Đã thanh toán" : "Thanh toán khi nhận hàng"}</b> </p>
                                     <p>Trạng thái: <b> {orderStatus.find(status => status.orderstatusid === queryOrder.orderstatusid).orderstatusname}</b>
                                     </p>
                                 </Col>
