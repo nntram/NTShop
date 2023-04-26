@@ -11,10 +11,13 @@ import Loading from "../components/loading/Loading";
 import { AvForm, AvField, AvGroup, AvRadioGroup, AvRadio, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 import customerApi from "../api/CustomerApi";
 import { useSelector } from "react-redux";
-import userIcon from '../assets/images/user-icon.png'
+import { useDispatch } from "react-redux";
+import authApi from "../api/AuthApi";
+import { customerActions } from "../redux/slices/customerSlice";
+import jwt_decode from "jwt-decode";
 
 const CustomerInfo = () => {
-
+    const dispatch = useDispatch()
     const [province, setProvince] = useState("");
     const [district, setDistrict] = useState("");
     const [ward, setWard] = useState("");
@@ -31,10 +34,20 @@ const CustomerInfo = () => {
             console.log('Failed to post Customer Infor: ', error);
         }
     }
+    const postRefreshToken = async (formData) => {
+        try {
+            const response = authApi.refreshToken(formData)
+            return (response);
+        } catch (error) {
+            console.log('Failed to post refresh token: ', error);
+        }
+    }
     const mutation = useMutation({
         mutationFn: (formData) => postCustomerInfor(formData),
     });
-
+    const mutationRefreshToken = useMutation({
+        mutationFn: (formData) => postRefreshToken(formData),
+    })
     const fetchDistricts = async (prodvinceId) => {
         try {
             const response = await addressApi.getDistrict(prodvinceId);
@@ -135,6 +148,7 @@ const CustomerInfo = () => {
             gender: queryResult.data.customergender ? 'male' : 'female'
         }
 
+
     }
 
     const districtResults = useQuery(['districts', province],
@@ -182,11 +196,20 @@ const CustomerInfo = () => {
         const gender = values.gender === 'male' ? true : false
         formData.append("Customergender", gender)
 
-        const result = await mutation.mutateAsync(formData).then((result) =>{
-            toast.success('result')
-        })
-    
+        await mutation.mutateAsync(formData).then(async (result) => {
+            toast.success(result + "Trang sẽ tự tải lại sau 3s.", {autoClose: false})
+            const accessToken = sessionStorage.getItem("userAuth");
+            var refreshTokenForm = new FormData()
+            refreshTokenForm.append("authorization", accessToken);
 
+            mutationRefreshToken.mutateAsync(refreshTokenForm).then((newToken) => {                              
+                sessionStorage.setItem("userAuth", newToken);
+                const decode = JSON.stringify(jwt_decode(newToken));
+                sessionStorage.setItem("currentUser", decode);
+                
+                window.setTimeout(function(){window.location.reload()},3000)
+            })
+        })
     }
 
     const validateImage = () => {
@@ -346,7 +369,7 @@ const CustomerInfo = () => {
                                         </div>
                                     </AvGroup>
                                     {
-                                        mutation.isLoading ? <Loading /> :
+                                        mutation.isLoading || mutationRefreshToken.isLoading ? <Loading /> :
                                             <FormGroup className="text-center">
                                                 <button className="buy__btn auth__btn" type="submit">
                                                     Lưu thay đổi

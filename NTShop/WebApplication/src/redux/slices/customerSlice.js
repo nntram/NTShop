@@ -48,6 +48,7 @@ const customerSlice = createSlice({
     setCurrentUser: (state, action) => {
       if(action === "RESET"){
         state.currentUser = initialState;
+        console.log(state.currentUser)
       }
       const data = action.payload
       state.currentUser = data
