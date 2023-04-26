@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using NTShop.Models.AuthModels;
 using NTShop.Models.CreateModels;
 using NTShop.Models.SendMail;
+using NTShop.Models.UpdateModels;
 using NTShop.Repositories.Interface;
 using NTShop.Services;
 using NTShop.Services.Interface;
@@ -105,6 +106,22 @@ namespace NTShop.Controllers
                 return Ok("Đã xác nhận mail.");
             }
             return BadRequest("Xác nhận mail không thành công.");
+        }
+
+        [Authorize]
+        [Route("change-infor")]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword([FromForm] CustomerUpdateModel model,
+                    [FromHeader] string authorization)
+        {
+            var userId = _tokenService.GetUserIdFromToken(authorization);
+
+            var result = await _customerRepository.UpdateInforAsync(model, userId);
+            if (result == "success")
+            {
+                return Ok("Đã lưu thay đổi.");
+            }
+            return BadRequest(result);
         }
 
     }

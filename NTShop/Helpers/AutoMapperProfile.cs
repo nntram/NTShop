@@ -4,6 +4,7 @@ using NTShop.Entities;
 using NTShop.Models;
 using NTShop.Models.AddressModels;
 using NTShop.Models.CreateModels;
+using NTShop.Models.UpdateModels;
 
 namespace NTShop.Helpers
 {
@@ -37,6 +38,7 @@ namespace NTShop.Helpers
             CreateMap<Orderstatus, OrderStatusModel>().ReverseMap();
             CreateMap<Orderstatus, OrderStatusModel>().ReverseMap();
             CreateMap<StaffModel, staff>().ReverseMap();
+            CreateMap<CustomerUpdateModel, Customer>().ReverseMap();
         }
     }
 }

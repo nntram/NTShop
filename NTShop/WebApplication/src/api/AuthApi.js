@@ -20,22 +20,35 @@ class AuthApi {
 
     forgotPassword = async (data) => {
         const url = '/auth/customer/forgot-password';
-        return await axiosClient.post(url, {Username: data});
+        return await axiosClient.post(url, { Username: data });
     };
 
     resetPassword = async (data, token) => {
         const url = '/auth/customer/reset-password';
-        
-        if(token){
+
+        if (token) {
             const headers = {
                 authorization: 'Bearer ' + token,
             }
-            return await axiosClient.post(url, {Password: data}, {headers})
+            return await axiosClient.post(url, { Password: data }, { headers })
         }
 
         return await axiosClient.post(url, data)
-       
+
     };
+    changePassword = async (data) => {
+        const url = '/auth/customer/change-password';
+        return await axiosClient.post(url, data)
+    };
+
+    refreshToken = async (formData) => {
+        const url = '/auth/refresh'
+        return await axiosClient.post(url, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        })
+    }
 }
 
 const authApi = new AuthApi();

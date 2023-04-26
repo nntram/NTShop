@@ -25,6 +25,15 @@ class CustomerApi {
         return await axiosClient.get(url);
     };
 
+    changeInfo = async (formData) => {
+        const url = '/customers/change-infor';
+        return await axiosClient.post(url, formData, {
+            headers:  {
+                'content-type': 'multipart/form-data',
+            }          
+        });
+    }
+
 }
 
 const customerApi = new CustomerApi();

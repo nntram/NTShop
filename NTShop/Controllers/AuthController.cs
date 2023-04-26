@@ -288,7 +288,7 @@ namespace NTShop.Controllers
                 var result = await _customerRepository.ResetPasswordAsync(data);
                 if (result)
                 {
-                    return Ok("Đặt lại mật khẩu thành công. Hãy đăng nhập với mật khẩu mới.");
+                    return Ok("Đặt lại mật khẩu thành công. Lần sau hãy đăng nhập với mật khẩu mới.");
                 }
 
             }
@@ -296,6 +296,26 @@ namespace NTShop.Controllers
 
             return StatusCode(500);
         }
+        [Authorize]
+        [Route("{area}/change-password")]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model,
+            [FromHeader] string authorization, [FromRoute] string area)
+        {
+            var userId = _tokenService.GetUserIdFromToken(authorization);
 
+            if (area == "customer")
+            {
+                var result = await _customerRepository.ChangePasswordAsync(model, userId);
+                if (result == "success")
+                {
+                    return Ok("Đổi mật khẩu thành công. Hãy đăng nhập với mật khẩu mới.");
+                }
+                return BadRequest(result);
+            }
+
+
+            return StatusCode(500);
+        }
     }
 }

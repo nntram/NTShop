@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-
 let init;
 
 const rememberLogin = localStorage.getItem("remember");
-console.log(rememberLogin)
+
 if (rememberLogin === "true") {
   const token = localStorage.getItem("userAuth");
   const user = localStorage.getItem("currentUser");
@@ -47,6 +46,9 @@ const customerSlice = createSlice({
   initialState,
   reducers: {
     setCurrentUser: (state, action) => {
+      if(action === "RESET"){
+        state.currentUser = initialState;
+      }
       const data = action.payload
       state.currentUser = data
     }

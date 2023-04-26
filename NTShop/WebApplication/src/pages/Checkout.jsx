@@ -33,7 +33,7 @@ const Checkout = () => {
       const response = await checkoutApi.checkout(formData);
       return (response);
     } catch (error) {
-      console.log('Failed to fetch provinces: ', error);
+      console.log('Failed to check out: ', error);
     }
   }
   const mutation = useMutation({
@@ -62,7 +62,7 @@ const Checkout = () => {
       const response = await customerApi.getById(currentUser.Id)
       return (response);
     } catch (error) {
-      console.log('Failed to fetch cart: ', error)
+      console.log('Failed to fetch customer infor: ', error)
     }
   }
 
@@ -122,11 +122,11 @@ const Checkout = () => {
   }
 
   const isLoading = queryResults.some(query => query.isLoading) || fullAddressResults.isLoading
-  const isSucess = queryResults.every(query => query.isSuccess) && fullAddressResults.isSuccess
+  const isSuccess = queryResults.every(query => query.isSuccess) && fullAddressResults.isSuccess
 
   let queryCart
   let defaultValues
-  if (isSucess) {
+  if (isSuccess) {
     queryCart = queryResults[0]
     if (queryCart.data && queryCart.data.cartdetails.length > 0) {
       let sum = 0;
@@ -183,13 +183,14 @@ const Checkout = () => {
     districtOptions = [...data]
   }
 
-  const wardResults = useQuery(['wards', district],
+  const wardResults = useQuery(['wards', district, province],
     ({ districtId = district }) => fetchWards(districtId),
     {
       enabled: Boolean(district),
+      initialData: []
     })
 
-  if (wardResults.isSuccess && wardResults.data) {
+  if (wardResults.isSuccess && wardResults.data && province) {
     const data = [...wardResults.data.map((item) => (
       {
         value: item.wardid, label: item.wardname

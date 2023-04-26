@@ -2,6 +2,7 @@
 using NTShop.Models;
 using NTShop.Models.AuthModels;
 using NTShop.Models.CreateModels;
+using NTShop.Models.UpdateModels;
 
 namespace NTShop.Repositories.Interface
 {
@@ -16,6 +17,8 @@ namespace NTShop.Repositories.Interface
         public Task<bool> IsUsernameExist(string username);
         public Task<bool> ConfirmEmail(string id);
         public Task<bool> ResetPasswordAsync(AccountModel model);
+        public Task<string> ChangePasswordAsync(ChangePasswordModel model, string userId);
+        public Task<string> UpdateInforAsync(CustomerUpdateModel model, string userId);
     }
 
 }

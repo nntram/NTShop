@@ -22,6 +22,8 @@ import AdLogin from '../admin/pages/AdLogin'
 import AllOrders from '../admin/pages/AllOrders'
 import AdminRoute from './AdminRoute'
 import DbOrder from '../admin/pages/DbOrder'
+import ChangePassword from '../pages/ChangePassword.jsx'
+import CustomerInfo from '../pages/CustomerInfo'
 
 const Routers = () => {
   return <Routes>   
@@ -42,7 +44,8 @@ const Routers = () => {
       <Route path='cart' element={<Cart />} />
       <Route path='orders' element={<Orders/>} />
       <Route path='order/:orderId' element={<Order/>} />
-      <Route path='reset-password' element={<ResetPassword />} />
+      <Route path='change-password' element={<ChangePassword />} />
+      <Route path='customer-infor' element={<CustomerInfo />} />
       <Route path='checkout' element={<Checkout />} />
     </Route>
 

@@ -131,9 +131,9 @@ const Header = () => {
                         <i className="ri-key-fill"></i>
                         <span>Đổi mật khẩu</span>
                       </Link>
-                      <Link to="/account" className="d-flex gap-3">
+                      <Link to="/customer-infor" className="d-flex gap-3">
                         <i className="ri-user-line"></i>
-                        <span>Tài khoản</span>
+                        <span>Thông tin</span>
                       </Link>
                       <a href="#" onClick={logout} className="d-flex gap-3" >
                         <i className="ri-logout-box-line"></i>
