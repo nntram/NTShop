@@ -7,20 +7,32 @@ import { ToDateTimeString } from '../../utils/Helpers'
 import { Container, Row, Col } from 'reactstrap'
 import Helmet from '../../components/helmet/Helmet'
 import Select from 'react-select'
+import { toast } from 'react-toastify'
 
 const AllOrders = () => {
   const [orderStatusSelected, setOrderStatusSelected] = useState("")
   const [orderPaymentSelected, setOrderPaymentSelected] = useState(null)
-  const [startDay, setStarDay] = useState()
-  const [endDay, setEndDay] = useState()
 
+  const now = new Date()
+
+  const defaultBeginValue = `${now.getFullYear()}-01-01`
+  const defaultEndValue = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  const defaultBeginDate = new Date(defaultBeginValue).valueOf()
+  const defaulEndDDate = new Date(defaultEndValue).setHours(23, 59, 59, 999).valueOf()
+
+  const [begintDate, setBeginDate] = useState(defaultBeginDate)
+  const [endDate, setEndDate] = useState(defaulEndDDate)
+  const [beginValue, setBeginValue] = useState(defaultBeginValue)
+  const [endValue, setEndValue] = useState(defaultEndValue)
 
   const fetchOrder = async () => {
     try {
       const response = await orderApi.getPaged({
         params: {
           Orderstatusid: orderStatusSelected,
-          Orderispaid: orderPaymentSelected
+          Orderispaid: orderPaymentSelected,
+          BeginDate: begintDate,
+          EndDate: endDate
         }
       })
       return (response);
@@ -37,8 +49,15 @@ const AllOrders = () => {
     }
   }
   const queryOrder = useQueries([
-    { queryKey: ['orders', orderStatusSelected, orderPaymentSelected], queryFn: fetchOrder },
-    { queryKey: ['order-status'], queryFn: fetchOrderStatus },
+    {
+      queryKey: ['orders', orderStatusSelected, orderPaymentSelected,
+        begintDate, endDate],
+      queryFn: fetchOrder
+    },
+    {
+      queryKey: ['order-status'],
+      queryFn: fetchOrderStatus
+    },
   ])
 
   const isSuccess = queryOrder.every(query => query.isSuccess)
@@ -81,60 +100,77 @@ const AllOrders = () => {
     },
   ]
 
-  const changeStartDay = () => {
-
+  const changeStartDate = (e) => {
+    const value = e.target.value
+    
+    if (value > endValue) {
+      toast.warning('Ngày bắt đầu phải nhỏ hơn ngày kết thúc.')
+      return;
+    }
+    setBeginValue(value)
+    const data = new Date(value).setHours(0, 0, 0).valueOf();
+    setBeginDate(data)
   }
-  const changeEndDay = () => {
-
+  const changeEndDate = (e) => {
+    const value = e.target.value
+    
+    if (value < beginValue) {
+      toast.warning('Ngày kết thúc phải lớn hơn ngày bắt đầu.')
+      return;
+    }
+    setEndValue(value)
+    const data = new Date(value).setHours(23, 59, 59, 999).valueOf();
+    setEndDate(data)
   }
-  const defaultStart = '1970-01-01'
-  const defaultEnd = new Date().toISOString().substring(0,10)
-  
+
+
   //const endTime = new Date().setHours(23,59,59,999).valueOf();
 
 
   return (
     <Helmet title='Đơn hàng'>
-      {!queryOrder[1].isSuccess ? <Loading /> :
-        <section className='pb-0'>
-          <Container>
-            <Row>
-              <Col lg='6' md='6' className='mb-3'>
-                <div className='form-group d-flex align-items-center gap-2'>
-                  <p>Thời gian đặt hàng: </p>
-                  <input type="date" onChange={changeStartDay} value={defaultStart}
-                    className="form-control w-25" />
-                  <p> - </p>
-                  <input type="date" onChange={changeEndDay} value={defaultEnd}
-                    className="form-control w-25" />
-                </div>
-              </Col>
 
-              <Col lg='3' md='6'>
-                <div className="filter__widget">
-                  <Select
-                    options={statusOptions}
-                    isSearchable={false}
-                    placeholder="Trạng thái"
-                    onChange={(e) => setOrderStatusSelected(e.value)}
-                  />
-                </div>
-              </Col>
+      <section className='pb-0'>
+        <Container>
+          <Row>
+            <Col lg='6' md='6' className='mb-3'>
+              <div className='form-group d-flex align-items-center gap-2'>
+                <p>Thời gian đặt hàng: </p>
+                <input type="date" onChange={changeStartDate} value={beginValue}
+                  className="form-control w-25" />
+                <p> - </p>
+                <input type="date" onChange={changeEndDate} value={endValue}
+                  className="form-control w-25" />
+              </div>
+            </Col>
+            {!queryOrder[1].isSuccess ? <Loading /> :
+              <>
+                <Col lg='3' md='6'>
+                  <div className="filter__widget">
+                    <Select
+                      options={statusOptions}
+                      isSearchable={false}
+                      placeholder="Trạng thái"
+                      onChange={(e) => setOrderStatusSelected(e.value)}
+                    />
+                  </div>
+                </Col>
 
-              <Col lg='3' md='6'>
-                <div className="filter__widget">
-                  <Select
-                    options={paymentStatusOptions}
-                    isSearchable={false}
-                    placeholder="Thanh toán"
-                    onChange={(e) => setOrderPaymentSelected(e.value)}
-                  />
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-      }
+                <Col lg='3' md='6'>
+                  <div className="filter__widget">
+                    <Select
+                      options={paymentStatusOptions}
+                      isSearchable={false}
+                      placeholder="Thanh toán"
+                      onChange={(e) => setOrderPaymentSelected(e.value)}
+                    />
+                  </div>
+                </Col>
+              </>
+            }
+          </Row>
+        </Container>
+      </section>
       {
         !queryOrder[0].isSuccess ? <Loading /> :
           <section>

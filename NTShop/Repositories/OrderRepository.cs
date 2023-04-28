@@ -125,7 +125,8 @@ namespace NTShop.Repositories
 
         public async Task<List<OrderModel>> GetPagedOrders(OrderGetpagedModel filter)
         {
-            var predicate = PredicateBuilder.New<Order>(1==1);
+            var predicate = PredicateBuilder.New<Order>(p => 
+                    p.Ordercreateddate >= filter.BeginDate && p.Ordercreateddate <= filter.EndDate);
             if (filter.Orderispaid != null)
             {
                 predicate = predicate.And(p => p.Orderispaid == filter.Orderispaid);
