@@ -11,6 +11,10 @@ import Select from 'react-select'
 const AllOrders = () => {
   const [orderStatusSelected, setOrderStatusSelected] = useState("")
   const [orderPaymentSelected, setOrderPaymentSelected] = useState(null)
+  const [startDay, setStarDay] = useState()
+  const [endDay, setEndDay] = useState()
+
+
   const fetchOrder = async () => {
     try {
       const response = await orderApi.getPaged({
@@ -47,7 +51,7 @@ const AllOrders = () => {
 
     }]
   if (isSuccess) {
-    
+
     if (queryOrder[1].data) {
       orderStatus = queryOrder[1].data
       statusOptions = [...statusOptions, ...orderStatus.map((item) => (
@@ -77,19 +81,32 @@ const AllOrders = () => {
     },
   ]
 
+  const changeStartDay = () => {
+
+  }
+  const changeEndDay = () => {
+
+  }
+  const defaultStart = '1970-01-01'
+  const defaultEnd = new Date().toISOString().substring(0,10)
+  
+  //const endTime = new Date().setHours(23,59,59,999).valueOf();
+
+
   return (
     <Helmet title='Đơn hàng'>
       {!queryOrder[1].isSuccess ? <Loading /> :
         <section className='pb-0'>
           <Container>
             <Row>
-              <Col lg='6' md='6'>
-                <div className="search__box">
-                  <input type="text" placeholder='Tên khách hàng, mã khách hàng...'
-                  />
-                  <span >
-                    <i className="ri-search-line"  ></i>
-                  </span>
+              <Col lg='6' md='6' className='mb-3'>
+                <div className='form-group d-flex align-items-center gap-2'>
+                  <p>Thời gian đặt hàng: </p>
+                  <input type="date" onChange={changeStartDay} value={defaultStart}
+                    className="form-control w-25" />
+                  <p> - </p>
+                  <input type="date" onChange={changeEndDay} value={defaultEnd}
+                    className="form-control w-25" />
                 </div>
               </Col>
 
@@ -130,7 +147,7 @@ const AllOrders = () => {
                         <th>Thời gian đặt hàng</th>
                         <th>Tên khách hàng</th>
                         <th>Thanh toán</th>
-                        <th>Trạng thái</th>                      
+                        <th>Trạng thái</th>
                         <th className='text-right-column'>Thành tiền</th>
                         <th className='text-center'>Xem chi tiết</th>
                       </tr>
