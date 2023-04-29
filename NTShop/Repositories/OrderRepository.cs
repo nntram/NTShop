@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using NTShop.Models.CheckoutModels;
 using NTShop.Models.Filters;
 using Abp.Linq.Expressions;
+using Arch.EntityFrameworkCore.UnitOfWork.Collections;
 
 namespace NTShop.Repositories
 {
@@ -123,7 +124,7 @@ namespace NTShop.Repositories
             return _mapper.Map<List<OrderStatusModel>>(data);
         }
 
-        public async Task<List<OrderModel>> GetPagedOrders(OrderGetpagedModel filter)
+        public async Task<PagedList<OrderModel>> GetPagedOrders(OrderGetpagedModel filter)
         {
             var predicate = PredicateBuilder.New<Order>(p => 
                     p.Ordercreateddate >= filter.BeginDate && p.Ordercreateddate <= filter.EndDate);
@@ -136,12 +137,13 @@ namespace NTShop.Repositories
                 predicate = predicate.And(p => p.Orderstatusid == filter.Orderstatusid);
             }
 
-            var data = (await _unitOfWork.GetRepository<Order>().GetPagedListAsync(
+            var data = await _unitOfWork.GetRepository<Order>().GetPagedListAsync(
+                        pageIndex: filter.PageIndex,
                         pageSize: filter.PageSize,
                         predicate: predicate,
-                        orderBy: p => p.OrderByDescending(m => m.Ordercreateddate))).Items;
+                        orderBy: p => p.OrderByDescending(m => m.Ordercreateddate));
 
-            return _mapper.Map<List<OrderModel>>(data);
+            return _mapper.Map<PagedList<OrderModel>>(data);
         }
 
         public async Task<bool> UpdateOrderPaidStatus(string orderId)

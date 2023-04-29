@@ -25,23 +25,23 @@ const admin__nav = [
     },
     {
         display: "Sản phẩm",
-        path: "/dashboard/2"
+        path: "/dashboard/all-products"
     },
     {
         display: "Loại sản phẩm",
-        path: "/dashboard/3"
+        path: "/dashboard/all-categories"
     },
     {
         display: "Thương hiệu",
-        path: "/dashboard/4"
+        path: "/dashboard/all-brands"
     },
     {
         display: "Khách hàng",
-        path: "/dashboard/5"
+        path: "/dashboard/all-custumers"
     },
     {
         display: "Nhân viên",
-        path: "/dashboard/6"
+        path: "/dashboard/all-stafs"
     },
 
 ]

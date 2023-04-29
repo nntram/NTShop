@@ -127,7 +127,7 @@ const Home = () => {
               <h3 className='timer__text text-white'>
                 Xem thêm nhiều sản phẩm hơn <i className="ri-arrow-down-s-line"></i>
               </h3>
-              <Link to='/shop' className=''>
+              <Link to='/shop'>
                 <motion.button className="buy__btn  auth__btn" whileHover={{ scale: 1.1 }}>
                   Tất cả sản phẩm
                 </motion.button>

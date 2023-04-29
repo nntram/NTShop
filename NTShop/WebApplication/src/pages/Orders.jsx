@@ -65,8 +65,9 @@ const Orders = () => {
                   </thead>
                   <tbody>
                     {
-                      orders.map(item =>
+                      orders.map((item, index) =>
                         <tr key={item.orderid}>
+                          <td>{index+1}</td>
                           <td>
                             {ToDateTimeString(item.ordercreateddate)}
                           </td>

@@ -8,8 +8,11 @@ import { Container, Row, Col } from 'reactstrap'
 import Helmet from '../../components/helmet/Helmet'
 import Select from 'react-select'
 import { toast } from 'react-toastify'
+import CommonSection from '../../components/UI/CommonSection'
+import ReactPaginate from 'react-paginate';
 
 const AllOrders = () => {
+  const pageSize = 5;
   const [orderStatusSelected, setOrderStatusSelected] = useState("")
   const [orderPaymentSelected, setOrderPaymentSelected] = useState(null)
 
@@ -24,6 +27,7 @@ const AllOrders = () => {
   const [endDate, setEndDate] = useState(defaulEndDDate)
   const [beginValue, setBeginValue] = useState(defaultBeginValue)
   const [endValue, setEndValue] = useState(defaultEndValue)
+  const [pageIndex, setPageInex] = useState(0)
 
   const fetchOrder = async () => {
     try {
@@ -32,7 +36,9 @@ const AllOrders = () => {
           Orderstatusid: orderStatusSelected,
           Orderispaid: orderPaymentSelected,
           BeginDate: begintDate,
-          EndDate: endDate
+          EndDate: endDate,
+          PageIndex: pageIndex,
+          PageSize: pageSize,
         }
       })
       return (response);
@@ -51,8 +57,11 @@ const AllOrders = () => {
   const queryOrder = useQueries([
     {
       queryKey: ['orders', orderStatusSelected, orderPaymentSelected,
-        begintDate, endDate],
-      queryFn: fetchOrder
+        begintDate, endDate, pageIndex],
+      queryFn: fetchOrder,
+      keepPreviousData: true,
+      staleTime: 5000,
+      
     },
     {
       queryKey: ['order-status'],
@@ -82,8 +91,9 @@ const AllOrders = () => {
     }
 
     if (queryOrder[0].data) {
-      orders = queryOrder[0].data
+      orders = queryOrder[0].data.items
     }
+  
   }
   const paymentStatusOptions = [
     {
@@ -96,13 +106,13 @@ const AllOrders = () => {
     },
     {
       value: false,
-      label: "Chưa thanh toán"
+      label: "Thanh toán khi nhận hàng"
     },
   ]
 
   const changeStartDate = (e) => {
     const value = e.target.value
-    
+
     if (value > endValue) {
       toast.warning('Ngày bắt đầu phải nhỏ hơn ngày kết thúc.')
       return;
@@ -110,10 +120,11 @@ const AllOrders = () => {
     setBeginValue(value)
     const data = new Date(value).setHours(0, 0, 0).valueOf();
     setBeginDate(data)
+    setPageInex(0)
   }
   const changeEndDate = (e) => {
     const value = e.target.value
-    
+
     if (value < beginValue) {
       toast.warning('Ngày kết thúc phải lớn hơn ngày bắt đầu.')
       return;
@@ -121,14 +132,18 @@ const AllOrders = () => {
     setEndValue(value)
     const data = new Date(value).setHours(23, 59, 59, 999).valueOf();
     setEndDate(data)
+    setPageInex(0)
   }
 
-
-  //const endTime = new Date().setHours(23,59,59,999).valueOf();
+  const handlePageClick = (event) => {
+    setPageInex(event.selected)
+    console.log(event)
+  };
 
 
   return (
     <Helmet title='Đơn hàng'>
+      <CommonSection title='Quản lý đơn hàng' />
 
       <section className='pb-0'>
         <Container>
@@ -151,7 +166,7 @@ const AllOrders = () => {
                       options={statusOptions}
                       isSearchable={false}
                       placeholder="Trạng thái"
-                      onChange={(e) => setOrderStatusSelected(e.value)}
+                      onChange={(e) => {setOrderStatusSelected(e.value); setPageInex(0)}}
                     />
                   </div>
                 </Col>
@@ -162,7 +177,7 @@ const AllOrders = () => {
                       options={paymentStatusOptions}
                       isSearchable={false}
                       placeholder="Thanh toán"
-                      onChange={(e) => setOrderPaymentSelected(e.value)}
+                      onChange={(e) => {setOrderPaymentSelected(e.value); setPageInex(0)}}
                     />
                   </div>
                 </Col>
@@ -180,6 +195,7 @@ const AllOrders = () => {
                   <table className='table'>
                     <thead>
                       <tr>
+                        <th>STT</th>
                         <th>Thời gian đặt hàng</th>
                         <th>Tên khách hàng</th>
                         <th>Thanh toán</th>
@@ -190,8 +206,9 @@ const AllOrders = () => {
                     </thead>
                     <tbody>
                       {
-                        orders && orders.map(item =>
+                        orders && orders.map((item, index) =>
                           <tr key={item.orderid}>
+                            <td>{pageIndex*pageSize+(index + 1)}</td>
                             <td>
                               {ToDateTimeString(item.ordercreateddate)}
                             </td>
@@ -211,6 +228,28 @@ const AllOrders = () => {
                         )}
                     </tbody>
                   </table>
+
+                  <ReactPaginate
+                    containerClassName='pagination justify-content-center mt-5'
+                    pageClassName='page-item'
+                    pageLinkClassName='page-link'
+                    previousClassName='page-item'
+                    previousLinkClassName='page-link'
+                    nextClassName='page-item'
+                    nextLinkClassName='page-link'
+                    breakClassName='page-item'
+                    breakLinkClassName='page-link'
+                    activeClassName='active'
+                    disabledClassName='disabled'
+                    breakLabel="..."
+                    nextLabel="Trang sau >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={5}
+                    pageCount={queryOrder[0].data.totalPages}
+                    previousLabel="< Trang trước"
+                    renderOnZeroPageCount={null}
+                    forcePage={pageIndex}
+                  />
                 </Col>
               </Row>
             </Container>

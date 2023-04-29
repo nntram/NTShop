@@ -1,4 +1,5 @@
-﻿using NTShop.Models;
+﻿using Arch.EntityFrameworkCore.UnitOfWork.Collections;
+using NTShop.Models;
 using NTShop.Models.CheckoutModels;
 using NTShop.Models.Filters;
 
@@ -12,6 +13,6 @@ namespace NTShop.Repositories.Interface
         public Task<bool> UpdateOrderStatus(OrderStatusUpdateModel model);
         public Task<List<OrderStatusModel>> GetOrderStatus();
         public Task<OrderModel> GetByIdAsync(string id);
-        public Task<List<OrderModel>> GetPagedOrders(OrderGetpagedModel filter);
+        public Task<PagedList<OrderModel>> GetPagedOrders(OrderGetpagedModel filter);
     }
 }
