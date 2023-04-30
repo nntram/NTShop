@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using NTShop.Models.Filters;
 using Arch.EntityFrameworkCore.UnitOfWork.Collections;
 using Abp.Linq.Expressions;
+using Abp.Extensions;
 
 namespace NTShop.Repositories
 {
@@ -63,6 +64,16 @@ namespace NTShop.Repositories
             {
                 predicate = predicate.And(p => 
                     p.Productname.ToLower().Contains(filter.Productname.ToLower()));
+            }
+            if(filter.Productishot == true)
+            {
+                predicate = predicate.And(p =>
+                    p.Productishot == true);
+            }
+            if (filter.Productsmallquantity == true)
+            {
+                predicate = predicate.And(p =>
+                    p.Productquantity <= 5 );
             }
             var pages = await _unitOfWork.GetRepository<Product>().GetPagedListAsync(
 

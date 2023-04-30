@@ -143,6 +143,8 @@ namespace NTShop.Repositories
             var data = await _unitOfWork.GetRepository<Customer>().FindAsync(id);
             if (data is null) return false;
 
+            if(data.Customeremailconfirm == true) return false;
+
             data.Customeremailconfirm = true;
             data.Customerisactive = true;
 

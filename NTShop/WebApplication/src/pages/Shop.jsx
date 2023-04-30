@@ -103,8 +103,7 @@ const Shop = () => {
       getNextPageParam: (lastPage) =>
         lastPage && lastPage.pageIndex < lastPage.totalPages - 1 ? lastPage.pageIndex + 1 : undefined
     },
-    { enabled: Boolean(debouncedFilter) }
-
+  
   )
 
   const queryResults = useQueries([

@@ -29,7 +29,7 @@ const AllOrders = () => {
   const [endValue, setEndValue] = useState(defaultEndValue)
   const [pageIndex, setPageInex] = useState(0)
 
-  const fetchOrder = async () => {
+  const fetchOrders = async () => {
     try {
       const response = await orderApi.getPaged({
         params: {
@@ -58,7 +58,7 @@ const AllOrders = () => {
     {
       queryKey: ['orders', orderStatusSelected, orderPaymentSelected,
         begintDate, endDate, pageIndex],
-      queryFn: fetchOrder,
+      queryFn: fetchOrders,
       keepPreviousData: true,
       staleTime: 5000,
       
@@ -137,7 +137,6 @@ const AllOrders = () => {
 
   const handlePageClick = (event) => {
     setPageInex(event.selected)
-    console.log(event)
   };
 
 

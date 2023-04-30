@@ -15,6 +15,7 @@ namespace NTShop.Models.Filters
         public bool? Productisacitve { get; set; } = true;    
         public int Productcode { get; set; }
         public bool? Productishot { get; set; }
-     
+        public bool? Productsmallquantity { get; set; }
+
     }
 }

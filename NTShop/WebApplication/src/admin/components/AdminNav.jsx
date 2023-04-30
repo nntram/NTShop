@@ -43,6 +43,10 @@ const admin__nav = [
         display: "Nhân viên",
         path: "/dashboard/all-stafs"
     },
+    {
+        display: "Nhà cung cấp",
+        path: "/dashboard/all-suppliers"
+    },
 
 ]
 
