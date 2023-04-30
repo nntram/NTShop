@@ -8,7 +8,6 @@ import Login from '../pages/Login'
 import Signup from '../pages/Signup'
 import ProductDetails from '../pages/ProductDetails'
 import NotFound from '../components/UI/NotFound'
-import AddProduct from '../admin/pages/AddProduct'
 import AllProducts from '../admin/pages/AllProducts'
 import Dashboard from '../admin/pages/Dashboard'
 import Users from '../admin/pages/Users'
@@ -26,6 +25,12 @@ import ChangePassword from '../pages/ChangePassword.jsx'
 import CustomerInfo from '../pages/CustomerInfo'
 import AllCategories from '../admin/pages/AllCategories'
 import AllBrands from '../admin/pages/AllBrands'
+import CreateProduct from '../admin/pages/CreateProduct'
+import CreateBrand from '../admin/pages/CreateBrand'
+import CreateCategory from '../admin/pages/CreateCategory'
+import EditProduct from '../admin/pages/EditProduct'
+import EditBrand from '../admin/pages/EditBrand'
+import EditCategory from '../admin/pages/EditCategory'
 
 const Routers = () => {
   return <Routes>   
@@ -58,8 +63,9 @@ const Routers = () => {
       <Route path='dashboard/all-products' element={<AllProducts />} />
       <Route path='dashboard/all-categories' element={<AllCategories />} />
       <Route path='dashboard/all-brands' element={<AllBrands/>} />
-
-      <Route path='dashboard/add-product' element={<AddProduct />} />
+      <Route path='dashboard/all-products/create' element={<CreateProduct />} />
+      <Route path='dashboard/all-categories/create' element={<CreateCategory />} />
+      <Route path='dashboard/all-brands/create' element={<CreateBrand/>} />
       <Route path='dashboard/users' element={<Users />} />
     </Route>
 

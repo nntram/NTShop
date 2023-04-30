@@ -32,7 +32,7 @@ const AllCategories = () => {
       <CommonSection title='Quản lý loại sản phẩm' />
       <section className='pb-0'>
         <Container>
-          <Link to={'/all-categories/create'}>
+          <Link to={'/dashboard/all-categories/create'}>
             <button className='btn btn-outline-secondary py-3 px-5 fw-bold'>
               <span className='d-flex align-items-center gap-2'>
                 <i className="ri-add-line"></i>  Thêm mới
@@ -67,7 +67,7 @@ const AllCategories = () => {
                               src={require(`../../assets/image_data/categories/${item.categoryimage}`)} alt="" /></td>
                             <td className='align-middle'>{item.categoryname}</td>
                             <td className='align-middle'>{ToDateTimeString(item.categorycreateddate)}</td>
-                            <td className='align-middle text-center text-info'><Link to={`/all-categories/${item.categoryid}`}>Chi tiết</Link></td>
+                            <td className='align-middle text-center text-info'><Link to={`/dashboard/all-categories/${item.categoryid}`}>Chi tiết</Link></td>
                             <td className='align-middle'>
                               <motion.div className='text-danger remove__cartItem' whileTap={{ scale: 1.2 }}>
                                 <i

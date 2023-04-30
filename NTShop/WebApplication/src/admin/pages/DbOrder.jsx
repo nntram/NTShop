@@ -8,7 +8,7 @@ import { useQueries, useMutation } from 'react-query'
 import orderApi from '../../api/OrderApi'
 import OrderDetail from '../../components/UI/OrderDetail'
 import { ToDateTimeString } from '../../utils/Helpers'
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 
 const DbOrder = () => {
     const [orderStatusSelected, setOrderStatusSelected] = useState()
@@ -31,17 +31,17 @@ const DbOrder = () => {
     }
     const postUpdateOrderStatus = async (data) => {
         try {
-          const response = await orderApi.updateOrderStatus(data)
-          return response;
+            const response = await orderApi.updateOrderStatus(data)
+            return response;
         } catch (error) {
-          toast.error(error.response.data, { autoClose: false })
-          console.log("Failed to add product to cart: ", error);
+            toast.error(error.response.data, { autoClose: false })
+            console.log("Failed to add product to cart: ", error);
         }
-      };
-    
-      const mutation = useMutation({
+    };
+
+    const mutation = useMutation({
         mutationFn: (data) => postUpdateOrderStatus(data)
-      });
+    });
     const queryOrders = useQueries([
         { queryKey: ['order', orderId, mutation], queryFn: ({ id = orderId }) => fetchOrderById(id) },
         { queryKey: ['order-status'], queryFn: fetchOrderStatus },
@@ -64,7 +64,7 @@ const DbOrder = () => {
                 <td style="text-align: right;">${item.orderdetailquantity}</td>
             </tr>`
 
-        ),'')
+        ), '')
         orderContent = ` 
         <head>
             <title>Mã đơn hàng: ${queryOrder.orderid}</title>
@@ -117,23 +117,23 @@ const DbOrder = () => {
     }
 
 
-    const submit =  async (e) => {
+    const submit = async (e) => {
         e.preventDefault()
 
         const data = {
             OrderId: queryOrder.orderid,
             OrderStatusId: orderStatusSelected ?? queryOrder.orderstatusid
-          }
-      
-          const result = await mutation.mutateAsync(data)
-          console.log(result)
-          if (result) {
+        }
+
+        const result = await mutation.mutateAsync(data)
+        console.log(result)
+        if (result) {
             toast.success(result)
-          }
+        }
 
     }
 
-    const printOrder = () => {        
+    const printOrder = () => {
         var myWindow = window.open("", "", "width=1200,height=1400");
         myWindow.document.title = "Đơn hàng"
         myWindow.document.write(orderContent);
@@ -192,8 +192,7 @@ const DbOrder = () => {
                                     </table>
                                 </Col>
                             </Row>
-
-                            <Form className='mt-5 p-5 border border-dark' onSubmit={submit}>
+                            {(queryOrder.orderstatusid !== '-1' && queryOrder.orderstatusid !== '3') ? <Form className='mt-5 p-5 border border-dark' onSubmit={submit}>
                                 <FormGroup>
                                     <h5 className='mb-3'>Cập nhật trạng thái đơn hàng:</h5>
                                     <Input type="select" name="orderstatus" onChange={(e) => setOrderStatusSelected(e.target.value)}>
@@ -215,10 +214,12 @@ const DbOrder = () => {
                                         Cập nhật thay đổi
                                     </button>
                                 </FormGroup>
-                            </Form>
+                            </Form> : ""}
+
+
                             <div className='text-center mt-3'>
                                 <button className="btn btn-secondary" type="button" onClick={printOrder}>
-                                <i className='ri-printer-line'></i> In đơn hàng
+                                    <i className='ri-printer-line'></i> In đơn hàng
                                 </button>
                             </div>
                             <div className='mt-3 text-info'>

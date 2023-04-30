@@ -219,7 +219,7 @@ const AllProducts = () => {
 
       <section className='pb-0'>
         <Container>
-          <Link to={'/all-products/create'}>
+          <Link to={'/dashboard/all-products/create'}>
             <button className='btn btn-outline-secondary py-3 px-5 fw-bold'>
               <span className='d-flex align-items-center gap-2'>
                 <i className="ri-add-line"></i>  Thêm mới

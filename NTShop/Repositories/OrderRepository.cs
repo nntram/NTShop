@@ -66,7 +66,7 @@ namespace NTShop.Repositories
                     orderdetail.Productid = item.Productid;
                     orderdetail.Orderdetailquantity = item.Cartdetailquantity;
                     orderdetail.Orderdetailprice = product.Productsaleprice;
-                    _unitOfWork.GetRepository<Orderdetail>().Insert(orderdetail);;
+                    _unitOfWork.GetRepository<Orderdetail>().Insert(orderdetail);
 
                     var cartDetail = _unitOfWork.GetRepository<Cartdetail>().Find(item.Cartdetailid);
                     _unitOfWork.GetRepository<Cartdetail>().Delete(cartDetail);
@@ -167,14 +167,52 @@ namespace NTShop.Repositories
 
         public async Task<bool> UpdateOrderStatus(OrderStatusUpdateModel model)
         {
-            var data = await _unitOfWork.GetRepository<Order>().FindAsync(model.OrderId);
+            var data = await _unitOfWork.GetRepository<Order>().GetFirstOrDefaultAsync(
+                predicate: p => p.Orderid == model.OrderId,
+                include: p => p.Include(m => m.Orderdetails).ThenInclude(n => n.Product));
             if (data == null) return false;
+            if (data.Orderstatusid == "-1" || data.Orderstatusid == "3") return false; //thanh cong va da huy
 
             data.Orderstatusid = model.OrderStatusId;
             data.Staffid = model.StaffId;
+            _unitOfWork.GetRepository<Order>().Update(data);
+
+            if(model.OrderStatusId == "-1") //huy don hang, hoan lai so luong san phan
+            {
+                var listOrderDetail = data.Orderdetails;
+                foreach( var item in listOrderDetail)
+                {
+                    var product = await _unitOfWork.GetRepository<Product>().FindAsync(item.Product.Productid);
+                    product.Productquantity += item.Orderdetailquantity;
+                    _unitOfWork.GetRepository<Product>().Update(product);
+                }
+            }
+            if (model.OrderStatusId == "3") //don thanh cong, tao hoa don
+            {
+                var listOrderDetail = data.Orderdetails;
+                var invoice = new Invoice();
+                invoice.Invoiceid = Guid.NewGuid().ToString();
+                invoice.Staffid = model.StaffId;
+                invoice.Orderid = model.OrderId;
+                invoice.Customerid = data.Customerid;
+                invoice.Invoiceadress = data.Orderadress;
+                invoice.Invoicephonenumber = data.Orderphonenumber;
+                invoice.Invoicecustomername = data.Ordercustomername;
+                invoice.Invoicetotalamount = data.Ordertotalamount;
+                _unitOfWork.GetRepository<Invoice>().Insert(invoice);
+
+                foreach (var item in listOrderDetail)
+                {
+                    var invoiceDetail = new Invoicedetail();
+                    invoiceDetail.Invoiceid = invoice.Invoiceid;
+                    invoiceDetail.Invoicedetailquantity = item.Orderdetailquantity;
+                    invoiceDetail.Invoicedetailprice = item.Orderdetailprice;
+                    invoiceDetail.Productid = item.Productid;
+                    _unitOfWork.GetRepository<Invoicedetail>().Insert(invoiceDetail);
+                }
+            }
             try
             {
-                _unitOfWork.GetRepository<Order>().Update(data);
                 _unitOfWork.SaveChanges();
             }
             catch (Exception ex)

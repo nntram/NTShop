@@ -32,7 +32,7 @@ const AllBrands = () => {
       <CommonSection title='Quản lý thương hiệu' />
       <section className='pb-0'>
         <Container>
-          <Link to={'/all-brands/create'}>
+          <Link to={'/dashboard/all-brands/create'}>
             <button className='btn btn-outline-secondary py-3 px-5 fw-bold'>
               <span className='d-flex align-items-center gap-2'>
                 <i className="ri-add-line"></i>  Thêm mới
@@ -67,7 +67,7 @@ const AllBrands = () => {
                               src={require(`../../assets/image_data/brands/${item.brandimage}`)} alt="" /></td>
                             <td className='align-middle'>{item.brandname}</td>
                             <td className='align-middle'>{ToDateTimeString(item.brandcreateddate)}</td>
-                            <td className='align-middle text-center text-info'><Link to={`/all-brands/${item.brandid}`}>Chi tiết</Link></td>
+                            <td className='align-middle text-center text-info'><Link to={`/dashboard/all-brands/${item.brandid}`}>Chi tiết</Link></td>
                             <td className='align-middle'>
                               <motion.div className='text-danger remove__cartItem' whileTap={{ scale: 1.2 }}>
                                 <i
