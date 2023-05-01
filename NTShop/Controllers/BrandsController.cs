@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NTShop.Models.CreateModels;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Controllers
@@ -31,6 +32,18 @@ namespace NTShop.Controllers
                 return NotFound();
             }
             return Ok(data);
+        }
+
+        [HttpPost("")]
+        [Authorize(Roles = "Admin, Staff")]
+        public async Task<IActionResult> Create([FromForm] BrandCreateModel model )
+        {
+            var data = await _brandRepository.Create(model);
+            if (data == "success")
+            {
+                return Ok(data);
+            }
+            return BadRequest(data);
         }
     }
 }

@@ -61,22 +61,29 @@ const img = {
     height: '100%'
 };
 
-const UploadImage = ({myFiles, setMyFiles}) => {
-    
-    
+const UploadImage = ({ myFiles, setMyFiles, maxFiles }) => {
+
+
     const onDrop = useCallback(acceptedFiles => {
+        if(acceptedFiles.length + myFiles.length > maxFiles){
+            return;
+        }
         setMyFiles([
             ...myFiles.map(file => Object.assign(file, { preview: URL.createObjectURL(file) })),
             ...acceptedFiles.map(file => Object.assign(file, { preview: URL.createObjectURL(file) }))
         ]);
     }, [myFiles])
 
+
     const { getRootProps, getInputProps, isFocused, isDragAccept,
-        isDragReject } = useDropzone({
+        isDragReject, acceptedFiles } = useDropzone({
+            maxFiles: {maxFiles},
             onDrop,
             accept: {
                 'image/*': ['.jpeg', '.png', '.jpg']
             },
+            disabled: myFiles.length >= maxFiles
+                     
         })
 
     const removeFile = file => () => {
@@ -126,17 +133,22 @@ const UploadImage = ({myFiles, setMyFiles}) => {
     }, []);
 
     return (
-        <section className="container border my-3 p-3">
+        <div className="container border p-3">
             <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
-                <p>Kéo và thả, hoặc click vào để chọn file</p>
+
+                <p className='mt-0'>
+                    <i className="ri-image-add-line"></i>
+                    {" "}Kéo và thả, hoặc click vào để chọn file.
+                    {maxFiles ? ` Tối đa ${maxFiles} file(s).` : ""}
+                </p>
             </div>
             <aside style={thumbsContainer}>
 
                 <ul>{files}</ul>
             </aside>
             {files.length > 0 && <button className='btn btn-danger' onClick={removeAll}>Xóa tất cả</button>}
-        </section>
+        </div>
     )
 }
 
