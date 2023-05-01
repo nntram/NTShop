@@ -46,7 +46,7 @@ namespace NTShop.Repositories
 
                 if (model.BrandImageFile?.Length > 0)
                 {
-                    var upLoadImage = await _fileManagerService.UploadSingleImage(model.BrandImageFile, GetPath.BrandImage);
+                    var upLoadImage =  _fileManagerService.UploadSingleImage2(model.BrandImageFile, GetPath.BrandImage);
                     if (upLoadImage.Length > 0)
                     {
                         brand.Brandimage = upLoadImage;

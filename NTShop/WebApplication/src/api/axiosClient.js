@@ -11,10 +11,27 @@ const axiosClient = axios.create({
 });
 
 // Set the AUTH token for any request
-axiosClient.interceptors.request.use(function (config) {
+axiosClient.interceptors.request.use(async function (config) {
   const token = sessionStorage.getItem("userAuth");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+
+    if (config.data instanceof FormData 
+      && config.url !== 'https://localhost:7157/auth/refresh'
+      && config.url !== '/auth/refresh') {
+      const bodyFormData = new FormData();
+      bodyFormData.append("authorization", token);
+      await axiosClient.post('https://localhost:7157/auth/refresh', bodyFormData,  
+      {
+        headers: {
+            "Content-Type": "multipart/form-data",
+      }}).then((newToken) => {
+        config.headers.Authorization = `Bearer ${newToken}`;
+        sessionStorage.setItem("userAuth", newToken);
+        const decode = JSON.stringify(jwt_decode(newToken));
+        sessionStorage.setItem("currentUser", decode);
+      })
+    }
   }
   return config;
 });
@@ -90,7 +107,7 @@ axiosClient.interceptors.response.use(
             localStorage.removeItem("remember");
             localStorage.removeItem("userAuth");
             localStorage.removeItem("currentUser");
-            
+
             processQueue(err, null);
             reject(err);
           })

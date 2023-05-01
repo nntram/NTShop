@@ -41,7 +41,7 @@ namespace NTShop.Controllers
             var data = await _brandRepository.Create(model);
             if (data == "success")
             {
-                return Ok(data);
+                return Ok("Thêm mới thành công.");
             }
             return BadRequest(data);
         }

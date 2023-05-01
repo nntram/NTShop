@@ -45,7 +45,7 @@ namespace NTShop.Services
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: signIn);
 
             return (new JwtSecurityTokenHandler().WriteToken(token)); ;

@@ -8,16 +8,20 @@ import brandApi from '../../api/BrandApi'
 import { useMutation } from 'react-query'
 import {toast} from 'react-toastify'
 import Loading from '../../components/loading/Loading'
+import { useNavigate } from 'react-router-dom'
 
 const CreateBrand = () => {
   const [myFiles, setMyFiles] = useState([])
-  const [myFiles2, setMyFiles2] = useState()
+  const navigate = useNavigate()
+  
   const postBrand = async (data) => {
     try {
       const response = await brandApi.create(data)
       return response;
     } catch (error) {
-      toast.error(error.response.data, { autoClose: false })
+      if(error.response){
+        toast.error(error.response.data, { autoClose: false })
+      }
       console.log("Failed to create brand: ", error);
     }
   };
@@ -28,19 +32,20 @@ const CreateBrand = () => {
 
   const submit = async (e, values) => {
     e.preventDefault();
-    const {preview, path, ...image} = myFiles[0] 
-    console.log(image)
+
     const data = new FormData()
     data.append("Brandname", values["Brandname"])
     data.append("BrandImageFile", myFiles[0])
   
     const result = await mutation.mutateAsync(data);
     if (result) {
+      setTimeout(() => {
+        navigate('/dashboard/all-brands')
+      }, 2000)
+      
       toast.success(result, { autoClose: false })
     }
   }
-  console.log(myFiles[0])
-  console.log(myFiles2)
 
   return (
     <Helmet title='Tạo mới thương hiệu'>
@@ -69,7 +74,6 @@ const CreateBrand = () => {
               <AvField name="img" type="text" value={myFiles} className='d-none' validate={{
                 required: { value: true, errorMessage: 'Vui lòng chọn một ảnh.' },
               }} />
-              <input type="file" onChange={(e) => setMyFiles2(e.target.files[0])} />
               <UploadImage myFiles={myFiles} setMyFiles={setMyFiles} maxFiles={1} />
             </AvGroup>
 

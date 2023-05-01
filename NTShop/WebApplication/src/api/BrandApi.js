@@ -13,9 +13,9 @@ class BrandApi {
   
     create = async (formData) => {
         const url = '/brands';
-        return await axiosClient.post(url, formData, {
+        return await axiosClient.post(url, formData,{
             headers:  {
-                'content-type': 'multipart/form-data',
+                'Content-Type': 'multipart/form-data',
             }          
         });
     }

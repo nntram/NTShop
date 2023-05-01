@@ -3,8 +3,9 @@ import { createSlice } from '@reduxjs/toolkit'
 let init;
 
 const rememberLogin = localStorage.getItem("remember");
+const curentToken = sessionStorage.getItem("userAuth");
 
-if (rememberLogin === "true") {
+if (rememberLogin === "true" && !curentToken) {
   const token = localStorage.getItem("userAuth");
   const user = localStorage.getItem("currentUser");
   try {
@@ -13,7 +14,7 @@ if (rememberLogin === "true") {
       userObj = JSON.parse(user);
     } 
     if (userObj
-        && userObj.RefreshTokenExpire <= Date.now()
+        && userObj.RefreshTokenExpire >= Math.floor(Date.now() / 1000)
         && userObj.Role === "Customer") {
       sessionStorage.setItem("currentUser", user);
       sessionStorage.setItem("userAuth", token);
