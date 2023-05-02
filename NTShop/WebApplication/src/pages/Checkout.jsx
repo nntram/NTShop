@@ -12,13 +12,14 @@ import { AvForm, AvField, AvGroup, AvRadio, AvRadioGroup } from 'availity-reacts
 import addressApi from '../api/AddressApi'
 import CheckoutDetail from '../components/UI/CheckoutDetail'
 import customerApi from '../api/CustomerApi'
-import vnpayLogo from '../assets/images/vnpay-logo.jpg'
-import codLogo from '../assets/images/cod-logo.jpg'
 import checkoutApi from '../api/CheckoutApi'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 
 const Checkout = () => {
+  const vnpayLogo = '/assets/images/vnpay-logo.jpg'
+  const codLogo = '/assets/images/cod-logo.jpg'
+
   const currentTotalQuantity = useSelector(state => state.cart.totalQuantity)
   const currentUser = useSelector(state => state.customer.currentUser)
   const dispatch = useDispatch()
@@ -217,17 +218,17 @@ const Checkout = () => {
     const district = districtOptions.find((item) => item.value === values["district"]).label
     const province = provinceOptions.find((item) => item.value === values["province"]).label
     const address = values["Customeraddress"] + ', ' + ward + ', ' + district + ', ' + province
-    formData.append("Orderadress", address )
-    
+    formData.append("Orderadress", address)
+
     const result = await mutation.mutateAsync(formData);
     if (result) {
       dispatch(cartActions.setTotalQuatity(0))
-      
+
       navigate('/orders')
-      if (values.PaymentType === "COD") {       
+      if (values.PaymentType === "COD") {
         toast.success(result, { autoClose: false })
       }
-      else{
+      else {
         console.log('Đặt hàng thành công.')
         const win = window.open(result, '_blank');
       }

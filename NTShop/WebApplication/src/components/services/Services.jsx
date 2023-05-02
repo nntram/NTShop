@@ -1,10 +1,11 @@
 import React from 'react'
 import './services.css'
-import serviecesData from '../../assets/data/serviceData'
+import serviecesData from  '../../assets/data/serviceData'
 import { Col, Container, Row } from 'reactstrap'
 import { motion } from 'framer-motion'
 
 const Services = () => {
+  // const serviecesData = '/assets/data/serviceData'
   return <section className='services'>
     <Container>
       <Row>

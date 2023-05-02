@@ -6,8 +6,6 @@ import '../styles/home.css'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
-import counterImg from '../assets/images/counter-timer-img.png'
-
 import Services from '../components/services/Services'
 import ProductList from '../components/UI/ProductList'
 import Clock from '../components/UI/Clock'
@@ -23,6 +21,7 @@ import Carouse4 from '../components/carousel/Carouse4'
 
 
 const Home = () => {
+  const counterImg = '/assets/images/counter-timer-img.png'
 
   const fetchProductList = async () => {
     try {

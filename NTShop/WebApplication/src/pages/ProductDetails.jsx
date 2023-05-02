@@ -186,7 +186,7 @@ const ProductDetails = () => {
                   {
                     product.productimages && product.productimages.map((image) =>
                       <div key={image.productimageid}>
-                        <img src={require(`../assets/image_data/products/${image.productimageurl}`)} />
+                        <img src={`/assets/image_data/products/${image.productimageurl}`} />
                       </div>
                     )
                   }

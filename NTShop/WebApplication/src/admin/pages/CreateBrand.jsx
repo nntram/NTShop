@@ -6,20 +6,20 @@ import UploadImage from '../components/UploadImage'
 import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import brandApi from '../../api/BrandApi'
 import { useMutation } from 'react-query'
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import Loading from '../../components/loading/Loading'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const CreateBrand = () => {
   const [myFiles, setMyFiles] = useState([])
   const navigate = useNavigate()
-  
+
   const postBrand = async (data) => {
     try {
       const response = await brandApi.create(data)
       return response;
     } catch (error) {
-      if(error.response){
+      if (error.response) {
         toast.error(error.response.data, { autoClose: false })
       }
       console.log("Failed to create brand: ", error);
@@ -36,13 +36,10 @@ const CreateBrand = () => {
     const data = new FormData()
     data.append("Brandname", values["Brandname"])
     data.append("BrandImageFile", myFiles[0])
-  
+
     const result = await mutation.mutateAsync(data);
     if (result) {
-      setTimeout(() => {
-        navigate('/dashboard/all-brands')
-      }, 2000)
-      
+      navigate('/dashboard/all-brands')
       toast.success(result, { autoClose: false })
     }
   }
@@ -87,10 +84,17 @@ const CreateBrand = () => {
             }
 
           </AvForm>
+
+
         </Col>
       </Container>
-
-
+      <section className='p-3'>
+        <div className='mt-3 text-info'>
+          <Link to='/dashboard/all-brands' >
+            <i className='ri-arrow-go-back-line'></i> Trở về
+          </Link>
+        </div>
+      </section>
 
     </Helmet>
   )

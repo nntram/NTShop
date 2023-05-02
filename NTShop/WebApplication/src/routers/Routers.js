@@ -65,7 +65,10 @@ const Routers = () => {
       <Route path='dashboard/all-brands' element={<AllBrands/>} />
       <Route path='dashboard/all-products/create' element={<CreateProduct />} />
       <Route path='dashboard/all-categories/create' element={<CreateCategory />} />
-      <Route path='dashboard/all-brands/create' element={<CreateBrand/>} />
+      <Route path='dashboard/all-brands/create' element={<CreateBrand />} />
+      <Route path='dashboard/all-products/:id' element={<EditProduct />} />
+      <Route path='dashboard/all-categories/:id' element={<EditCategory />} />
+      <Route path='dashboard/all-brands/:id' element={<EditBrand />} />
       <Route path='dashboard/users' element={<Users />} />
     </Route>
 

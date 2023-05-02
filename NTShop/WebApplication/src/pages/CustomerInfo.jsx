@@ -74,7 +74,6 @@ const CustomerInfo = () => {
         }
     }
 
-
     const fetchFullAddress = async (wardId) => {
         try {
             const response = await addressApi.getFullAddress(wardId);
@@ -91,7 +90,6 @@ const CustomerInfo = () => {
             queryFn: fetchCustomerInfo
         }
     )
-
 
     const fullAddressResults = useQuery({
         queryKey: ['full-address'],
@@ -350,7 +348,7 @@ const CustomerInfo = () => {
                                         </Label>
                                         <div className="text-center">
                                             {
-                                                queryResult.data.customeravatar ? <img src={require('../assets/image_data/avatar/' + queryResult.data.customeravatar)} className="w-25 m-auto" />
+                                                queryResult.data.customeravatar ? <img src={'/assets/image_data/avatar/' + queryResult.data.customeravatar} className="w-25 m-auto" />
                                                     : "Bạn chưa chọn ảnh đại diện"
                                             }
 

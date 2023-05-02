@@ -1,8 +1,10 @@
 import React from 'react'
 import Helmet from '../helmet/Helmet'
-import bgImg from "../../assets/images/404.jpg"
+
 
 const NotFound = () => {
+  const bgImg = "../../assets/images/404.jpg"
+  
   return (
     <Helmet title='404'>
         <img src={bgImg} className='w-100'/>

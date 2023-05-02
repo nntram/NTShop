@@ -1,9 +1,7 @@
 import { Container } from 'reactstrap'
 import '../../styles/admin-nav.css'
-import userIcon from '../../assets/images/user-icon.png'
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo5.png";
 import AdminNav from "./AdminNav";
 import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +10,9 @@ import { staffActions } from '../../redux/slices/staffSlice'
 import {toast} from 'react-toastify'
 
 const AdminHeader = () => {
+  const  userIcon = '/assets/images/user-icon.png'
+  const logo = "/assets/images/logo5.png"
+
   const currentStaff = useSelector(state => state.staff.currentStaff)
 
   const queryClient = useQueryClient()

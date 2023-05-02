@@ -1,11 +1,12 @@
 import React from 'react'
 import './hero-slider.css'
-import heroImg from '../../assets/image_data/banners/hero-img-02.png'
 import { Row, Col, Container } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const HeroSlider = () => {
+    const  heroImg = '/assets/image_data/banners/hero-img-02.png'
+    
     return (
         <section className='hero__section hero-slide'>
             <Container>

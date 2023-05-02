@@ -3,8 +3,6 @@ import { Container, Row } from "reactstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./header.css";
 import { motion } from "framer-motion";
-import logo from "../../assets/images/logo5.png";
-import userIcon from "../../assets/images/user-icon.png";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -29,6 +27,9 @@ const nav__links = [
 ];
 
 const Header = () => {
+  const  userIcon = '/assets/images/user-icon.png'
+  const logo = "/assets/images/logo5.png"
+
   const navigate = useNavigate();
   const navigateToCart = () => {
     navigate("/cart");
@@ -115,7 +116,7 @@ const Header = () => {
                   {currentUser ?
                     <>
                       <motion.img whileTap={{ scale: 1.2 }}
-                        src={currentUser.Avatar ? require('../../assets/image_data/avatar/' + currentUser.Avatar) : userIcon} />
+                        src={currentUser.Avatar ? '/assets/image_data/avatar/' + currentUser.Avatar : userIcon} />
                       <p className='username'>{currentUser.DisplayName}</p>
                     </>
                     : <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />}

@@ -17,7 +17,7 @@
 
 .timer__count {
     background: radial-gradient(circle, rgba(148,187,233,0.5) 50%, rgba(255, 255, 255, 0.5) 100%), 
-    url('../assets/images/common-section-bg.jpg') no-repeat center center;
+    url('../../public/assets/images/common-section-bg.jpg') no-repeat center center;
     height: 300px;
 }
 

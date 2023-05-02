@@ -9,6 +9,8 @@ import { toast } from 'react-toastify'
 import brandApi from '../../api/BrandApi'
 import { motion } from 'framer-motion'
 import CommonSection from '../../components/UI/CommonSection'
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 const AllBrands = () => {
 
@@ -26,6 +28,17 @@ const AllBrands = () => {
       queryFn: fetchBrands
     },
   )
+
+
+  const handleDelete = (item) => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <DeleteMessage item={item} onClose={onClose} />
+        );
+      }
+    });
+  }
 
   return (
     <Helmet title='Thương hiệu'>
@@ -64,7 +77,7 @@ const AllBrands = () => {
                           <tr key={item.brandid}>
                             <td>{index + 1}</td>
                             <td><img
-                              src={require(`../../assets/image_data/brands/${item.brandimage}`)} alt="" /></td>
+                              src={`/assets/image_data/brands/${item.brandimage}`} alt="" /></td>
                             <td className='align-middle'>{item.brandname}</td>
                             <td className='align-middle'>{ToDateTimeString(item.brandcreateddate)}</td>
                             <td className='align-middle text-center text-info'><Link to={`/dashboard/all-brands/${item.brandid}`}>Chi tiết</Link></td>
@@ -72,7 +85,7 @@ const AllBrands = () => {
                               <motion.div className='text-danger remove__cartItem' whileTap={{ scale: 1.2 }}>
                                 <i
                                   className="ri-delete-bin-line"
-                                  onClick={null}>
+                                  onClick={() => handleDelete(item)}>
                                 </i>
                               </motion.div>
                             </td>
@@ -87,11 +100,40 @@ const AllBrands = () => {
             </Container>
           </section>
       }
-
-
-
     </Helmet>
   )
 }
 
+const DeleteMessage = ({ item, onClose }) => {
+  return (
+    <div className="react-confirm-alert">
+      <div className="react-confirm-alert-body">
+        <h1>Xác nhận xóa</h1>
+        <p>Bạn chắc chắn muốn xóa?</p>
+
+        <div className='text-center m-2'>
+          <p>{item.brandname}</p>
+          <img className='w-50' src={`/assets/image_data/brands/${item.brandimage}`} alt="" />
+        </div>
+
+        <div className="d-flex justify-content-center align-items-center gap-3">
+          <button label="Yes"
+          className='btn btn-danger'
+            onClick={() => {
+              this.handleClickDelete();
+              onClose();
+            }}>Xóa
+          </button>
+          <button label="No"
+          className='btn btn-secondary'
+            onClick={onClose}>Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+
+  )
+}
+
 export default AllBrands
+

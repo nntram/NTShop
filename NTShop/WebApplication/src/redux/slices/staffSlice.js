@@ -13,8 +13,6 @@ if (rememberLogin === "true" && !curentToken) {
     if (token && user){
       userObj = JSON.parse(user);
     } 
-    console.log(userObj.RefreshTokenExpire)
-    console.log(userObj.exp)
 
     if (userObj
       && userObj.RefreshTokenExpire >= Math.floor(Date.now() / 1000)
