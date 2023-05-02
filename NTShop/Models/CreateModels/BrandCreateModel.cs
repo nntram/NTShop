@@ -7,6 +7,7 @@ namespace NTShop.Models.CreateModels
         [Required]
         [StringLength(256)]
         public string Brandname { get; set; }
+        [Required]
         public IFormFile BrandImageFile { get; set; }
     }
 }

@@ -19,6 +19,20 @@ class BrandApi {
             }          
         });
     }
+
+    update = async (formData) => {
+        const url = '/brands/update';
+        return await axiosClient.post(url, formData,{
+            headers:  {
+                'Content-Type': 'multipart/form-data',
+            }          
+        });
+    }
+
+    delete = async (id) => {
+        const url = '/brands/delete/' + id;
+        return await axiosClient.post(url);
+    }
 }
 
 const brandApi = new BrandApi();

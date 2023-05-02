@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NTShop.Models.CreateModels;
+using NTShop.Models.UpdateModels;
 using NTShop.Repositories.Interface;
 
 namespace NTShop.Controllers
@@ -42,6 +43,30 @@ namespace NTShop.Controllers
             if (data == "success")
             {
                 return Ok("Thêm mới thành công.");
+            }
+            return BadRequest(data);
+        }
+
+        [HttpPost("update")]
+        [Authorize(Roles = "Admin, Staff")]
+        public async Task<IActionResult> Update([FromForm] BrandUpdateModel model)
+        {
+            var data = await _brandRepository.Update(model);
+            if (data == "success")
+            {
+                return Ok("Lưu thay đổi thành công.");
+            }
+            return BadRequest(data);
+        }
+
+        [HttpPost("delete/{id}")]
+        [Authorize(Roles = "Admin, Staff")]
+        public async Task<IActionResult> Delete([FromRoute] string id)
+        {
+            var data = await _brandRepository.Delete(id);
+            if (data == "success")
+            {
+                return Ok("Xóa thành công.");
             }
             return BadRequest(data);
         }

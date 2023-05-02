@@ -8,6 +8,5 @@
         public void DeleteMultipleImages(List<string> listPath);
         public void DeleteSingleImage(string path);
 
-        public string UploadSingleImage2(IFormFile postedFile, string path);
     }
 }

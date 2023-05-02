@@ -59,30 +59,6 @@ namespace NTShop.Services
             return fileName;
         }
 
-        public string UploadSingleImage2(IFormFile postedFile, string path)
-        {
-            string fileName = "";
-            try
-            {
-                var fullPath = Path.Combine(path);
-                if (!Directory.Exists(fullPath))
-                {
-                    Directory.CreateDirectory(fullPath);
-                }
-
-                fileName = Guid.NewGuid().ToString() + Path.GetExtension(postedFile.FileName);
-                var imagePath = Path.Combine(fullPath, fileName);
-                using (FileStream stream = new FileStream(imagePath, FileMode.Create))
-                {
-                     postedFile.CopyTo(stream);
-
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-            return fileName;
-        }
+       
     }
 }

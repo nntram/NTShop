@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
 import Loading from '../../components/loading/Loading'
 import { Link } from 'react-router-dom'
 import { ToDateTimeString } from '../../utils/Helpers'
@@ -14,6 +14,29 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 const AllBrands = () => {
 
+  const postDeleteBrand = async (id) => {
+    try {
+      const response = await brandApi.delete(id)
+      return response;
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data, { autoClose: false })
+      }
+      console.log("Failed to delete brand: ", error);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: (id) => postDeleteBrand(id)
+  });
+
+  const handleConfirmDelete = async (id) => {
+    const result = await mutation.mutateAsync(id);
+    if (result) {
+      toast.success(result)
+    }
+  }
+
   const fetchBrands = async () => {
     try {
       const response = await brandApi.getAll()
@@ -24,17 +47,19 @@ const AllBrands = () => {
   }
   const queryResult = useQuery(
     {
-      queryKey: ['db-brands'],
+      queryKey: ['db-brands', mutation],
       queryFn: fetchBrands
     },
   )
+
+
 
 
   const handleDelete = (item) => {
     confirmAlert({
       customUI: ({ onClose }) => {
         return (
-          <DeleteMessage item={item} onClose={onClose} />
+          <DeleteMessage item={item} onClose={onClose} handleConfirmDelete={handleConfirmDelete}/>
         );
       }
     });
@@ -104,7 +129,7 @@ const AllBrands = () => {
   )
 }
 
-const DeleteMessage = ({ item, onClose }) => {
+const DeleteMessage = ({ item, onClose, handleConfirmDelete }) => {
   return (
     <div className="react-confirm-alert">
       <div className="react-confirm-alert-body">
@@ -120,7 +145,7 @@ const DeleteMessage = ({ item, onClose }) => {
           <button label="Yes"
           className='btn btn-danger'
             onClick={() => {
-              this.handleClickDelete();
+              handleConfirmDelete(item.brandid);
               onClose();
             }}>Xóa
           </button>

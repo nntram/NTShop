@@ -27,7 +27,7 @@ const CreateBrand = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: (data) => postBrand(data)
+    mutationFn: (data) => postBrand(data),
   });
 
   const submit = async (e, values) => {
@@ -39,8 +39,8 @@ const CreateBrand = () => {
 
     const result = await mutation.mutateAsync(data);
     if (result) {
-      navigate('/dashboard/all-brands')
       toast.success(result, { autoClose: false })
+      navigate('/dashboard/all-brands')  
     }
   }
 

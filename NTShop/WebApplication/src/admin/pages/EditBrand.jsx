@@ -12,13 +12,14 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { ToDateTimeString } from '../../utils/Helpers'
 
 const EditBrand = () => {
-  const { id } = useParams()
+
+  const {brandId} = useParams()
   const [myFiles, setMyFiles] = useState([])
   const navigate = useNavigate()
 
   const postEditBrand = async (data) => {
     try {
-      const response = await brandApi.create(data)
+      const response = await brandApi.update(data)
       return response;
     } catch (error) {
       if (error.response) {
@@ -36,13 +37,16 @@ const EditBrand = () => {
     e.preventDefault();
 
     const data = new FormData()
+    data.append("Brandid",  brandId)
     data.append("Brandname", values["Brandname"])
-    data.append("BrandImageFile", myFiles[0])
+    if (myFiles[0]) {
+      data.append("BrandImageFile", myFiles[0])
+    }
 
     const result = await mutation.mutateAsync(data);
     if (result) {
-      navigate('/dashboard/all-brands')
       toast.success(result, { autoClose: false })
+      navigate('/dashboard/all-brands')
     }
   }
 
@@ -55,9 +59,12 @@ const EditBrand = () => {
     }
   }
   const queryBrand = useQuery(
-    { queryKey: ['brand', id], queryFn: ({ brandId = id }) => fetchBrandById(brandId) }
+    {
+      queryKey: ['brand'],
+      queryFn: ({ id = brandId }) => fetchBrandById(id),
+      cacheTime: 1000
+    }
   )
-
 
   let defaultValues;
   if (queryBrand.isSuccess) {
@@ -66,7 +73,6 @@ const EditBrand = () => {
     }
 
   }
-  console.log(defaultValues)
 
   return (
     <Helmet title='Chỉnh sửa thương hiệu'>
@@ -94,7 +100,7 @@ const EditBrand = () => {
                 <Label className="text-right text-white mx-2">
                   Ngày tạo:
                 </Label>
-                <Input type='text' readOnly value={ToDateTimeString(queryBrand.data.brandcreateddate)} />
+                <Input type='text' readOnly value={ToDateTimeString(queryBrand.data.brandcreateddate)} />               
               </FormGroup>
               <FormGroup>
                 <Label className="text-right text-white mx-2">
