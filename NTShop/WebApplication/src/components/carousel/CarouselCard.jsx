@@ -11,7 +11,7 @@ const CarouselCard = ({ item }) => {
             <div className='card__item border'>
                 <div className="card__img">
                     <motion.img whileHover={{ scale: 0.9 }} alt=""
-                        src={"/assets/image_data/" + item.type + "/" + item.image} />
+                        src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/` + item.type + "/" + item.image} />
                 </div>
 
                 <div className="p-2 card__info text-center">

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const HeroSlider2 = () => {
-    const heroImg = '../../assets/image_data/banners/hero-img.png'
+    const heroImg = '../../assets/images/banners/hero-img.png'
     
     return (
         <section className='hero__section2 hero-slide'>

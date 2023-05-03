@@ -339,7 +339,7 @@ const AllProducts = () => {
                           <tr key={item.productid}>
                             <td>{pageIndex * pageSize + (index + 1)}</td>
                             <td><img
-                              src={`/assets/image_data/products/${item.productimages}`} alt="" /></td>
+                              src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${item.productimages}`} alt="" /></td>
                             <td>{item.productname}</td>
                             <td>
                               {item.productprice.toLocaleString()} VNĐ

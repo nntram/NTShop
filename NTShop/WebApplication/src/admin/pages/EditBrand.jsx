@@ -107,7 +107,7 @@ const EditBrand = () => {
                   Hình ảnh
                 </Label>
                 <div className='text-center'>
-                  <img src={`/assets/image_data/brands/${queryBrand.data.brandimage}`}
+                  <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/brands/${queryBrand.data.brandimage}`}
                     className='w-50' alt="" />
                 </div>
               </FormGroup>

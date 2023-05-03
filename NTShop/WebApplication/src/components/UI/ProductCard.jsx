@@ -65,7 +65,7 @@ const ProductCard = ({ item }) => {
             <div className='product__item border'>
                 <div className="product__img">
                     <motion.img whileHover={{ scale: 0.9 }} alt=""
-                        src={"/assets/image_data/products/" + item.productimages} />
+                        src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/` + item.productimages} />
                 </div>
 
                 <div className="p-2 product__info">

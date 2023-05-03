@@ -186,7 +186,7 @@ const ProductDetails = () => {
                   {
                     product.productimages && product.productimages.map((image) =>
                       <div key={image.productimageid}>
-                        <img src={`/assets/image_data/products/${image.productimageurl}`} />
+                        <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${image.productimageurl}`} />
                       </div>
                     )
                   }

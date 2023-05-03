@@ -102,7 +102,7 @@ const AllBrands = () => {
                           <tr key={item.brandid}>
                             <td>{index + 1}</td>
                             <td><img
-                              src={`/assets/image_data/brands/${item.brandimage}`} alt="" /></td>
+                              src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/brands/${item.brandimage}`} alt="" /></td>
                             <td className='align-middle'>{item.brandname}</td>
                             <td className='align-middle'>{ToDateTimeString(item.brandcreateddate)}</td>
                             <td className='align-middle text-center text-info'><Link to={`/dashboard/all-brands/${item.brandid}`}>Chi tiết</Link></td>
@@ -138,7 +138,7 @@ const DeleteMessage = ({ item, onClose, handleConfirmDelete }) => {
 
         <div className='text-center m-2'>
           <p>{item.brandname}</p>
-          <img className='w-50' src={`/assets/image_data/brands/${item.brandimage}`} alt="" />
+          <img className='w-50' src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/brands/${item.brandimage}`} alt="" />
         </div>
 
         <div className="d-flex justify-content-center align-items-center gap-3">

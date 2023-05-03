@@ -64,7 +64,7 @@ const AllCategories = () => {
                           <tr key={item.categoryid}>
                             <td>{index + 1}</td>
                             <td><img
-                              src={`/assets/image_data/categories/${item.categoryimage}`} alt="" /></td>
+                              src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/categories/${item.categoryimage}`} alt="" /></td>
                             <td className='align-middle'>{item.categoryname}</td>
                             <td className='align-middle'>{ToDateTimeString(item.categorycreateddate)}</td>
                             <td className='align-middle text-center text-info'><Link to={`/dashboard/all-categories/${item.categoryid}`}>Chi tiết</Link></td>

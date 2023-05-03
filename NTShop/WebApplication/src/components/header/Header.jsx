@@ -116,7 +116,7 @@ const Header = () => {
                   {currentUser ?
                     <>
                       <motion.img whileTap={{ scale: 1.2 }}
-                        src={currentUser.Avatar ? '/assets/image_data/avatar/' + currentUser.Avatar : userIcon} />
+                        src={currentUser.Avatar ? `${process.env.REACT_APP_API_IMAGE_BASE_URL}/avatar/` + currentUser.Avatar : userIcon} />
                       <p className='username'>{currentUser.DisplayName}</p>
                     </>
                     : <motion.img whileTap={{ scale: 1.2 }} src={userIcon} />}

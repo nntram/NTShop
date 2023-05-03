@@ -348,7 +348,7 @@ const CustomerInfo = () => {
                                         </Label>
                                         <div className="text-center">
                                             {
-                                                queryResult.data.customeravatar ? <img src={'/assets/image_data/avatar/' + queryResult.data.customeravatar} className="w-25 m-auto" />
+                                                queryResult.data.customeravatar ? <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/avatar/` + queryResult.data.customeravatar} className="w-25 m-auto" />
                                                     : "Bạn chưa chọn ảnh đại diện"
                                             }
 
