@@ -16,6 +16,28 @@ class ProductApi {
         return await axiosClient.get(url);
     };
 
+    create = async (formData) => {
+        const url = '/products';
+        return await axiosClient.post(url, formData,{
+            headers:  {
+                'Content-Type': 'multipart/form-data',
+            }          
+        });
+    }
+
+    update = async (formData) => {
+        const url = '/products/update';
+        return await axiosClient.post(url, formData,{
+            headers:  {
+                'Content-Type': 'multipart/form-data',
+            }          
+        });
+    }
+
+    delete = async (id) => {
+        const url = '/products/delete/' + id;
+        return await axiosClient.post(url);
+    }
 
 }
 

@@ -44,7 +44,7 @@ const Orders = () => {
   }
 
   const getOrderStatusClass = (id) => {
-    const orderStatusClass = ''
+    let orderStatusClass = ''
     switch (id) {
       case '0':
         orderStatusClass = 'text-secondary'
@@ -99,11 +99,11 @@ const Orders = () => {
                             {item.orderispaid ? "Đã thanh toán" : "Thanh toán khi nhận hàng"}
                           </td>
                           <td className={
-                                item.orderstatusid == '0' ? 'text-secondary'
-                                : item.orderstatusid == '1' ? 'text-primary' 
-                                : item.orderstatusid == '2' ? 'text-warning' 
-                                : item.orderstatusid == '3' ? 'text-success' 
-                                : item.orderstatusid == '-1' ? 'text-danger' 
+                                item.orderstatusid === '0' ? 'text-secondary'
+                                : item.orderstatusid === '1' ? 'text-primary' 
+                                : item.orderstatusid === '2' ? 'text-warning' 
+                                : item.orderstatusid === '3' ? 'text-success' 
+                                : item.orderstatusid === '-1' ? 'text-danger' 
                                 : ''}>
                             {orderStatus.find(status => status.orderstatusid === item.orderstatusid).orderstatusname}
                           </td>
