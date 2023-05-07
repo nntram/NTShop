@@ -25,7 +25,7 @@ const EditBrand = () => {
       if (error.response) {
         toast.error(error.response.data, { autoClose: false })
       }
-      console.log("Failed to create brand: ", error);
+      console.log("Failed to update brand: ", error);
     }
   };
 

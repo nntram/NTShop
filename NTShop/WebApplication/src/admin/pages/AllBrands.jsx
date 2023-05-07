@@ -90,7 +90,7 @@ const AllBrands = () => {
                       <tr>
                         <th>STT</th>
                         <th></th>
-                        <th>Tên loại sản phẩm</th>
+                        <th>Tên thương hiệu</th>
                         <th>Ngày tạo</th>
                         <th className='text-center'>Xem chi tiết</th>
                         <th>Xóa</th>

@@ -215,7 +215,13 @@ const AllOrders = () => {
                             <td>
                               {item.orderispaid ? "Đã thanh toán" : "Thanh toán khi nhận hàng"}
                             </td>
-                            <td>
+                            <td className={
+                                item.orderstatusid == '0' ? 'text-secondary'
+                                : item.orderstatusid == '1' ? 'text-primary' 
+                                : item.orderstatusid == '2' ? 'text-warning' 
+                                : item.orderstatusid == '3' ? 'text-success' 
+                                : item.orderstatusid == '-1' ? 'text-danger' 
+                                : ''}>
                               {orderStatus.find(status => status.orderstatusid === item.orderstatusid).orderstatusname}
                             </td>
                             <td className='text-right-column'>{item.ordertotalamount.toLocaleString()} VNĐ</td>

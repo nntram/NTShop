@@ -152,10 +152,7 @@ const AdLogin = () => {
                     <button className="buy__btn auth__btn" type="submit">
                       Đăng nhập
                     </button>
-                    <p>
-                      Bạn chưa có tài khoản?{" "}
-                      <Link to="/signup">Đăng ký tài khoản ngay</Link>
-                    </p>
+                   
                     <p className="mt-2">
                       <Link to="/forgot-password">Quên mật khẩu</Link>
                     </p>

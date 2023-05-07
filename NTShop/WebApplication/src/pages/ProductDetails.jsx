@@ -86,10 +86,12 @@ const ProductDetails = () => {
   const queryRelatedProducts = useQuery(
     {
       queryKey: ['relatedProducts', productId],
-      queryFn: ({ categoryid = product ? product.categoryid : "",
-        brandid = product ? product.brandid : "" }) =>
-        fetchProducts(categoryid, brandid)
+      queryFn: ({ categoryid = product.categoryid,
+        brandid = product.brandid }) =>
+        fetchProducts(categoryid, brandid),
+      enabled: Boolean(product)
     },
+    
   )
   const relatedProducts = queryRelatedProducts.data
 

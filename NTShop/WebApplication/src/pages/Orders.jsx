@@ -43,6 +43,29 @@ const Orders = () => {
 
   }
 
+  const getOrderStatusClass = (id) => {
+    const orderStatusClass = ''
+    switch (id) {
+      case '0':
+        orderStatusClass = 'text-secondary'
+        break;
+      case '1':
+        orderStatusClass = 'text-secondary'
+        break;
+      case '2':
+        orderStatusClass = 'text-secondary'
+        break;
+      case '3':
+        orderStatusClass = 'text-secondary'
+        break;
+      case '-1':
+        orderStatusClass = 'text-secondary'
+        break;
+    }
+    console.log(orderStatusClass)
+    return orderStatusClass;
+  }
+
 
   return (
 
@@ -56,6 +79,7 @@ const Orders = () => {
                 <table className='table'>
                   <thead>
                     <tr>
+                      <th>STT</th>
                       <th>Thời gian đặt hàng</th>
                       <th>Thanh toán</th>
                       <th>Trạng thái</th>
@@ -67,14 +91,20 @@ const Orders = () => {
                     {
                       orders.map((item, index) =>
                         <tr key={item.orderid}>
-                          <td>{index+1}</td>
+                          <td>{index + 1}</td>
                           <td>
                             {ToDateTimeString(item.ordercreateddate)}
                           </td>
                           <td>
-                            {item.orderispaid ? "Đã thanh toán" : "Chưa thanh toán"}
-                          </td>                   
-                          <td>
+                            {item.orderispaid ? "Đã thanh toán" : "Thanh toán khi nhận hàng"}
+                          </td>
+                          <td className={
+                                item.orderstatusid == '0' ? 'text-secondary'
+                                : item.orderstatusid == '1' ? 'text-primary' 
+                                : item.orderstatusid == '2' ? 'text-warning' 
+                                : item.orderstatusid == '3' ? 'text-success' 
+                                : item.orderstatusid == '-1' ? 'text-danger' 
+                                : ''}>
                             {orderStatus.find(status => status.orderstatusid === item.orderstatusid).orderstatusname}
                           </td>
                           <td className='text-right-column'>{item.ordertotalamount.toLocaleString()} VNĐ</td>
