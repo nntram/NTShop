@@ -2,10 +2,10 @@
 {
     public static class GetPath
     {
-        public const string ProductImage = "wwwroot/image_data/products/";
-        public const string BrandImage = "wwwroot/image_data/brands/";
-        public const string CategoryImage = "wwwroot/image_data/categories/";
-        public const string BannerImage = "wwwroot/image_data/banners";
-        public const string AvatarImage = "wwwroot/image_data/avatar";
+        public const string ProductImage = "wwwroot/images/products/";
+        public const string BrandImage = "wwwroot/images/brands/";
+        public const string CategoryImage = "wwwroot/images/categories/";
+        public const string BannerImage = "wwwroot/images/banners";
+        public const string AvatarImage = "wwwroot/images/avatar";
     }
 }

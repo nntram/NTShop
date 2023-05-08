@@ -60,7 +60,7 @@ const EditBrand = () => {
   }
   const queryBrand = useQuery(
     {
-      queryKey: ['brand'],
+      queryKey: ['brand', brandId],
       queryFn: ({ id = brandId }) => fetchBrandById(id),
       cacheTime: 1000
     }

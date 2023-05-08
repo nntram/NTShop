@@ -90,7 +90,7 @@ const CreateCategory = () => {
       </Container>
       <section className='p-3'>
         <div className='mt-3 text-info'>
-          <Link to='/dashboard/all-categorys' >
+          <Link to='/dashboard/all-categories' >
             <i className='ri-arrow-go-back-line'></i> Trở về
           </Link>
         </div>

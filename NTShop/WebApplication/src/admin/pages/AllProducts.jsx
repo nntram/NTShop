@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { useQueries } from 'react-query'
+import { useQueries, useMutation } from 'react-query'
 import productApi from '../../api/ProductApi'
 import Loading from '../../components/loading/Loading'
 import { Link } from 'react-router-dom'
@@ -13,7 +13,8 @@ import ReactPaginate from 'react-paginate';
 import categoryApi from '../../api/CategoryApi'
 import brandApi from '../../api/BrandApi'
 import useDebounce from '../../custom-hooks/useDebounce'
-
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 const AllProducts = () => {
   const pageSize = 5;
@@ -106,12 +107,33 @@ const AllProducts = () => {
     }
 
   }
+  const postDeleteProduct = async (id) => {
+    try {
+      const response = await productApi.delete(id)
+      return response;
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data, { autoClose: false })
+      }
+      console.log("Failed to delete product: ", error);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: (id) => postDeleteProduct(id)
+  });
+
+  const handleConfirmDelete = async (id) => {
+    const result = await mutation.mutateAsync(id);
+    if (result) {
+      toast.success(result)
+    }
+  }
+
 
   const handlePageClick = (event) => {
     setPageInex(event.selected)
   };
-
-
 
 
   const handleSearchIcon = () => {
@@ -211,6 +233,16 @@ const AllProducts = () => {
         setIsSmallQuantity(false)
         break;
     }
+  }
+
+  const handleDelete = (item) => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <DeleteMessage item={item} onClose={onClose} handleConfirmDelete={handleConfirmDelete}/>
+        );
+      }
+    });
   }
 
   return (
@@ -355,7 +387,7 @@ const AllProducts = () => {
                               <motion.div className='text-danger remove__cartItem' whileTap={{ scale: 1.2 }}>
                                 <i
                                   className="ri-delete-bin-line"
-                                  onClick={null}>
+                                  onClick={() => handleDelete(item)}>
                                 </i>
                               </motion.div>
                             </td>
@@ -400,6 +432,37 @@ export const SortPlaceHolder = () => {
   return <span className='d-flex align-items-center gap-2'>
     <i className="ri-list-unordered"></i> Sắp xếp
   </span>
+}
+
+const DeleteMessage = ({ item, onClose, handleConfirmDelete }) => {
+  return (
+    <div className="react-confirm-alert">
+      <div className="react-confirm-alert-body">
+        <h1>Xác nhận xóa</h1>
+        <p>Bạn chắc chắn muốn xóa?</p>
+
+        <div className='text-center m-2'>
+          <p>{item.productname}</p>
+          <img className='w-50' src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${item.productimages}`} alt="" />
+        </div>
+
+        <div className="d-flex justify-content-center align-items-center gap-3">
+          <button label="Yes"
+          className='btn btn-danger'
+            onClick={() => {
+              handleConfirmDelete(item.productid);
+              onClose();
+            }}>Xóa
+          </button>
+          <button label="No"
+          className='btn btn-secondary'
+            onClick={onClose}>Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+
+  )
 }
 
 export default AllProducts
