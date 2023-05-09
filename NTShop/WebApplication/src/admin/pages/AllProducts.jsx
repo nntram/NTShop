@@ -213,21 +213,25 @@ const AllProducts = () => {
 
     switch (tab) {
       case '1':
+        setPageInex(0)
         setIsActive(true)
         setIsHot(false)
         setIsSmallQuantity(false)
         break;
       case '2':
+        setPageInex(0)
         setIsActive(true)
         setIsHot(false)
         setIsSmallQuantity(true)
         break;
       case '3':
+        setPageInex(0)
         setIsActive(true)
         setIsHot(true)
         setIsSmallQuantity(false)
         break;
       case '4':
+        setPageInex(0)
         setIsActive(false)
         setIsHot(false)
         setIsSmallQuantity(false)

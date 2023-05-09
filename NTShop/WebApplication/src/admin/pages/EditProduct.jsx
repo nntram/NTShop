@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
 import { Container, Label, FormGroup, Col } from 'reactstrap'
@@ -98,11 +98,10 @@ const EditProduct = () => {
     }
   }
 
-
   const queryResults = useQueries(
     [
-      { queryKey: 'categories', queryFn: fetchCategoryList },
-      { queryKey: 'brands', queryFn: fetchBrandList },
+      { queryKey: ['categories', productId], queryFn: fetchCategoryList },
+      { queryKey: ['brands', productId], queryFn: fetchBrandList },
       {
         queryKey: ['dbproduct', productId],
         queryFn: ({ id = productId }) => fetchProudctById(id),
@@ -120,12 +119,35 @@ const EditProduct = () => {
     }),
     ) ?? []
   )
+  const fetchImageFiles = async (data, index) => {
+    try {
+      const url = `data:image/png;base64,${data}`
+      const res = await fetch(url)
+      const blob = await res.blob()
+      const file = new File([blob], queryResults[2].data.productimages[index].productimageurl)
+      return file
+    } catch (error) {
+      console.log('Failed to fetch product image file: ', error);
+    }
+  }
+  const queryImageFile = useQueries(
+    queryImage?.map((item, index) =>
+    ({
+      queryKey: ['productimagefile', item],
+      queryFn: () => fetchImageFiles(item.data, index),
+      enabled: queryResults[2].data != null && Boolean(queryImage[0].data)
+    }),
+    ) ?? []
+  )
 
-  const isSuccess = queryResults.every(query => query.isSuccess) && queryImage.every(query => query.isSuccess)
+  const isSuccess = queryResults.every(query => query.isSuccess)
+    && queryImage.every(query => query.isSuccess)
+    && queryImageFile.every(query => query.isSuccess)
 
   let categoryOptions
   let brandOptions
   let defaultValues
+  let defaultImages = []
   if (isSuccess) {
     if (queryResults[0] && queryResults[0].data) {
       categoryOptions = [...queryResults[0].data.map((item) => (
@@ -142,6 +164,13 @@ const EditProduct = () => {
 
         }
       ))]
+      let images = []
+      queryImageFile?.map((item) => {
+        images = [...images, item.data]
+      })
+      if(images){
+        defaultImages = images
+      }
     }
     defaultValues = {
       Productname: queryResults[2].data.productname,
@@ -152,11 +181,9 @@ const EditProduct = () => {
       Brandid: queryResults[2].data.brandid,
       Productisactive: queryResults[2].data.productisactive,
       Productishot: queryResults[2].data.productishot,
-
     }
 
   }
-
 
   const handleCategorySelect = () => {
 
@@ -170,7 +197,13 @@ const EditProduct = () => {
   const handleSalePriceChange = (e) => {
     salePriceRef.current.innerText = `Thành tiền: ${(Number)(e.target.value).toLocaleString()} VNĐ`
   }
-  console.log(queryImage)
+
+useEffect(() => {
+  if(defaultImages){
+    setMyFiles([...defaultImages.map(file => Object.assign(file, { preview: URL.createObjectURL(file), path: file.name }))])
+  }
+}, [defaultImages.length])
+
 
   return (
     <Helmet title='Chỉnh sửa sản phẩm'>
@@ -183,8 +216,6 @@ const EditProduct = () => {
                 model={defaultValues}
                 encType="multipart/form-data"
                 onValidSubmit={submit}>
-
-                <img src={`data:image/png;base64,${queryImage[0].data}`} />
 
                 <AvGroup>
                   <Label className="text-right text-white mx-2">
