@@ -47,7 +47,7 @@ const AllProducts = () => {
           productName: filter,
           Productsmallquantity: isSmallQuantity,
           Productishot: isHot,
-          Productisacitve: isActive
+          Productisactive: isActive
         }
       })
       return (response);
@@ -84,12 +84,27 @@ const AllProducts = () => {
     }
   }
 
+  const postDeleteProduct = async (id) => {
+    try {
+      const response = await productApi.delete(id)
+      return response;
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data, { autoClose: false })
+      }
+      console.log("Failed to delete product: ", error);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: (id) => postDeleteProduct(id)
+  });
 
   const queryProduct = useQueries(
     [
       {
         queryKey: ['products', pageIndex, brandOption, categoryOption,
-          sortOption, debouncedFilter, activeTab, isHot, isActive, isSmallQuantity],
+          sortOption, debouncedFilter, activeTab, isHot, isActive, isSmallQuantity, mutation],
         queryFn: fetchProducts,
         keepPreviousData: true,
         staleTime: 5000,
@@ -107,21 +122,6 @@ const AllProducts = () => {
     }
 
   }
-  const postDeleteProduct = async (id) => {
-    try {
-      const response = await productApi.delete(id)
-      return response;
-    } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data, { autoClose: false })
-      }
-      console.log("Failed to delete product: ", error);
-    }
-  };
-
-  const mutation = useMutation({
-    mutationFn: (id) => postDeleteProduct(id)
-  });
 
   const handleConfirmDelete = async (id) => {
     const result = await mutation.mutateAsync(id);

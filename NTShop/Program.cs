@@ -47,19 +47,19 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 //Add My services
-builder.Services.AddTransient<ITokenService, TokenService>();
-builder.Services.AddTransient<IFileManagerService, FileManagerService>();
-builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IFileManagerService, FileManagerService>();
+builder.Services.AddScoped<IMailService, MailService>();
 
-builder.Services.AddTransient<IProductRepository, ProductRepository>();
-builder.Services.AddTransient<IBrandRepository, BrandRepository>();
-builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
-builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
-builder.Services.AddTransient<IStaffRepository, StaffRepository>();
-builder.Services.AddTransient<IAddressRepository, AddressRepository>();
-builder.Services.AddTransient<ICartRepository, CartRepository>();
-builder.Services.AddTransient<ICartRepository, CartRepository>();
-builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddHttpContextAccessor();
 
 //Config database

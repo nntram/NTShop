@@ -23,7 +23,7 @@ namespace NTShop.Repositories
         {
             var cart = await GetCart(customerId);
             var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
-                            predicate: p => (p.Productid == model.ProductId && p.Productisacitve == true));
+                            predicate: p => (p.Productid == model.ProductId && p.Productisactive == true));
 
             if (product == null || cart == null ||
                 (product != null && model.Quantity > product.Productquantity))
@@ -77,7 +77,7 @@ namespace NTShop.Repositories
             foreach(var item in cart.Cartdetails)
             {
                 var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
-                    predicate: p => p.Productisacitve == true 
+                    predicate: p => p.Productisactive == true 
                         && p.Productid == item.Productid 
                         && p.Productquantity > 0);
 
@@ -159,7 +159,7 @@ namespace NTShop.Repositories
             }
 
             var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
-                    predicate: p => (p.Productisacitve == true && p.Productid == cartDetail.Productid));
+                    predicate: p => (p.Productisactive == true && p.Productid == cartDetail.Productid));
             var cart = await _unitOfWork.GetRepository<Cart>().FindAsync(cartDetail.Cartid);
 
             if (cart == null)

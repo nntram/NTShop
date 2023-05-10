@@ -42,7 +42,7 @@ namespace NTShop.Repositories
                 foreach (var item in cart.Cartdetails)
                 {
                     var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
-                        predicate: p => (p.Productisacitve == true && p.Productid == item.Productid));
+                        predicate: p => (p.Productisactive == true && p.Productid == item.Productid));
                     if (product == null || product.Productquantity < item.Cartdetailquantity)
                     {
                         result.Status = "Số lượng sản phẩm trong kho hiện không đủ.";

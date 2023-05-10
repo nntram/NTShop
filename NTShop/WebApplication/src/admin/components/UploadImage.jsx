@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect, useImperativeHandle } from 'react'
-import { Container } from 'reactstrap'
+import React, { useCallback, useMemo, useEffect } from 'react'
 import { useDropzone } from "react-dropzone"
 
 const baseStyle = {

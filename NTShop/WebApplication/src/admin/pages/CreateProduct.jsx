@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
 import { Container, Label, FormGroup, Col } from 'reactstrap'
@@ -16,7 +16,10 @@ import CustomCKEditor from '../components/CustomCKEditor'
 
 const CreateProduct = () => {
   const [myFiles, setMyFiles] = useState([])
+  const [describer, setdDescriber] = useState('')
   const navigate = useNavigate()
+  const priceRef = useRef(null)
+  const salePriceRef = useRef(null)
 
   const postProduct = async (data) => {
     try {
@@ -38,9 +41,13 @@ const CreateProduct = () => {
     e.preventDefault();
 
     const data = new FormData()
-    data.append("Productname", values["Productname"])
-    data.append("ProductImageFile", myFiles[0])
-
+    for (var key in values) {
+      data.append(key, values[key]);
+    }
+    myFiles.forEach((file) => {
+      data.append('ProductImageFiles', file)
+    })
+    data.append('Productdescribe', describer)
     const result = await mutation.mutateAsync(data);
     if (result) {
       toast.success(result, { autoClose: false })
@@ -109,15 +116,15 @@ const CreateProduct = () => {
   }
 
 
-  const handleCategorySelect = () => {
-
-  }
-  const handleBrandSelect = () => {
-
-  }
-
   const defaultValues = {
     Productisactive: true
+  }
+
+  const handlePriceChange = (e) => {
+    priceRef.current.innerText = `Thành tiền: ${(Number)(e.target.value).toLocaleString()} VNĐ`
+  }
+  const handleSalePriceChange = (e) => {
+    salePriceRef.current.innerText = `Thành tiền: ${(Number)(e.target.value).toLocaleString()} VNĐ`
   }
 
   return (
@@ -142,13 +149,11 @@ const CreateProduct = () => {
                 }} />
             </AvGroup>
 
-
             <AvGroup>
               <Label className="text-right text-white mx-2">
                 Loại sản phẩm <span className="text-danger">*</span>
               </Label>
-              <AvField type="select" name="Categoryid" required
-                onChange={(e) => handleCategorySelect(e.target.value)}>
+              <AvField type="select" name="Categoryid" required>
                 <option value="" hidden>Chọn loại sản phẩm</option>
                 {
                   categoryOptions && categoryOptions.map((item) => (
@@ -164,8 +169,7 @@ const CreateProduct = () => {
               <Label className="text-right text-white mx-2">
                 Thương hiệu <span className="text-danger">*</span>
               </Label>
-              <AvField type="select" name="Brandid" required
-                onChange={(e) => handleBrandSelect(e.target.value)}>
+              <AvField type="select" name="Brandid" required>
                 <option value="" hidden>Chọn thương hiệu</option>
                 {
                   brandOptions && brandOptions.map((item) => (
@@ -182,11 +186,13 @@ const CreateProduct = () => {
                 Giá niêm yết <span className="text-danger">*</span>
               </Label>
               <AvField name="Productprice" type="number"
+                onChange={handlePriceChange}
                 placeholder="Giá niêm yết"
                 validate={{
-                  pattern: { value: '^[^0][0-9]+$', errorMessage: 'Chỉ chấp nhận giá trị nguyên dương.' },
+                  pattern: { value: '^[1-9][0-9]*$', errorMessage: 'Chỉ chấp nhận giá trị nguyên dương.' },
                   required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
                 }} />
+                <p className="text-dark mx-2" ref={priceRef}>Thành tiền: 0 VNĐ </p>
             </AvGroup>
 
             <AvGroup>
@@ -194,11 +200,13 @@ const CreateProduct = () => {
                 Giá bán <span className="text-danger">*</span>
               </Label>
               <AvField name="Productsaleprice" type="number"
+                onChange={handleSalePriceChange}
                 placeholder="Giá bán"
                 validate={{
-                  pattern: { value: '^[^0][0-9]+$', errorMessage: 'Chỉ chấp nhận giá trị nguyên dương.' },
+                  pattern: { value: '^[1-9][0-9]*$', errorMessage: 'Chỉ chấp nhận giá trị nguyên dương.' },
                   required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
                 }} />
+                <p className="text-dark mx-2" ref={salePriceRef}>Thành tiền: 0 VNĐ </p>
             </AvGroup>
 
             <AvGroup>
@@ -208,7 +216,7 @@ const CreateProduct = () => {
               <AvField name="Productquantity" type="number"
                 placeholder="Số lượng"
                 validate={{
-                  pattern: { value: '^[^0][0-9]+$', errorMessage: 'Chỉ chấp nhận giá trị nguyên dương.' },
+                  pattern: { value: '^[1-9][0-9]*$', errorMessage: 'Chỉ chấp nhận giá trị nguyên dương.' },
                   required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
                 }} />
             </AvGroup>
@@ -237,7 +245,7 @@ const CreateProduct = () => {
 
             <FormGroup>
               <Label className="text-right text-white mx-2">Mô tả sản phẩm </Label>
-              <CustomCKEditor title={"Mô tả sản phẩm"} />
+              <CustomCKEditor title={"Mô tả sản phẩm"} value={describer} setValue={setdDescriber}/>
             </FormGroup>
 
             {

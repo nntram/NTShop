@@ -12,7 +12,7 @@ namespace NTShop.Models.Filters
         public int? Productsaleprice { get; set; }       
         public int? Productquantity { get; set; }       
         public long? Productcreateddate { get; set; }
-        public bool? Productisacitve { get; set; } = true;    
+        public bool? Productisactive { get; set; } = true;    
         public int Productcode { get; set; }
         public bool? Productishot { get; set; }
         public bool? Productsmallquantity { get; set; }

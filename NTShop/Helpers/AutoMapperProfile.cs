@@ -40,6 +40,9 @@ namespace NTShop.Helpers
             CreateMap<Orderstatus, OrderStatusModel>().ReverseMap();
             CreateMap<StaffModel, staff>().ReverseMap();
             CreateMap<CustomerUpdateModel, Customer>().ReverseMap();
+
+            CreateMap<Product, ProductCreateModel>().ReverseMap();
+            CreateMap<Product, ProductUpdateModel>().ReverseMap();
         }
     }
 }

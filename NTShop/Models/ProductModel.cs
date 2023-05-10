@@ -13,7 +13,7 @@ namespace NTShop.Models
         public int? Productsaleprice { get; set; }       
         public int? Productquantity { get; set; }       
         public long? Productcreateddate { get; set; }      
-        public bool? Productisacitve { get; set; }        
+        public bool? Productisactive { get; set; }        
         public int Productcode { get; set; }
         public bool? Productishot { get; set; }
         public string Categoryname { get; set; } = null!;

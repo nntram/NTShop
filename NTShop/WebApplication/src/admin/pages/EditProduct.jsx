@@ -20,6 +20,7 @@ const EditProduct = () => {
   const { productId } = useParams()
   const priceRef = useRef(null)
   const salePriceRef = useRef(null)
+  const [describer, setdDescriber] = useState('')
 
   const fetchProudctById = async (id) => {
     try {
@@ -60,9 +61,14 @@ const EditProduct = () => {
     e.preventDefault();
 
     const data = new FormData()
-    data.append("Productname", values["Productname"])
-    data.append("ProductImageFile", myFiles)
-
+    for (var key in values) {
+      data.append(key, values[key]);
+    }
+    myFiles.forEach((file) => {
+      data.append('ProductImageFiles', file)
+    })
+    data.append('Productid', productId)
+    data.append('Productdescribe', describer)
     const result = await mutation.mutateAsync(data);
     if (result) {
       toast.success(result, { autoClose: false })
@@ -185,12 +191,6 @@ const EditProduct = () => {
 
   }
 
-  const handleCategorySelect = () => {
-
-  }
-  const handleBrandSelect = () => {
-
-  }
   const handlePriceChange = (e) => {
     priceRef.current.innerText = `Thành tiền: ${(Number)(e.target.value).toLocaleString()} VNĐ`
   }
@@ -233,8 +233,7 @@ useEffect(() => {
                   <Label className="text-right text-white mx-2">
                     Loại sản phẩm <span className="text-danger">*</span>
                   </Label>
-                  <AvField type="select" name="Categoryid" required
-                    onChange={(e) => handleCategorySelect(e.target.value)}>
+                  <AvField type="select" name="Categoryid" required>
                     <option value="" hidden>Chọn loại sản phẩm</option>
                     {
                       categoryOptions && categoryOptions.map((item) => (
@@ -250,8 +249,7 @@ useEffect(() => {
                   <Label className="text-right text-white mx-2">
                     Thương hiệu <span className="text-danger">*</span>
                   </Label>
-                  <AvField type="select" name="Brandid" required
-                    onChange={(e) => handleBrandSelect(e.target.value)}>
+                  <AvField type="select" name="Brandid" required>
                     <option value="" hidden>Chọn thương hiệu</option>
                     {
                       brandOptions && brandOptions.map((item) => (
@@ -327,7 +325,7 @@ useEffect(() => {
 
                 <FormGroup>
                   <Label className="text-right text-white mx-2">Mô tả sản phẩm </Label>
-                  <CustomCKEditor title={queryResults[2].data.productdescribe} />
+                  <CustomCKEditor title={queryResults[2].data.productdescribe} value={describer} setValue={setdDescriber}/>
                 </FormGroup>
 
 
@@ -336,7 +334,7 @@ useEffect(() => {
                   mutation.isLoading ? <Loading /> :
                     <FormGroup className="text-center">
                       <button className="buy__btn auth__btn" type="submit">
-                        Thêm mới
+                        Lưu thay đổi
                       </button>
                     </FormGroup>
                 }

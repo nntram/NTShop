@@ -2,18 +2,18 @@ import React from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import Editor from 'ckeditor5-custom-build/build/ckeditor'
 
-const CustomCKEditor = ({title}) => {
+const CustomCKEditor = ({title, value, setValue}) => {
     return (
         <CKEditor
             editor={Editor}
-            data={`<p>${title}</p>`}
+            data={title}
             onReady={editor => {
-                // You can store the "editor" and use when it is needed.
-                
+                setValue(title)
+                console.log(title)
             }}
             onChange={(event, editor) => {
                 const data = editor.getData();
-                
+                setValue(data)
             }}
             onBlur={(event, editor) => {
                 
