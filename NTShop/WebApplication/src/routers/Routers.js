@@ -25,12 +25,15 @@ import ChangePassword from '../pages/ChangePassword.jsx'
 import CustomerInfo from '../pages/CustomerInfo'
 import AllCategories from '../admin/pages/AllCategories'
 import AllBrands from '../admin/pages/AllBrands'
+import AllSuppliers from '../admin/pages/AllSuppliers'
 import CreateProduct from '../admin/pages/CreateProduct'
 import CreateBrand from '../admin/pages/CreateBrand'
 import CreateCategory from '../admin/pages/CreateCategory'
+import CreateSupplier from '../admin/pages/CreateSupplier'
 import EditProduct from '../admin/pages/EditProduct'
 import EditBrand from '../admin/pages/EditBrand'
 import EditCategory from '../admin/pages/EditCategory'
+import EditSupplier from '../admin/pages/EditSupplier'
 
 const Routers = () => {
   return <Routes>   
@@ -63,12 +66,15 @@ const Routers = () => {
       <Route path='dashboard/all-products' element={<AllProducts />} />
       <Route path='dashboard/all-categories' element={<AllCategories />} />
       <Route path='dashboard/all-brands' element={<AllBrands/>} />
+      <Route path='dashboard/all-suppliers' element={<AllSuppliers/>} />
       <Route path='dashboard/all-products/create' element={<CreateProduct />} />
       <Route path='dashboard/all-categories/create' element={<CreateCategory />} />
       <Route path='dashboard/all-brands/create' element={<CreateBrand />} />
+      <Route path='dashboard/all-suppliers/create' element={<CreateSupplier />} />
       <Route path='dashboard/all-products/:productId' element={<EditProduct />} />
       <Route path='dashboard/all-categories/:categoryId' element={<EditCategory />} />
       <Route path='dashboard/all-brands/:brandId' element={<EditBrand />} />
+      <Route path='dashboard/all-suppliers/:supplierId' element={<EditSupplier />} />
       <Route path='dashboard/users' element={<Users />} />
     </Route>
 

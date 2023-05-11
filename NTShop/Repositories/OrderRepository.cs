@@ -8,6 +8,7 @@ using NTShop.Models.CheckoutModels;
 using NTShop.Models.Filters;
 using Abp.Linq.Expressions;
 using Arch.EntityFrameworkCore.UnitOfWork.Collections;
+using NTShop.Models.UpdateModels;
 
 namespace NTShop.Repositories
 {

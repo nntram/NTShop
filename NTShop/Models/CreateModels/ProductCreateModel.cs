@@ -8,7 +8,8 @@ namespace NTShop.Models.CreateModels
         public string Categoryid { get; set; } = null!;
         [Required]
         public string Brandid { get; set; } = null!;
-        public string? Productname { get; set; }
+        [Required]
+        public string Productname { get; set; }
         [Required]
         public string? Productdescribe { get; set; }
         [Required]

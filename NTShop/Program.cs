@@ -60,6 +60,8 @@ builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ISupplierRepository, SupplierRepsitory>();
+builder.Services.AddScoped<IWarehouseReceiptRepository, WarehouseReceiptRepository>();
 builder.Services.AddHttpContextAccessor();
 
 //Config database

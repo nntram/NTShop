@@ -43,6 +43,10 @@ namespace NTShop.Helpers
 
             CreateMap<Product, ProductCreateModel>().ReverseMap();
             CreateMap<Product, ProductUpdateModel>().ReverseMap();
+
+            CreateMap<Supplier, SupplierModel>().ReverseMap();  
+            CreateMap<Supplier, SupplierCreateModel>().ReverseMap();
+            CreateMap<Supplier, SupplierUpdateModel>().ReverseMap();
         }
     }
 }

@@ -81,7 +81,7 @@ const Checkout = () => {
       const response = await addressApi.getFullAddress(wardId);
       return (response);
     } catch (error) {
-      console.log('Failed to fetch cart: ', error)
+      console.log('Failed to fetch full address: ', error)
     }
   }
 
@@ -98,7 +98,7 @@ const Checkout = () => {
 
 
   const fullAddressResults = useQuery({
-    queryKey: ['full-address'],
+    queryKey: ['full-address', queryResults[1]],
     queryFn: ({ wardId = queryResults[1].data.wardid }) => fetchFullAddress(wardId),
     enabled: queryResults[1].data != null
   })

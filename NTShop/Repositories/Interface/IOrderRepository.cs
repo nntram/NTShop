@@ -2,6 +2,7 @@
 using NTShop.Models;
 using NTShop.Models.CheckoutModels;
 using NTShop.Models.Filters;
+using NTShop.Models.UpdateModels;
 
 namespace NTShop.Repositories.Interface
 {

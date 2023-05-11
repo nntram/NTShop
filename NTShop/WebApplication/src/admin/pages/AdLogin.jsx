@@ -153,7 +153,7 @@ const AdLogin = () => {
                       Đăng nhập
                     </button>
                    
-                    <p className="mt-2">
+                    <p className="mt-2 text-white">
                       <Link to="/forgot-password">Quên mật khẩu</Link>
                     </p>
                   </>

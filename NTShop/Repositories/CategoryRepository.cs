@@ -70,7 +70,6 @@ namespace NTShop.Repositories
 
         public async Task<string> Delete(string id)
         {
-
             var category = await _unitOfWork.GetRepository<Category>().FindAsync(id);
             if (category != null)
             {

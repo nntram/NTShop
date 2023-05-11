@@ -30,7 +30,6 @@ namespace NTShop.Entities
         public string? Supplieremail { get; set; }
         [Column("SUPPLIERPHONENUMBER")]
         [StringLength(16)]
-        [Unicode(false)]
         public string? Supplierphonenumber { get; set; }
         [Column("SUPPLIERADDRESS")]
         [StringLength(256)]

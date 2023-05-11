@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NTShop.Models
+namespace NTShop.Models.UpdateModels
 {
     public class OrderStatusUpdateModel
     {
