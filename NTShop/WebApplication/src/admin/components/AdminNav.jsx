@@ -21,7 +21,7 @@ const admin__nav = [
     },
     {
         display: "Nhập hàng",
-        path: "/dashboard/all-warehouse-receipt"
+        path: "/dashboard/all-warehouse-receipts"
     },
     {
         display: "Sản phẩm",

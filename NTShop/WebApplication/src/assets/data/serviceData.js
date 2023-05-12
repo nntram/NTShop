@@ -14,7 +14,7 @@ const serviceData = [
   {
     icon: "ri-secure-payment-line",
     title: "Thanh toán đơn giản",
-    subtitle: "Nhiều hình thức thanh toán",
+    subtitle: "Thanh toán trực tuyến hoặc bằng tiền mặt",
     bg: "#e2f2b2",
   },
   {
