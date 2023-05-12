@@ -38,6 +38,14 @@ namespace NTShop.Repositories
 
             foreach(var item in model.Warehousereceiptdetail)
             {
+                var product = await _unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(
+                        predicate: p => (p.Productisactive == true && p.Productid == item.Productid));
+                if (product == null)
+                {
+                    return "Không tìm thấy sản phẩm.";
+                }//update product quantity
+                product.Productquantity += item.Wrdetailquatity;
+                _unitOfWork.GetRepository<Product>().Update(product);
                 var warehouseReceiptDetail = new Warehousereceiptdetail();
                 _mapper.Map(item, warehouseReceiptDetail);
                 warehouseReceiptDetail.Warehousereceiptid = warehouseReceipt.Warehousereceiptid;
