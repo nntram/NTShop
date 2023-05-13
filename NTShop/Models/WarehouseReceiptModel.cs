@@ -12,8 +12,8 @@ namespace NTShop.Models
         [StringLength(64)]
         public string Supplierid { get; set; } = null!;
         public long? Warehousereceiptcreateddate { get; set; }
-        public WarehouseReceiptDetailModel? Warehousereceiptdetail { get; set;}
-        [StringLength(128)]
-        public string? Staffname { get; set; }
+        public List<WarehouseReceiptDetailModel>? Warehousereceiptdetails { get; set;}
+        public StaffModel? Staff { get;set; }
+        public SupplierModel? Supplier { get; set; }
     }
 }

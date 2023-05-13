@@ -14,7 +14,8 @@ namespace NTShop.Models.CreateModels
         [Required]
         public long? Warehousereceiptcreateddate { get; set; }
         [Required]
-        public WarehouseReceiptDetailCreateModel[] Warehousereceiptdetail { get; set; }
+        public string StrWarehousereceiptdetail { get; set; }
+        public WarehouseReceiptDetailCreateModel[]? Warehousereceiptdetail { get; set; }
 
     }
 }

@@ -50,14 +50,33 @@ const CreateWarehouseReceipt = () => {
     data.append('Supplierid', values['Supplierid'])
     data.append('Warehousereceiptcreateddate', new Date(values['Createddate']).valueOf())
 
-    console.log(rowsData)
-    for(var item in rowsData){
-        data.append('Warehousereceiptdetail', item)
-    }
+    let wrDetail = []
+    rowsData.forEach((item) => {
+      let value = {
+        Productid: '',
+        Wrdetailprice: '',
+        Wrdetailquatity: ''
+      }
+      for(var key in item){
+        if(key.startsWith('product')){
+          value.Productid = item[key]
+        }
+        if(key.startsWith('price')){
+          value.Wrdetailprice = item[key]
+        }
+        if(key.startsWith('quantity')){
+          value.Wrdetailquatity = item[key]
+        }
+      }
+      wrDetail = [...wrDetail, value]
+    })
+    data.append('StrWarehousereceiptdetail', JSON.stringify(wrDetail) )
+      
+    
     const result = await mutation.mutateAsync(data);
     if (result) {
       toast.success(result, { autoClose: false })
-      navigate('/dashboard/all-warehouseReceipts')
+      navigate('/dashboard/all-warehouse-receipts')
     }
   }
   const fetchProducts = async () => {

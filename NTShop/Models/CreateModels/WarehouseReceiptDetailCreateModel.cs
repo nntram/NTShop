@@ -7,7 +7,7 @@ namespace NTShop.Models
     {
         [Required]
         [StringLength(64)]
-        public string Productid { get; set; } = null!;
+        public string Productid { get; set; } 
         [Required]
         public int Wrdetailquatity { get; set; }
         [Required]

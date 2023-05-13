@@ -5,6 +5,7 @@ using NTShop.Entities;
 using NTShop.Models;
 using NTShop.Models.CreateModels;
 using NTShop.Repositories.Interface;
+using Newtonsoft.Json;
 
 namespace NTShop.Repositories
 {
@@ -21,6 +22,13 @@ namespace NTShop.Repositories
 
         public async Task<string> Create(WarehouseReceiptCreateModel model)
         {
+            if(String.IsNullOrEmpty(model.StrWarehousereceiptdetail))
+            {
+                return "Yêu cầu không hợp lệ.";
+            }
+
+            model.Warehousereceiptdetail = JsonConvert.DeserializeObject<WarehouseReceiptDetailCreateModel[]>(model.StrWarehousereceiptdetail);
+
             var staff = await _unitOfWork.GetRepository<staff>().FindAsync(model.Staffid);
             if (staff == null)
             {
@@ -59,7 +67,9 @@ namespace NTShop.Repositories
         public async Task<List<WarehouseReceiptModel>> GetAllAsync()
         {
             var data = (await _unitOfWork.GetRepository<Warehousereceipt>().GetPagedListAsync(
-                         pageSize: int.MaxValue)).Items;
+                         pageSize: int.MaxValue,
+                         include: p => p.Include(m => m.Staff)
+                                      .Include(n => n.Supplier))).Items;
 
             return _mapper.Map<List<WarehouseReceiptModel>>(data);
         }
@@ -70,7 +80,9 @@ namespace NTShop.Repositories
                        predicate: x => x.Warehousereceiptid == id,
                        include: p => p.Include(n => n.Warehousereceiptdetails)
                                       .ThenInclude(o => o.Product).ThenInclude(u => u.Productimages)
-                                      .Include(m => m.Staff.Staffname));
+                                      .Include(m => m.Staff)
+                                      .Include(q => q.Supplier)
+                                      );
 
             return _mapper.Map<WarehouseReceiptModel>(data);
         }

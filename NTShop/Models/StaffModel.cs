@@ -10,7 +10,6 @@
         public string? Staffemail { get; set; }
         public long? Staffcreareddate { get; set; }
         public string? Staffloginname { get; set; }
-        public string? Staffpassword { get; set; }
         public bool? Staffisactive { get; set; }
         public string? Staffrefreshtoken { get; set; }
         public long? Stafftokenexpirytime { get; set; }
