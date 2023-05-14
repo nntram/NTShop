@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using NTShop.Entities;
+using NTShop.Models.StatisticsModels;
 
 namespace NTShop.Data
 {
@@ -37,6 +38,10 @@ namespace NTShop.Data
         public virtual DbSet<Warehousereceipt> Warehousereceipts { get; set; } = null!;
         public virtual DbSet<Warehousereceiptdetail> Warehousereceiptdetails { get; set; } = null!;
         public virtual DbSet<staff> staff { get; set; } = null!;
+        public virtual DbSet<ProductStatisticsModel> ProductStatisticsModels { get; set; }
+        public virtual DbSet<InvoiceStatisticsModel> InvoiceStatisticsModels { get; set; }
+
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -374,7 +379,14 @@ namespace NTShop.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_STAFF_STAFF_ROL_ROLE");
             });
-
+            modelBuilder.Entity<ProductStatisticsModel>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<InvoiceStatisticsModel>(entity =>
+            {
+                entity.HasNoKey();
+            });
             OnModelCreatingPartial(modelBuilder);
         }
 

@@ -37,6 +37,7 @@ import EditBrand from '../admin/pages/EditBrand'
 import EditCategory from '../admin/pages/EditCategory'
 import EditSupplier from '../admin/pages/EditSupplier'
 import EditWarehouseReceipt from '../admin/pages/EditWarehouseReceipts'
+import Contact from '../pages/Contact'
 
 const Routers = () => {
   return <Routes>   
@@ -44,7 +45,7 @@ const Routers = () => {
     <Route path='home' element={<Home />} />
     <Route path='shop' element={<Shop />} />
     <Route path='shop/:productId' element={<ProductDetails key={window.location.pathname} />} />
-
+    <Route path='contact' element={<Contact />} />
     <Route path='login' element={<Login />} />
     <Route path='forgot-password' element={<ForgotPassword />} />
     <Route path='reset-password/:accessToken' element={<ResetPassword />} />

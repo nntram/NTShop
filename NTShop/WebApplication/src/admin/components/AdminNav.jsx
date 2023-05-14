@@ -12,7 +12,7 @@ import '../../styles/admin-nav.css'
 
 const admin__nav = [
     {
-        display: "Dashboard",
+        display: "Thống kê",
         path: "/dashboard/home"
     },
     {

@@ -62,6 +62,8 @@ builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepsitory>();
 builder.Services.AddScoped<IWarehouseReceiptRepository, WarehouseReceiptRepository>();
+builder.Services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+
 builder.Services.AddHttpContextAccessor();
 
 //Config database
