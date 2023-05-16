@@ -1,14 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Arch.EntityFrameworkCore.UnitOfWork.Collections;
+using Microsoft.AspNetCore.Mvc;
 using NTShop.Models;
 using NTShop.Models.AuthModels;
 using NTShop.Models.CreateModels;
+using NTShop.Models.Filters;
 using NTShop.Models.UpdateModels;
 
 namespace NTShop.Repositories.Interface
 {
     public interface ICustomerRepository
     {
-        public Task<List<CustomerModel>> GetAllAsync();
+        public Task<PagedList<CustomerModel>> GetAllAsync(CustomerFilterModel filter);
         public Task<CustomerModel> GetByIdAsync(string id);
         public Task<AccountModel> GetByUserName(string username);
         public Task<AccountModel> GetByEmail(string email);

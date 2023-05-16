@@ -10,7 +10,6 @@ import ProductDetails from '../pages/ProductDetails'
 import NotFound from '../components/UI/NotFound'
 import AllProducts from '../admin/pages/AllProducts'
 import Dashboard from '../admin/pages/Dashboard'
-import Users from '../admin/pages/Users'
 import Loading from '../components/loading/Loading'
 import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
@@ -38,6 +37,7 @@ import EditCategory from '../admin/pages/EditCategory'
 import EditSupplier from '../admin/pages/EditSupplier'
 import EditWarehouseReceipt from '../admin/pages/EditWarehouseReceipts'
 import Contact from '../pages/Contact'
+import AllCustomers from '../admin/pages/AllCustomers'
 
 const Routers = () => {
   return <Routes>   
@@ -72,20 +72,19 @@ const Routers = () => {
       <Route path='dashboard/all-brands' element={<AllBrands/>} />
       <Route path='dashboard/all-suppliers' element={<AllSuppliers/>} />
       <Route path='dashboard/all-warehouse-receipts' element={<AllWarehouseReceipts/>} />
+      <Route path='dashboard/all-customers' element={<AllCustomers />} />
 
       <Route path='dashboard/all-products/create' element={<CreateProduct />} />
       <Route path='dashboard/all-categories/create' element={<CreateCategory />} />
       <Route path='dashboard/all-brands/create' element={<CreateBrand />} />
       <Route path='dashboard/all-suppliers/create' element={<CreateSupplier />} />
       <Route path='dashboard/all-warehouse-receipts/create' element={<CreateWarehouseReceipt />} />
-
       <Route path='dashboard/all-products/:productId' element={<EditProduct />} />
       <Route path='dashboard/all-categories/:categoryId' element={<EditCategory />} />
       <Route path='dashboard/all-brands/:brandId' element={<EditBrand />} />
       <Route path='dashboard/all-suppliers/:supplierId' element={<EditSupplier />} />
       <Route path='dashboard/all-warehouse-receipts/:warehouseReceiptId' element={<EditWarehouseReceipt />} />
 
-      <Route path='dashboard/users' element={<Users />} />
     </Route>
 
     <Route path='/*' element={<Navigate to="home" />} />

@@ -26,6 +26,7 @@ namespace NTShop.Helpers
             CreateMap<Customer, CustomerModel>().ReverseMap();
             CreateMap<Customer, CustomerCreateModel>().ReverseMap();
             CreateMap<IPagedList<Product>, PagedList<ProductCardModel>>();
+            CreateMap<IPagedList<Customer>, PagedList<CustomerModel>>();
 
             CreateMap<Province, ProvinceModel>().ReverseMap();
             CreateMap<District, DistrictModel>().ReverseMap();

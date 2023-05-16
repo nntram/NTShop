@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient'
 
 class CustomerApi {
-    getAll =  async () => {
+    getAll =  async (data) => {
         const url = '/customers';
-        return await axiosClient.get(url);
+        return await axiosClient.get(url, data);
     };
 
     getById =  async (id) => {

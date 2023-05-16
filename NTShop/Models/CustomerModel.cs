@@ -9,7 +9,7 @@ namespace NTShop.Models
         public string Wardid { get; set; } = null!;
         public string? Customername { get; set; }
         public bool? Customergender { get; set; }
-        public long? Custiomercreateddate { get; set; }
+        public long? Customercreateddate { get; set; }
         [StringLength(16)]
         public string? Customerphonenumber { get; set; }
         public string? Customeraddress { get; set; }

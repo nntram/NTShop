@@ -29,8 +29,8 @@ namespace NTShop.Entities
         public string? Customername { get; set; }
         [Column("CUSTOMERGENDER")]
         public bool? Customergender { get; set; }
-        [Column("CUSTIOMERCREATEDDATE")]
-        public long? Custiomercreateddate { get; set; }
+        [Column("CUSTOMERCREATEDDATE")]
+        public long? Customercreateddate { get; set; }
         [Column("CUSTOMERPHONENUMBER")]
         [StringLength(16)]
         public string? Customerphonenumber { get; set; }

@@ -1,5 +1,7 @@
 ﻿using Abp.Extensions;
+using Abp.Linq.Expressions;
 using Arch.EntityFrameworkCore.UnitOfWork;
+using Arch.EntityFrameworkCore.UnitOfWork.Collections;
 using AutoMapper;
 using Castle.Core.Resource;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,7 @@ using NTShop.Helpers;
 using NTShop.Models;
 using NTShop.Models.AuthModels;
 using NTShop.Models.CreateModels;
+using NTShop.Models.Filters;
 using NTShop.Models.UpdateModels;
 using NTShop.Repositories.Interface;
 using NTShop.Services.Interfaces;
@@ -28,12 +31,21 @@ namespace NTShop.Repositories
             _fileManagerService = fileManagerService;
         }
 
-        public async Task<List<CustomerModel>> GetAllAsync()
+        public async Task<PagedList<CustomerModel>> GetAllAsync(CustomerFilterModel filter)
         {
+            var predicate = PredicateBuilder.New<Customer>(true);
+            if (!string.IsNullOrEmpty(filter.SearchValue))
+            {
+                predicate = predicate.Start(p => p.Customername.Contains(filter.SearchValue));
+                predicate = predicate.Or(p => p.Customerusername.Contains(filter.SearchValue));
+                predicate = predicate.Or(p => p.Customeremail.Contains(filter.SearchValue));
+            }
             var data = (await _unitOfWork.GetRepository<Customer>().GetPagedListAsync(
-                        pageSize: int.MaxValue)).Items;
+                        pageSize: filter.PageSize,
+                        pageIndex: filter.PageIndex,                   
+                        predicate: predicate)) ;
 
-            return _mapper.Map<List<CustomerModel>>(data);
+            return _mapper.Map<PagedList<CustomerModel>>(data);
         }
 
         public async Task<CustomerModel> GetByIdAsync(string id)
@@ -143,7 +155,7 @@ namespace NTShop.Repositories
             var data = await _unitOfWork.GetRepository<Customer>().FindAsync(id);
             if (data is null) return false;
 
-            if(data.Customeremailconfirm == true) return false;
+            if (data.Customeremailconfirm == true) return false;
 
             data.Customeremailconfirm = true;
             data.Customerisactive = true;
@@ -262,9 +274,9 @@ namespace NTShop.Repositories
                     {
                         customer.Customeravatar = upLoadImage;
                     }
-                    if(oldAvatar != null)
+                    if (oldAvatar != null)
                     {
-                        _fileManagerService.DeleteSingleImage(GetPath.AvatarImage+ "/" +oldAvatar);
+                        _fileManagerService.DeleteSingleImage(GetPath.AvatarImage + "/" + oldAvatar);
                     }
 
                 }

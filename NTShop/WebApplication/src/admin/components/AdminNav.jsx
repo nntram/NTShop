@@ -37,11 +37,11 @@ const admin__nav = [
     },
     {
         display: "Khách hàng",
-        path: "/dashboard/all-custumers"
+        path: "/dashboard/all-customers"
     },
     {
         display: "Nhân viên",
-        path: "/dashboard/all-stafs"
+        path: "/dashboard/all-staffs"
     },
     {
         display: "Nhà cung cấp",

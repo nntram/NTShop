@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using NTShop.Models.AuthModels;
 using NTShop.Models.CreateModels;
+using NTShop.Models.Filters;
 using NTShop.Models.SendMail;
 using NTShop.Models.UpdateModels;
 using NTShop.Repositories.Interface;
@@ -28,9 +29,9 @@ namespace NTShop.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] CustomerFilterModel filter)
         {
-            var data = await _customerRepository.GetAllAsync();
+            var data = await _customerRepository.GetAllAsync(filter);
             return Ok(data);
         }
 
