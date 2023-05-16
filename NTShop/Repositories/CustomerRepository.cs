@@ -292,5 +292,18 @@ namespace NTShop.Repositories
 
 
         }
+
+        public async Task<string> UpdateStatus(CustomerUpdateStatusModel model)
+        {
+            var customer = await _unitOfWork.GetRepository<Customer>().FindAsync(model.Customerid);
+            if (customer is null) return "Không tìm thấy tài khoản.";
+            if (customer.Customeremailconfirm != true && model.Status == true) return "Không thể kích hoạt do tài khoản chưa xác nhận email.";
+
+            customer.Customerisactive = model.Status;
+            _unitOfWork.GetRepository<Customer>().Update(customer);
+            _unitOfWork.SaveChanges();
+
+            return "success";
+        }
     }
 }

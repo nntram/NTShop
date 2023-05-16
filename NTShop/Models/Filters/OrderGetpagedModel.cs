@@ -9,5 +9,6 @@ namespace NTShop.Models.Filters
         public bool? Orderispaid { get; set; }
         public long BeginDate { get; set; } = 0;
         public long EndDate { get; set; } = long.MaxValue;
+        public string? Customerid { get; set; }
     }
 }

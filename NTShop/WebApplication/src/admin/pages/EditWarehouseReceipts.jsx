@@ -1,17 +1,17 @@
 import React from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
-import { Container, Label, Form, FormGroup, Col, Input } from 'reactstrap'
+import { Container, Label, Form, FormGroup, Col, Input, Button } from 'reactstrap'
 import warehouseReceiptApi from '../../api/WarehouseReceiptApi'
 import { useQuery } from 'react-query'
 import Loading from '../../components/loading/Loading'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ToDateTimeString } from '../../utils/Helpers'
 
 
 const EditWarehouseReceipt = () => {
   const { warehouseReceiptId } = useParams()
-
+  const navigate = useNavigate()
   const fetchWarehouseReceiptById = async (id) => {
     try {
       const response = await warehouseReceiptApi.getById(id)
@@ -164,9 +164,9 @@ const EditWarehouseReceipt = () => {
 
       <section className='p-3'>
         <div className='mt-3 text-info'>
-          <Link to='/dashboard/all-warehouse-receipts' >
+          <Button type='button' onClick={() => navigate(-1)} >
             <i className='ri-arrow-go-back-line'></i> Trở về
-          </Link>
+          </Button>
         </div>
       </section>
 

@@ -33,6 +33,14 @@ class CustomerApi {
             }          
         });
     }
+    changeStatus = async (formData) => {
+        const url = '/customers/change-status';
+        return await axiosClient.post(url, formData, {
+            headers:  {
+                'content-type': 'multipart/form-data',
+            }          
+        });
+    }
 
 }
 

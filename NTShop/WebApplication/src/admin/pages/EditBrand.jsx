@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
-import { Container, Label, FormGroup, Col, Input } from 'reactstrap'
+import { Container, Label, FormGroup, Col, Input, Button } from 'reactstrap'
 import UploadImage from '../components/UploadImage'
 import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import brandApi from '../../api/BrandApi'
@@ -13,7 +13,7 @@ import { ToDateTimeString } from '../../utils/Helpers'
 
 const EditBrand = () => {
 
-  const {brandId} = useParams()
+  const { brandId } = useParams()
   const [myFiles, setMyFiles] = useState([])
   const navigate = useNavigate()
 
@@ -37,7 +37,7 @@ const EditBrand = () => {
     e.preventDefault();
 
     const data = new FormData()
-    data.append("Brandid",  brandId)
+    data.append("Brandid", brandId)
     data.append("Brandname", values["Brandname"])
     if (myFiles[0]) {
       data.append("BrandImageFile", myFiles[0])
@@ -100,7 +100,7 @@ const EditBrand = () => {
                 <Label className="text-right text-white mx-2">
                   Ngày tạo:
                 </Label>
-                <Input type='text' readOnly value={ToDateTimeString(queryBrand.data.brandcreateddate)} />               
+                <Input type='text' readOnly value={ToDateTimeString(queryBrand.data.brandcreateddate)} />
               </FormGroup>
               <FormGroup>
                 <Label className="text-right text-white mx-2">
@@ -136,9 +136,9 @@ const EditBrand = () => {
 
       <section className='p-3'>
         <div className='mt-3 text-info'>
-          <Link to='/dashboard/all-brands' >
+          <Button type='button' onClick={() => navigate(-1)} >
             <i className='ri-arrow-go-back-line'></i> Trở về
-          </Link>
+          </Button>
         </div>
       </section>
 

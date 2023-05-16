@@ -38,7 +38,8 @@ import EditSupplier from '../admin/pages/EditSupplier'
 import EditWarehouseReceipt from '../admin/pages/EditWarehouseReceipts'
 import Contact from '../pages/Contact'
 import AllCustomers from '../admin/pages/AllCustomers'
-
+import EditCustomer from '../admin/pages/EditCustomer'
+import CustomerOrders from '../admin/pages/CustomerOrders'
 const Routers = () => {
   return <Routes>   
     <Route path='loading' element={<Loading />} />
@@ -79,12 +80,14 @@ const Routers = () => {
       <Route path='dashboard/all-brands/create' element={<CreateBrand />} />
       <Route path='dashboard/all-suppliers/create' element={<CreateSupplier />} />
       <Route path='dashboard/all-warehouse-receipts/create' element={<CreateWarehouseReceipt />} />
+      
       <Route path='dashboard/all-products/:productId' element={<EditProduct />} />
       <Route path='dashboard/all-categories/:categoryId' element={<EditCategory />} />
       <Route path='dashboard/all-brands/:brandId' element={<EditBrand />} />
       <Route path='dashboard/all-suppliers/:supplierId' element={<EditSupplier />} />
       <Route path='dashboard/all-warehouse-receipts/:warehouseReceiptId' element={<EditWarehouseReceipt />} />
-
+      <Route path='dashboard/all-customers/:customerId' element={<EditCustomer />} />
+      <Route path='dashboard/all-customers/:customerId/orders' element={<CustomerOrders />} />
     </Route>
 
     <Route path='/*' element={<Navigate to="home" />} />

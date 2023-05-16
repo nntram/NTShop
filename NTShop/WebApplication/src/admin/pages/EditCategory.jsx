@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
-import { Container, Label, FormGroup, Col, Input } from 'reactstrap'
+import { Container, Label, FormGroup, Col, Input, Button } from 'reactstrap'
 import UploadImage from '../components/UploadImage'
 import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import categoryApi from '../../api/CategoryApi'
@@ -13,7 +13,7 @@ import { ToDateTimeString } from '../../utils/Helpers'
 
 const EditCategory = () => {
 
-  const {categoryId} = useParams()
+  const { categoryId } = useParams()
   const [myFiles, setMyFiles] = useState([])
   const navigate = useNavigate()
 
@@ -37,7 +37,7 @@ const EditCategory = () => {
     e.preventDefault();
 
     const data = new FormData()
-    data.append("Categoryid",  categoryId)
+    data.append("Categoryid", categoryId)
     data.append("Categoryname", values["Categoryname"])
     if (myFiles[0]) {
       data.append("CategoryImageFile", myFiles[0])
@@ -100,7 +100,7 @@ const EditCategory = () => {
                 <Label className="text-right text-white mx-2">
                   Ngày tạo:
                 </Label>
-                <Input type='text' readOnly value={ToDateTimeString(queryCategory.data.categorycreateddate)} />               
+                <Input type='text' readOnly value={ToDateTimeString(queryCategory.data.categorycreateddate)} />
               </FormGroup>
               <FormGroup>
                 <Label className="text-right text-white mx-2">
@@ -136,9 +136,9 @@ const EditCategory = () => {
 
       <section className='p-3'>
         <div className='mt-3 text-info'>
-          <Link to='/dashboard/all-categories' >
+          <Button type='button' onClick={() => navigate(-1)} >
             <i className='ri-arrow-go-back-line'></i> Trở về
-          </Link>
+          </Button>
         </div>
       </section>
 

@@ -125,5 +125,18 @@ namespace NTShop.Controllers
             return BadRequest(result);
         }
 
+        [Authorize(Roles ="Admin, Staff")]
+        [Route("change-status")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus([FromForm] CustomerUpdateStatusModel model)
+        {
+            var result = await _customerRepository.UpdateStatus(model);
+            if (result == "success")
+            {
+                return Ok("Đã lưu thay đổi.");
+            }
+            return BadRequest(result);
+        }
+
     }
 }

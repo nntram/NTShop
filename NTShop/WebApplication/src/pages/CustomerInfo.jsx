@@ -1,29 +1,23 @@
 import React, { useState } from "react";
 import Helmet from "../components/helmet/Helmet";
 import { Container, Row, Col, FormGroup, Label } from "reactstrap";
-import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import addressApi from "../api/AddressApi"
 import { useQuery, useMutation } from "react-query";
 import Loading from "../components/loading/Loading";
 import { AvForm, AvField, AvGroup, AvRadioGroup, AvRadio, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 import customerApi from "../api/CustomerApi";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import authApi from "../api/AuthApi";
-import { customerActions } from "../redux/slices/customerSlice";
 import jwt_decode from "jwt-decode";
 
 const CustomerInfo = () => {
-    const dispatch = useDispatch()
     const [province, setProvince] = useState("");
     const [district, setDistrict] = useState("");
     const [ward, setWard] = useState("");
     const [file, setFile] = useState(null);
     const [image, setImage] = useState(null)
-    const navigate = useNavigate();
     const currentUser = useSelector(state => state.customer.currentUser)
 
     const postCustomerInfor = async (formData) => {
@@ -92,7 +86,7 @@ const CustomerInfo = () => {
     )
 
     const fullAddressResults = useQuery({
-        queryKey: ['full-address'],
+        queryKey: ['full-address', currentUser],
         queryFn: ({ wardId = queryResult.data.wardid }) => fetchFullAddress(wardId),
         enabled: queryResult.data != null
     })

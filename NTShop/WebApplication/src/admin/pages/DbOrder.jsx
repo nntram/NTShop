@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Container, Row, Col, Form, FormGroup, Input } from 'reactstrap'
+import { Container, Row, Col, Form, FormGroup, Input, Button } from 'reactstrap'
 import Helmet from '../../components/helmet/Helmet'
 import CommonSection from '../../components/UI/CommonSection'
 import Loading from '../../components/loading/Loading'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useQueries, useMutation } from 'react-query'
 import orderApi from '../../api/OrderApi'
 import OrderDetail from '../../components/UI/OrderDetail'
@@ -11,6 +11,7 @@ import { ToDateTimeString } from '../../utils/Helpers'
 import { toast } from 'react-toastify'
 
 const DbOrder = () => {
+    const navigate = useNavigate()
     const [orderStatusSelected, setOrderStatusSelected] = useState()
     const { orderId } = useParams()
     const fetchOrderById = async (id) => {
@@ -217,15 +218,20 @@ const DbOrder = () => {
                             </Form> : ""}
 
 
-                            <div className='text-center mt-3'>
+                            <div className='d-flex justify-content-center align-items-center mt-5 gap-3'>
                                 <button className="btn btn-secondary" type="button" onClick={printOrder}>
                                     <i className='ri-printer-line'></i> In đơn hàng
                                 </button>
+                                <Link to={`/dashboard/all-customers/${queryOrder.customerid}`}>
+                                    <button className="btn btn-primary" type="button">
+                                    <i className="ri-user-line"></i> Xem thông tin khách hàng
+                                    </button>
+                                </Link>
                             </div>
                             <div className='mt-3 text-info'>
-                                <Link to='/dashboard/all-orders' >
+                                <Button type='button' onClick={() => navigate(-1)} >
                                     <i className='ri-arrow-go-back-line'></i> Trở về
-                                </Link>
+                                </Button>
                             </div>
                         </Container>
                 }

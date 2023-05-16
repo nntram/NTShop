@@ -16,7 +16,7 @@ import useDebounce from '../../custom-hooks/useDebounce'
 import ReactPaginate from 'react-paginate';
 
 const AllCustomers = () => {
-  const pageSize = 5;
+  const pageSize = 10;
   const [pageIndex, setPageInex] = useState(0)
   const iconRef = useRef(null)
   const searchRef = useRef(null)
@@ -68,8 +68,8 @@ const AllCustomers = () => {
   )
 
   return (
-    <Helmet title='Thương hiệu'>
-      <CommonSection title='Quản lý thương hiệu' />
+    <Helmet title='Khách hàng'>
+      <CommonSection title='Quản lý thông tin khách hàng' />
       <section className='pb-0'>
         <Container>
           <Row>

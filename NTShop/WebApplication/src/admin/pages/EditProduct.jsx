@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
-import { Container, Label, FormGroup, Col } from 'reactstrap'
+import { Container, Label, FormGroup, Col, Button } from 'reactstrap'
 import UploadImage from '../components/UploadImage'
 import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import productApi from '../../api/ProductApi'
@@ -174,7 +174,7 @@ const EditProduct = () => {
       queryImageFile?.map((item) => {
         images = [...images, item.data]
       })
-      if(images){
+      if (images) {
         defaultImages = images
       }
     }
@@ -198,11 +198,11 @@ const EditProduct = () => {
     salePriceRef.current.innerText = `Thành tiền: ${(Number)(e.target.value).toLocaleString()} VNĐ`
   }
 
-useEffect(() => {
-  if(defaultImages){
-    setMyFiles([...defaultImages.map(file => Object.assign(file, { preview: URL.createObjectURL(file), path: file.name }))])
-  }
-}, [defaultImages.length])
+  useEffect(() => {
+    if (defaultImages) {
+      setMyFiles([...defaultImages.map(file => Object.assign(file, { preview: URL.createObjectURL(file), path: file.name }))])
+    }
+  }, [defaultImages.length])
 
 
   return (
@@ -325,7 +325,7 @@ useEffect(() => {
 
                 <FormGroup>
                   <Label className="text-right text-white mx-2">Mô tả sản phẩm </Label>
-                  <CustomCKEditor title={queryResults[2].data.productdescribe} value={describer} setValue={setdDescriber}/>
+                  <CustomCKEditor title={queryResults[2].data.productdescribe} value={describer} setValue={setdDescriber} />
                 </FormGroup>
 
 
@@ -348,9 +348,9 @@ useEffect(() => {
 
       <section className='p-3'>
         <div className='mt-3 text-info'>
-          <Link to='/dashboard/all-products' >
+          <Button type='button' onClick={() => navigate(-1)} >
             <i className='ri-arrow-go-back-line'></i> Trở về
-          </Link>
+          </Button>
         </div>
       </section>
 
