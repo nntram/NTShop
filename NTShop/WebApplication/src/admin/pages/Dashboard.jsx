@@ -247,7 +247,7 @@ const Dashboard = () => {
         }
         {
           !isSuccess2 ? <Loading /> :
-            <section>
+            <section className='pt-0'>
               <h4 className='section__title'>Sản phẩm bán chạy</h4>
               <Row>
                 <Col lg='6' md='6' className='mb-3'>
@@ -300,7 +300,7 @@ const Dashboard = () => {
         }
         {
           !isSuccess3 ? <Loading /> :
-            <section>
+            <section className='pt-0'>
               <h4 className='section__title'>Thống kê</h4>
               <Row>
                 <Col lg='6' md='6' className='mb-3'>
@@ -316,7 +316,7 @@ const Dashboard = () => {
                 <Col lg='3' md='3' className='mb-3'>
                   <div className='form-group d-flex align-items-center gap-2'>
                     <p>Loại: </p>
-                    <select className='form-select' onChange={(e) => setType(e.target.value)}>
+                    <select className='form-select' value={type} onChange={(e) => setType(e.target.value)}>
                       <option value="0" >Theo tháng</option>
                       <option value="1" >Theo ngày</option>
                     </select>

@@ -128,7 +128,8 @@ const CreateWarehouseReceipt = () => {
       productOptions = [...queryResults[1].data.items.map((item) => (
         {
           value: item.productid,
-          label: <ProductOption name={item.productname} image={item.productimages} />
+          label: item.productname,
+          image: item.productimages
         }
       ))]
     }
@@ -303,6 +304,12 @@ const Tr = ({ deleteTableRows, productOptions, index, data, handleChange }) => {
         <AvGroup>
           <Select options={productOptions}
             value={productSelect}
+            formatOptionLabel={product => (
+              <div className="country-option">
+                <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${product.image}`} alt="" />
+                <span>{product.label}</span>
+              </div>
+            )}
             placeholder="Chọn sản phẩm"
             onChange={(e) => handleProductSelect(index, e, `product-${index}`)}
           />
@@ -354,13 +361,5 @@ const Tr = ({ deleteTableRows, productOptions, index, data, handleChange }) => {
   )
 }
 
-const ProductOption = ({ image, name }) => {
-  return (
-    <div>
-      <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${image}`} alt="" />
-      {name}
-    </div>
-  )
-}
 
 export default CreateWarehouseReceipt

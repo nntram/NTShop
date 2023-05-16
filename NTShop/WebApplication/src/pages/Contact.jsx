@@ -11,7 +11,7 @@ const Contact = () => {
 
     const position = [10.03018724676069, 105.77070112600119]
     const icon = L.icon({ 
-        iconRetinaUrl: makerIcon,  
+        iconUrl: makerIcon,  
     });
 
     return (
@@ -57,7 +57,7 @@ const Contact = () => {
             </section>
             <section className='pt-0 px-5'>
                 <MapContainer className='map' 
-                    center={position} zoom={15} >
+                    center={position} zoom={17} >
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

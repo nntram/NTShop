@@ -402,7 +402,7 @@ const Signup = () => {
                       <button className="buy__btn auth__btn" type="submit">
                         Tạo tài khoản
                       </button>
-                      <p>
+                      <p className="text-white mt-3">
                         Bạn đã có tài khoản? <Link to="/login">Đăng nhập</Link>
                       </p>
                     </FormGroup>
