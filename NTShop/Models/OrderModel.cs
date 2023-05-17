@@ -29,5 +29,6 @@ namespace NTShop.Models
         [Required]
         public string PaymentType { get; set; } = null!;
         public int Ordertotalamount { get; set; }
+        public int Ordercode { get; set; }
     }
 }

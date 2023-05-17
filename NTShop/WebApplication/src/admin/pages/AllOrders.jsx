@@ -195,6 +195,7 @@ const AllOrders = () => {
                     <thead>
                       <tr>
                         <th>STT</th>
+                        <th>Mã đơn hàng</th>
                         <th>Thời gian đặt hàng</th>
                         <th>Tên khách hàng</th>
                         <th>Thanh toán</th>
@@ -208,6 +209,7 @@ const AllOrders = () => {
                         orders && orders.map((item, index) =>
                           <tr key={item.orderid}>
                             <td>{pageIndex*pageSize+(index + 1)}</td>
+                            <td className='text-center'>{item.ordercode}</td>
                             <td>
                               {ToDateTimeString(item.ordercreateddate)}
                             </td>

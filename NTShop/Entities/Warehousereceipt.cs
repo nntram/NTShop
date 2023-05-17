@@ -28,6 +28,9 @@ namespace NTShop.Entities
         public string Supplierid { get; set; } = null!;
         [Column("WAREHOUSERECEIPTCREATEDDATE")]
         public long? Warehousereceiptcreateddate { get; set; }
+        [Column("WAREHOUSERECEIPTCODE")]
+        [StringLength(64)]
+        public string? Warehousereceiptcode { get; set; }
 
         [ForeignKey("Staffid")]
         [InverseProperty("Warehousereceipts")]

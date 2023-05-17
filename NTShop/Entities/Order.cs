@@ -51,6 +51,8 @@ namespace NTShop.Entities
         public string? Ordercustomername { get; set; }
         [Column("ORDERTOTALAMOUNT")]
         public int? Ordertotalamount { get; set; }
+        [Column("ORDERCODE")]
+        public int Ordercode { get; set; }
 
         [ForeignKey("Customerid")]
         [InverseProperty("Orders")]

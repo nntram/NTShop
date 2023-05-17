@@ -40,6 +40,9 @@ import Contact from '../pages/Contact'
 import AllCustomers from '../admin/pages/AllCustomers'
 import EditCustomer from '../admin/pages/EditCustomer'
 import CustomerOrders from '../admin/pages/CustomerOrders'
+import AllStaffs from '../admin/pages/AllStaffs'
+import SupperAdminRoute from './SupperAdminRoute'
+
 const Routers = () => {
   return <Routes>   
     <Route path='loading' element={<Loading />} />
@@ -88,6 +91,10 @@ const Routers = () => {
       <Route path='dashboard/all-warehouse-receipts/:warehouseReceiptId' element={<EditWarehouseReceipt />} />
       <Route path='dashboard/all-customers/:customerId' element={<EditCustomer />} />
       <Route path='dashboard/all-customers/:customerId/orders' element={<CustomerOrders />} />
+    </Route>
+
+    <Route element={<SupperAdminRoute />}>
+      <Route path='/dashboard/all-staffs' element={<AllStaffs />} />
     </Route>
 
     <Route path='/*' element={<Navigate to="home" />} />

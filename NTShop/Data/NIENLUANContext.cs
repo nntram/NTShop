@@ -40,9 +40,6 @@ namespace NTShop.Data
         public virtual DbSet<staff> staff { get; set; } = null!;
         public virtual DbSet<ProductStatisticsModel> ProductStatisticsModels { get; set; }
         public virtual DbSet<InvoiceStatisticsModel> InvoiceStatisticsModels { get; set; }
-
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -61,7 +58,7 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Brandid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Brandcreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Brandcreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
             });
 
             modelBuilder.Entity<Cart>(entity =>
@@ -107,7 +104,7 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Categoryid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Categorycreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Categorycreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
             });
 
             modelBuilder.Entity<Customer>(entity =>
@@ -117,7 +114,7 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Customerid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Customercreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Customercreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
 
                 entity.HasOne(d => d.Ward)
                     .WithMany(p => p.Customers)
@@ -148,7 +145,7 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Invoiceid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Invoicecreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Invoicecreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Invoices)
@@ -192,7 +189,9 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Orderid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Ordercreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Ordercode).ValueGeneratedOnAdd().Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore); 
+
+                entity.Property(e => e.Ordercreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
 
                 entity.Property(e => e.Orderstatusid).HasDefaultValueSql("((0))");
 
@@ -246,9 +245,9 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Productid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Productcode).ValueGeneratedOnAdd().Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore); ;
+                entity.Property(e => e.Productcode).ValueGeneratedOnAdd().Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore); 
 
-                entity.Property(e => e.Productcreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Productcreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
 
                 entity.HasOne(d => d.Brand)
                     .WithMany(p => p.Products)
@@ -301,9 +300,7 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Supplierid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Suppliercreacteddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
-
-                entity.Property(e => e.Supplierphonenumber).IsFixedLength();
+                entity.Property(e => e.Suppliercreacteddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getutcdate()))");
 
                 entity.HasOne(d => d.Ward)
                     .WithMany(p => p.Suppliers)
@@ -333,7 +330,7 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Warehousereceiptid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Warehousereceiptcreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Warehousereceiptcreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
 
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.Warehousereceipts)
@@ -371,7 +368,7 @@ namespace NTShop.Data
 
                 entity.Property(e => e.Staffid).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Staffcreareddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01 00:00:00',getdate()))");
+                entity.Property(e => e.Staffcreateddate).HasDefaultValueSql("(datediff_big(millisecond,'1970-01-01',getutcdate()))");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.staff)
@@ -387,6 +384,7 @@ namespace NTShop.Data
             {
                 entity.HasNoKey();
             });
+
             OnModelCreatingPartial(modelBuilder);
         }
 

@@ -125,6 +125,7 @@ const EditWarehouseReceipt = () => {
                   <thead>
                     <tr>
                       <th>STT</th>
+                      <th></th>
                       <th>Sản phẩm</th>
                       <th>Giá nhập</th>
                       <th>Số lượng</th>
@@ -136,9 +137,10 @@ const EditWarehouseReceipt = () => {
                         <tr>
                           <td>{index + 1}</td>
                           <td>
-                            <ProductOption name={item.product.productname}
-                              image={item.product.productimages[0].productimageurl
-                              } />
+                            <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${item.product.productimages[0].productimageurl}`} alt="" />
+                          </td>
+                          <td>
+                            {item.product.productname}
                           </td>
                           <td>{item.wrdetailprice.toLocaleString()} VNĐ</td>
                           <td>{item.wrdetailquatity}</td>
@@ -182,7 +184,7 @@ const EditWarehouseReceipt = () => {
 const ProductOption = ({ image, name }) => {
   return (
     <div>
-      <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${image}`} alt="" />
+
       {name}
     </div>
   )

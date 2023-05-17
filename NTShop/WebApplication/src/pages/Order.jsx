@@ -59,6 +59,8 @@ const Order = () => {
                                     <p>Số điện thoại: {queryOrder.orderphonenumber}</p>
                                 </Col>
                                 <Col lg='6' md='6' className='mb-3'>
+                                    <p>Mã đơn hàng: {queryOrder.ordercode}</p>
+
                                     <p>Thời gian đặt hàng:
                                         <b> {' ' + ToDateTimeString(queryOrder.ordercreateddate)}
                                         </b>

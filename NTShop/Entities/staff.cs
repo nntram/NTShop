@@ -35,8 +35,8 @@ namespace NTShop.Entities
         [Column("STAFFEMAIL")]
         [StringLength(256)]
         public string? Staffemail { get; set; }
-        [Column("STAFFCREAREDDATE")]
-        public long? Staffcreareddate { get; set; }
+        [Column("STAFFCREATEDDATE")]
+        public long? Staffcreateddate { get; set; }
         [Column("STAFFLOGINNAME")]
         [StringLength(128)]
         public string? Staffloginname { get; set; }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Row, Col, Form, FormGroup, Input, Button } from 'reactstrap'
+import { Container, Row, Col, Form, FormGroup, Input, Button, Label } from 'reactstrap'
 import Helmet from '../../components/helmet/Helmet'
 import CommonSection from '../../components/UI/CommonSection'
 import Loading from '../../components/loading/Loading'
@@ -68,7 +68,7 @@ const DbOrder = () => {
         ), '')
         orderContent = ` 
         <head>
-            <title>Mã đơn hàng: ${queryOrder.orderid}</title>
+            <title>Mã đơn hàng: ${queryOrder.ordercode}</title>
         </head>
         <body> 
             <center><h2>Thông tin đơn hàng</h2></center>
@@ -127,7 +127,6 @@ const DbOrder = () => {
         }
 
         const result = await mutation.mutateAsync(data)
-        console.log(result)
         if (result) {
             toast.success(result)
         }
@@ -156,6 +155,7 @@ const DbOrder = () => {
                                     <p>Số điện thoại: {queryOrder.orderphonenumber}</p>
                                 </Col>
                                 <Col lg='6' md='6' className='mb-3'>
+                                    <p>Mã đơn hàng: {queryOrder.ordercode}</p>
                                     <p>Thời gian đặt hàng:
                                         <b> {' ' + ToDateTimeString(queryOrder.ordercreateddate)}
                                         </b>
@@ -194,21 +194,29 @@ const DbOrder = () => {
                                 </Col>
                             </Row>
                             {(queryOrder.orderstatusid !== '-1' && queryOrder.orderstatusid !== '3') ? <Form className='mt-5 p-5 border border-dark' onSubmit={submit}>
-                                <FormGroup>
-                                    <h5 className='mb-3'>Cập nhật trạng thái đơn hàng:</h5>
-                                    <Input type="select" name="orderstatus" onChange={(e) => setOrderStatusSelected(e.target.value)}>
+                                <h5 className='mb-3'>Cập nhật trạng thái đơn hàng:</h5>
+                                <FormGroup check >
+                                    <Row className='my-5 justify-content-center gap-3'>
                                         {
                                             orderStatus.map((item) => (
-                                                <option value={item.orderstatusid}
-                                                    key={item.orderstatusid}
-                                                    selected={queryOrder.orderstatusid === item.orderstatusid}
-                                                >
-                                                    {item.orderstatusname}
 
-                                                </option>
+                                                <Col md={2} key={item.orderstatusid} className={
+                                                    item.orderstatusid === '0' ? 'btn btn-outline-secondary p-5 py-2'
+                                                        : item.orderstatusid === '1' ? 'btn btn-outline-primary p-5 py-2'
+                                                            : item.orderstatusid === '2' ? 'btn btn-outline-warning p-5 py-2'
+                                                                : item.orderstatusid === '3' ? 'btn btn-outline-success p-5 py-2'
+                                                                    : item.orderstatusid === '-1' ? 'btn btn-outline-danger p-5 py-2'
+                                                                        : ''}>
+                                                    <Input type='radio' name='orderstatus'
+                                                        value={item.orderstatusid} id={item.orderstatusid}
+                                                        checked={(queryOrder.orderstatusid === item.orderstatusid && !orderStatusSelected)
+                                                            || orderStatusSelected === item.orderstatusid}
+                                                        onChange={(e) => setOrderStatusSelected(e.target.value)} />
+                                                    <Label check for={item.orderstatusid}>{item.orderstatusname}</Label>
+                                                </Col>
                                             ))
                                         }
-                                    </Input>
+                                    </Row>
                                 </FormGroup>
                                 <FormGroup className='text-center'>
                                     <button className='btn btn-primary' type="submit">
@@ -224,7 +232,7 @@ const DbOrder = () => {
                                 </button>
                                 <Link to={`/dashboard/all-customers/${queryOrder.customerid}`}>
                                     <button className="btn btn-primary" type="button">
-                                    <i className="ri-user-line"></i> Xem thông tin khách hàng
+                                        <i className="ri-user-line"></i> Xem thông tin khách hàng
                                     </button>
                                 </Link>
                             </div>

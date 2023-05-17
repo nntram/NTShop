@@ -15,8 +15,11 @@ import {
   Title,
   Tooltip,
   Legend,
+  PointElement,
+  LineElement
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2'
 
 const Dashboard = () => {
 
@@ -29,7 +32,17 @@ const Dashboard = () => {
     Legend
   );
 
-  const options = {
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+  );
+
+  const options1 = {
     plugins: {
       legend: {
         position: 'top',
@@ -38,11 +51,19 @@ const Dashboard = () => {
         display: true,
         text: 'Thống kê doanh thu',
       },
-    },
-    scales: {
-      y: {
-        position: 'right'
-      }
+    }
+  };
+
+  
+  const options2 = {
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Thống kê số đơn hàng thành công',
+      },
     }
   };
 
@@ -187,24 +208,31 @@ const Dashboard = () => {
   const isSuccess2 = queryResults[4].isSuccess
   const isSuccess3 = queryResults[5].isSuccess
 
-  let data, labels
+  let data1, data2, labels
   if (isSuccess3 && queryResults[5].data) {
     labels = queryResults[5].data.map((item) => item.createdDate)
 
-    data = {
+    data1 = {
+      labels,
+      datasets: [
+        {
+          type: 'line',
+          label: 'Doanh thu',
+          data: queryResults[5].data.map((item) => item.totalAmount),
+          borderColor: 'rgb(255, 99, 132)',
+          borderWidth: 2,
+          fill: false,
+        },
+      ],
+    };
+
+    data2 = {
       labels,
       datasets: [
         {
           label: 'Số đơn thành công',
           data: queryResults[5].data.map((item) => item.totalInvoice),
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          yAxisID: 'y'
-        },
-        {
-          label: 'Doanh thu',
-          data: queryResults[5].data.map((item) => item.totalAmount),
           backgroundColor: 'rgba(53, 162, 235, 0.5)',
-          yAxisID: 'y2'
         },
       ],
     };
@@ -300,6 +328,7 @@ const Dashboard = () => {
         }
         {
           !isSuccess3 ? <Loading /> :
+          <>
             <section className='pt-0'>
               <h4 className='section__title'>Thống kê</h4>
               <Row>
@@ -323,10 +352,15 @@ const Dashboard = () => {
                   </div>
                 </Col>
               </Row>
-
-              <Bar options={options} data={data} />
-
+              <h4 className='mt-3'>Thống kê doanh thu</h4>
+              <Line options={options1} data={data1} />
+              <h4 className='mt-5'>Thống kê số đơn thành công</h4>
+              <Bar options={options2} data={data2} />
             </section>
+
+
+
+            </>
         }
 
       </Container>

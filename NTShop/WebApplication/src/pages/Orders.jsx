@@ -80,6 +80,7 @@ const Orders = () => {
                   <thead>
                     <tr>
                       <th>STT</th>
+                      <th>Mã đơn hàng</th>
                       <th>Thời gian đặt hàng</th>
                       <th>Thanh toán</th>
                       <th>Trạng thái</th>
@@ -92,6 +93,7 @@ const Orders = () => {
                       orders.map((item, index) =>
                         <tr key={item.orderid}>
                           <td>{index + 1}</td>
+                          <td>{item.ordercode}</td>
                           <td>
                             {ToDateTimeString(item.ordercreateddate)}
                           </td>

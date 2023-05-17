@@ -152,10 +152,6 @@ const Header = () => {
                         <i className="ri-account-circle-line"></i>
                         <span>Đăng ký</span>
                       </Link>
-                      <Link to="/dashboard" className="d-flex gap-3">
-                        <i className="ri-dashboard-line"></i>
-                        <span>Dashboard</span>
-                      </Link>
                     </>
                   )}
                 </div>
