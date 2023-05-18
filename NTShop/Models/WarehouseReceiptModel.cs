@@ -15,5 +15,7 @@ namespace NTShop.Models
         public List<WarehouseReceiptDetailModel>? Warehousereceiptdetails { get; set;}
         public StaffModel? Staff { get;set; }
         public SupplierModel? Supplier { get; set; }
+        [StringLength(64)]
+        public string Warehousereceiptcode { get; set; } = null!;
     }
 }

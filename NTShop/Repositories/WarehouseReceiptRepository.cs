@@ -53,6 +53,7 @@ namespace NTShop.Repositories
                     return "Không tìm thấy sản phẩm.";
                 }//update product quantity
                 product.Productquantity += item.Wrdetailquatity;
+                product.Productsaleprice = item.Wrdetailsaleprice;
                 _unitOfWork.GetRepository<Product>().Update(product);
                 var warehouseReceiptDetail = new Warehousereceiptdetail();
                 _mapper.Map(item, warehouseReceiptDetail);

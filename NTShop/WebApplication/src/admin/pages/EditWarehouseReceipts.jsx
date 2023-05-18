@@ -1,7 +1,7 @@
 import React from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
-import { Container, Label, Form, FormGroup, Col, Input, Button } from 'reactstrap'
+import { Container, Label, Form, FormGroup, Col, Input, Button, Row } from 'reactstrap'
 import warehouseReceiptApi from '../../api/WarehouseReceiptApi'
 import { useQuery } from 'react-query'
 import Loading from '../../components/loading/Loading'
@@ -93,74 +93,92 @@ const EditWarehouseReceipt = () => {
       {
         !isSuccess ? <Loading /> :
           <Container className='my-5 d-flex justify-content-center'>
-            <Col md={12}>
-              <Form className="auth__form"
-                encType="multipart/form-data">
-                <div className='d-flex'>
-                  <FormGroup className='w-50'>
+
+            <Form className="auth__form"
+              encType="multipart/form-data">
+              <Row>
+                <Col md={6}>
+                  <FormGroup>
                     <Label className="text-right text-white mx-2">
                       Ngày nhập <span className="text-danger">*</span>
                     </Label>
                     <Input type="text" name='Editddate' className='w-75' disabled
                       value={ToDateTimeString(queryWarehouseReceipt.data.warehousereceiptcreateddate)} />
                   </FormGroup>
-
-                  <FormGroup className='w-50'>
+                </Col>
+                <Col md={6}>
+                  <FormGroup>
                     <Label className="text-right text-white mx-2">
                       Nhân viên thực hiện: <span className="text-danger">*</span>
                     </Label>
                     <Input name="Staffname" type="text" value={queryWarehouseReceipt.data.staff.staffname} disabled />
-
                   </FormGroup>
-                </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <FormGroup>
+                    <Label className="text-right text-white mx-2">
+                      Nhà cung cấp <span className="text-danger">*</span>
+                    </Label>
+                    <Input name="Suppliername" type="text" disabled value={queryWarehouseReceipt.data.supplier.suppliername} />
+                  </FormGroup>
+                </Col>
+                <Col md={6}>
+                  <FormGroup>
+                    <Label className="text-right text-white mx-2">
+                      Mã phiếu nhập <span className="text-danger">*</span>
+                    </Label>
+                    <Input name="Suppliername" type="text" disabled value={queryWarehouseReceipt.data.warehousereceiptcode} />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <table className='table'>
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th></th>
+                    <th>Sản phẩm</th>
+                    <th>Giá nhập</th>
+                    <th>Giá bán</th>
+                    <th>Số lượng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    queryWarehouseReceipt.data?.warehousereceiptdetails.map((item, index) =>
+                      <tr>
+                        <td>{index + 1}</td>
+                        <td>
+                          <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${item.product.productimages[0].productimageurl}`} alt="" />
+                        </td>
+                        <td>
+                          {item.product.productname}
+                        </td>
+                        <td>{item.wrdetailprice.toLocaleString()} VNĐ</td>
+                        <td>{item.wrdetailsaleprice.toLocaleString()} VNĐ</td>
+                        <td>{item.wrdetailquatity}</td>
+                      </tr>
+                    )
+                  }
+                  <tr className='text-center'>
+                    <th colSpan={3}> Tổng:</th>
+                    <th colSpan={2}>{totalPrice.toLocaleString()} VNĐ</th>
+                  </tr>
+                </tbody>
+              </table>
 
-                <FormGroup>
-                  <Label className="text-right text-white mx-2">
-                    Nhà cung cấp <span className="text-danger">*</span>
-                  </Label>
-                  <Input name="Suppliername" type="text" disabled value={queryWarehouseReceipt.data.supplier.suppliername} />
-                </FormGroup>
-
-                <table className='table'>
-                  <thead>
-                    <tr>
-                      <th>STT</th>
-                      <th></th>
-                      <th>Sản phẩm</th>
-                      <th>Giá nhập</th>
-                      <th>Số lượng</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      queryWarehouseReceipt.data?.warehousereceiptdetails.map((item, index) =>
-                        <tr>
-                          <td>{index + 1}</td>
-                          <td>
-                            <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/products/${item.product.productimages[0].productimageurl}`} alt="" />
-                          </td>
-                          <td>
-                            {item.product.productname}
-                          </td>
-                          <td>{item.wrdetailprice.toLocaleString()} VNĐ</td>
-                          <td>{item.wrdetailquatity}</td>
-                        </tr>
-                      )
-                    }
-                    <tr className='text-center'>
-                      <th colSpan={2}> Tổng:</th>
-                      <th colSpan={2}>{totalPrice.toLocaleString()} VNĐ</th>
-                    </tr>
-                  </tbody>
-                </table>
-
-              </Form>
               <div className='text-center mt-5'>
                 <button className="btn btn-secondary" type="button" onClick={print}>
                   <i className='ri-printer-line'></i> In hóa đơn
                 </button>
               </div>
-            </Col>
+
+            </Form>
+
+
+
+
           </Container>
       }
 
@@ -172,7 +190,7 @@ const EditWarehouseReceipt = () => {
         </div>
       </section>
 
-    </Helmet>
+    </Helmet >
   )
 }
 

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
-import { Container, Label, FormGroup, Col } from 'reactstrap'
+import { Container, Label, FormGroup, Col, Button } from 'reactstrap'
 import UploadImage from '../components/UploadImage'
 import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import productApi from '../../api/ProductApi'
@@ -264,9 +264,9 @@ const CreateProduct = () => {
       </Container>
       <section className='p-3'>
         <div className='mt-3 text-info'>
-          <Link to='/dashboard/all-products' >
+          <Button type='button' onClick={() => navigate(-1)} >
             <i className='ri-arrow-go-back-line'></i> Trở về
-          </Link>
+          </Button>
         </div>
       </section>
 

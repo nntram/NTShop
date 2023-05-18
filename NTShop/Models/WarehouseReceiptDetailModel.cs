@@ -12,7 +12,8 @@ namespace NTShop.Models
         [StringLength(64)]
         public string Wrdetailid { get; set; } = null!;
         public int? Wrdetailquatity { get; set; }
-        public int? Wrdetailprice { get; set; }
+        public int? Wrdetailprice { get; set; }     
+        public int? Wrdetailsaleprice { get; set; }
         public ProductModel? Product { get; set; }
     }
 }

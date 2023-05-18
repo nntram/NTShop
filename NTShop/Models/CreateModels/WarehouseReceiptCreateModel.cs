@@ -11,6 +11,9 @@ namespace NTShop.Models.CreateModels
         [StringLength(64)]
         [Required]
         public string Supplierid { get; set; } = null!;
+        [StringLength(64)]
+        [Required]
+        public string Warehousereceiptcode { get; set; } = null!;
         [Required]
         public long? Warehousereceiptcreateddate { get; set; }
         [Required]

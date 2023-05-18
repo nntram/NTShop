@@ -25,6 +25,8 @@ namespace NTShop.Entities
         public int? Wrdetailquatity { get; set; }
         [Column("WRDETAILPRICE")]
         public int? Wrdetailprice { get; set; }
+        [Column("WRDETAILSALEPRICE")]
+        public int? Wrdetailsaleprice { get; set; }
 
         [ForeignKey("Productid")]
         [InverseProperty("Warehousereceiptdetails")]

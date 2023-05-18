@@ -12,5 +12,7 @@ namespace NTShop.Models
         public int Wrdetailquatity { get; set; }
         [Required]
         public int Wrdetailprice { get; set; }
+        [Required]
+        public int Wrdetailsaleprice { get; set; }
     }
 }

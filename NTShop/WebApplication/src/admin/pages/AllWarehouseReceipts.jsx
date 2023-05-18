@@ -57,6 +57,7 @@ const AllWarehouseReceipts = () => {
                     <thead>
                       <tr>
                         <th>STT</th>
+                        <th>Mã phiếu nhập</th>
                         <th>Tên nhà cung cấp</th>
                         <th>Nhân viên phụ trách</th>
                         <th>Ngày tạo</th>
@@ -68,6 +69,7 @@ const AllWarehouseReceipts = () => {
                         queryResult.data && queryResult.data.map((item, index) =>
                           <tr key={item.warehousereceiptid}>
                             <td>{index + 1}</td>
+                            <td>{item.warehousereceiptcode}</td>
                             <td className='align-middle'>{item.supplier.suppliername}</td>
                             <td>{item.staff.staffname}</td>
                             <td className='align-middle'>{ToDateTimeString(item.warehousereceiptcreateddate)}</td>

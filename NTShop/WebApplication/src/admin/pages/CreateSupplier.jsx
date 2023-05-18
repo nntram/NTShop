@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CommonSection from '../../components/UI/CommonSection'
 import Helmet from '../../components/helmet/Helmet'
-import { Container, Label, FormGroup, Col } from 'reactstrap'
+import { Container, Label, FormGroup, Col, Button } from 'reactstrap'
 import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import supplierApi from '../../api/SupplierApi'
 import { useMutation, useQuery } from 'react-query'
@@ -262,9 +262,9 @@ const CreateSupplier = () => {
       </Container>
       <section className='p-3'>
         <div className='mt-3 text-info'>
-          <Link to='/dashboard/all-suppliers' >
+          <Button type='button' onClick={() => navigate(-1)} >
             <i className='ri-arrow-go-back-line'></i> Trở về
-          </Link>
+          </Button>
         </div>
       </section>
 
