@@ -54,6 +54,7 @@ namespace NTShop.Helpers
             CreateMap<Warehousereceiptdetail, WarehouseReceiptDetailModel>().ReverseMap();
             CreateMap<Warehousereceiptdetail, WarehouseReceiptDetailCreateModel>().ReverseMap();
             CreateMap<IPagedList<Warehousereceipt>, PagedList<WarehouseReceiptModel>>();
+            CreateMap<Role, RoleModel>().ReverseMap();
 
         }
     }

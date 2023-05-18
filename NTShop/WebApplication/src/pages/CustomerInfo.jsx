@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import Helmet from "../components/helmet/Helmet";
-import { Container, Row, Col, FormGroup, Label } from "reactstrap";
 import "../styles/login.css";
 import { toast } from "react-toastify";
 import addressApi from "../api/AddressApi"
-import { useQuery, useMutation } from "react-query";
+import { useQuery } from "react-query";
 import Loading from "../components/loading/Loading";
-import { AvForm, AvField, AvGroup, AvRadioGroup, AvRadio, AvInput, AvFeedback } from 'availity-reactstrap-validation';
+import '../styles/customer-info.css'
 import customerApi from "../api/CustomerApi";
 import { useSelector } from "react-redux";
 import authApi from "../api/AuthApi";
-import jwt_decode from "jwt-decode";
+import { ToDateTimeString } from '../utils/Helpers'
+import { useNavigate } from "react-router-dom";
 
 const CustomerInfo = () => {
+    const  userIcon = '/assets/images/user-icon.png'
     const [province, setProvince] = useState("");
     const [district, setDistrict] = useState("");
     const [ward, setWard] = useState("");
-    const [file, setFile] = useState(null);
-    const [image, setImage] = useState(null)
+    const navigate = useNavigate()
     const currentUser = useSelector(state => state.customer.currentUser)
 
     const postCustomerInfor = async (formData) => {
@@ -36,12 +36,7 @@ const CustomerInfo = () => {
             console.log('Failed to post refresh token: ', error);
         }
     }
-    const mutation = useMutation({
-        mutationFn: (formData) => postCustomerInfor(formData),
-    });
-    const mutationRefreshToken = useMutation({
-        mutationFn: (formData) => postRefreshToken(formData),
-    })
+   
     const fetchDistricts = async (prodvinceId) => {
         try {
             const response = await addressApi.getDistrict(prodvinceId);
@@ -95,25 +90,12 @@ const CustomerInfo = () => {
     let districtOptions = []
     let wardOptions = []
 
-    const handleProvinceSelect = (value) => {
-        setProvince(value)
-        setDistrict("")
-        setWard("")
-    }
-    const handleDistrictSelect = (value) => {
-        setDistrict(value)
-        setWard("")
-    }
-    const handleWardSelect = (value) => {
-        setWard(value)
-    }
 
     const isLoading = queryResult.isLoading || fullAddressResults.isLoading
     const isSuccess = queryResult.isSuccess && fullAddressResults.isSuccess
 
     let defaultValues
     if (isSuccess) {
-
         provinceOptions = [...fullAddressResults.data.provinces.map((item) => (
             {
                 value: item.provinceid, label: item.provincename
@@ -134,13 +116,14 @@ const CustomerInfo = () => {
             Customername: queryResult.data.customername,
             Customerphonenumber: queryResult.data.customerphonenumber,
             Customeraddress: queryResult.data.customeraddress,
-            province: fullAddressResults.data.provinceId,
-            district: fullAddressResults.data.districtId,
-            Wardid: fullAddressResults.data.wardId,
+            Customerusername: queryResult.data.customerusername,
+            Customeremail: queryResult.data.customeremail,
+            Customercreateddate: queryResult.data.customercreateddate,
+            province: provinceOptions.find((item) => item.value === fullAddressResults.data.provinceId).label,
+            district: districtOptions.find((item) => item.value === fullAddressResults.data.districtId).label,
+            Wardid: wardOptions.find((item) => item.value === fullAddressResults.data.wardId).label,
             gender: queryResult.data.customergender ? 'male' : 'female'
         }
-
-
     }
 
     const districtResults = useQuery(['districts', province],
@@ -175,206 +158,140 @@ const CustomerInfo = () => {
         wardOptions = [...data]
     }
 
-    const submit = async (event, values) => {
-        event.preventDefault();
 
-        const formData = new FormData()
-        for (var key in values) {
-            formData.append(key, values[key]);
-        }
-        if (file) {
-            formData.append("Avatar", file)
-        }
-        const gender = values.gender === 'male' ? true : false
-        formData.append("Customergender", gender)
-
-        await mutation.mutateAsync(formData).then(async (result) => {
-            toast.success(result + "Trang sẽ tự tải lại sau 3s.", {autoClose: false})
-            const accessToken = sessionStorage.getItem("userAuth");
-            var refreshTokenForm = new FormData()
-            refreshTokenForm.append("authorization", accessToken);
-
-            mutationRefreshToken.mutateAsync(refreshTokenForm).then((newToken) => {                              
-                sessionStorage.setItem("userAuth", newToken);
-                const decode = JSON.stringify(jwt_decode(newToken));
-                sessionStorage.setItem("currentUser", decode);
-                
-                window.setTimeout(function(){window.location.reload()},3000)
-            })
-        })
-    }
-
-    const validateImage = () => {
-        if (file && file.size) {
-            const max_size = 2000000;
-            if (file.size > max_size)
-                return false;
-        }
-        return true;
-    }
-
-    const onImageChange = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setImage(URL.createObjectURL(event.target.files[0]));
-            setFile(event.target.files[0])
-        }
-        else {
-            setImage(null);
-            setFile(null)
-        }
-    }
     return (
         <Helmet title="Thông tin khách hàng">
             {isLoading ? <Loading /> :
-                <section className="auth__background">
-                    <Container>
-                        <Row>
-                            <Col lg="6" className="m-auto">
-                                <h3 className="fw-bold mb-4 text-center auth__title">Thông tin khách hàng</h3>
+                <section>
+                    <div className="container bootstrap snippets bootdey">
+                        <div className="panel-body inf-content">
+                            <div className="row p-5">
+                                <div className="col-md-4">
+                                    <img alt="" title="" className="rounded-circle img-thumbnail isTooltip" src={currentUser.Avatar ? `${process.env.REACT_APP_API_IMAGE_BASE_URL}/avatar/` + currentUser.Avatar : userIcon} data-original-title="Usuario" />
+                                </div>
+                                <div className="col-md-6">
+                                    <strong>Thông tin tài khoản</strong><br />
+                                    <div className="table-responsive">
+                                        <table className="table table-user-information">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            <i className="ri-user-fill"></i>
+                                                            Họ tên:
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.Customername}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            Giới tính:
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.gender === true ? "Nam" : "Nữ"}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            <i className="ri-star-line"></i>
+                                                            Tên đăng nhập
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.Customerusername}
+                                                    </td>
+                                                </tr>
 
-                                <AvForm className="auth__form"
-                                    encType="multipart/form-data"
-                                    onValidSubmit={submit}
-                                    model={defaultValues}>
-
-                                    <AvGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Họ và tên <span className="text-danger">*</span>
-                                        </Label>
-                                        <AvField name="Customername" type="text"
-                                            placeholder="Họ và tên"
-                                            validate={{
-                                                required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
-                                                maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
-                                            }} />
-                                    </AvGroup>
-
-                                    <AvRadioGroup className='radio__group' inline name="gender" required>
-                                        <Label className="text-white mx-2">
-                                            Giới tính <span className="text-danger">*</span>
-                                        </Label>
-                                        <AvRadio label="Nam"
-                                            className="mx-2"
-                                            value="male"
-                                        />
-                                        <AvRadio label="Nữ"
-                                            className="mx-2"
-                                            value="female"
-                                        />
-                                    </AvRadioGroup>
-                                    <AvGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Số điện thoại <span className="text-danger">*</span>
-                                        </Label>
-                                        <AvField name="Customerphonenumber" type="text"
-                                            placeholder="Số điện thoại"
-                                            validate={{
-                                                pattern: { value: /((09|03|07|08|05)+([0-9]{8})\b)/, errorMessage: 'Vui lòng nhập đúng định dạng.' },
-                                                required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
-                                                maxLength: { value: 10, errorMessage: 'Quá độ dài cho phép' },
-                                            }} />
-                                    </AvGroup>
-                                    <AvGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Tỉnh, thành <span className="text-danger">*</span>
-                                        </Label>
-                                        <AvField type="select" name="province" required
-                                            onChange={(e) => handleProvinceSelect(e.target.value)}>
-                                            <option value="" hidden>Chọn tỉnh, thành</option>
-                                            {
-                                                provinceOptions && provinceOptions.map((item) => (
-                                                    <option value={item.value} key={item.value}>
-                                                        {item.label}
-                                                    </option>
-                                                ))
-                                            }
-                                        </AvField>
-                                    </AvGroup>
-
-                                    <AvGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Quận, huyện <span className="text-danger">*</span>
-                                        </Label>
-                                        <AvField type="select" name="district" required
-                                            onChange={(e) => handleDistrictSelect(e.target.value)}>
-                                            <option value="" hidden>Chọn quận, huyện</option>
-                                            {
-                                                districtOptions && districtOptions.map((item) => (
-                                                    <option value={item.value} key={item.value}>
-                                                        {item.label}
-                                                    </option>
-                                                ))
-                                            }
-                                        </AvField>
-                                    </AvGroup>
-
-                                    <AvGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Xã, phường <span className="text-danger">*</span>
-                                        </Label>
-                                        <AvField type="select" name="Wardid" required
-                                            onChange={(e) => handleWardSelect(e.target.value)}>
-                                            <option value="" hidden>Chọn xã, phường</option>
-                                            {
-                                                wardOptions && wardOptions.map((item) => (
-                                                    <option value={item.value} key={item.value}>
-                                                        {item.label}
-                                                    </option>
-                                                ))
-                                            }
-                                        </AvField>
-                                    </AvGroup>
-
-                                    <AvGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Địa chỉ <span className="text-danger">*</span>
-                                        </Label>
-                                        <AvField name="Customeraddress" type="text"
-                                            placeholder="Số nhà, tên đường..."
-                                            validate={{
-                                                required: { value: true, errorMessage: 'Vui lòng điền đầy đủ thông tin.' },
-                                                maxLength: { value: 128, errorMessage: 'Quá độ dài cho phép' },
-                                            }} />
-                                    </AvGroup>
-                                    <FormGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Ảnh đại diện
-                                        </Label>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            <i className="ri-mail-line"></i>
+                                                            Email
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.Customeremail}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            <i className="ri-phone-line"></i>
+                                                            Số điện thoại
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.Customerphonenumber}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            <i className="ri-calendar-line"></i>
+                                                            Ngày đăng ký
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {ToDateTimeString(defaultValues.Customercreateddate)}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            Tỉnh, thành:
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.province}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            Quận, huyện:
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.district}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            Phường, xã:
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.Wardid}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>
+                                                            Địa chỉ:
+                                                        </strong>
+                                                    </td>
+                                                    <td className="text-primary">
+                                                        {defaultValues.Customeraddress}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                         <div className="text-center">
-                                            {
-                                                queryResult.data.customeravatar ? <img src={`${process.env.REACT_APP_API_IMAGE_BASE_URL}/avatar/` + queryResult.data.customeravatar} className="w-25 m-auto" />
-                                                    : "Bạn chưa chọn ảnh đại diện"
-                                            }
-
+                                            <button type="button" className="btn btn-primary"
+                                            onClick={() => navigate('/change-customer-info')}> 
+                                            <i className="ri-edit-line"></i> Thay đổi thông tin</button>
                                         </div>
-                                    </FormGroup>
-                                    <AvGroup>
-                                        <Label className="text-right text-white mx-2">
-                                            Chọn ảnh đại diện mới
-                                        </Label>
-                                        <AvInput name="avatar" type="file" accept="image/*"
-                                            onChange={onImageChange}
-                                            validate={{ checkCapacity: validateImage }} />
-                                        <AvFeedback>Dung lượng tối đa là 2 Mb.</AvFeedback>
-                                        <div className="text-center mt-4">
-                                            {image && <img src={image} className="w-25 m-auto" />}
-                                        </div>
-                                    </AvGroup>
-                                    {
-                                        mutation.isLoading || mutationRefreshToken.isLoading ? <Loading /> :
-                                            <FormGroup className="text-center">
-                                                <button className="buy__btn auth__btn" type="submit">
-                                                    Lưu thay đổi
-                                                </button>
-                                            </FormGroup>
-                                    }
-
-                                </AvForm>
-
-                            </Col>
-
-                        </Row>
-                    </Container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             }
         </Helmet>

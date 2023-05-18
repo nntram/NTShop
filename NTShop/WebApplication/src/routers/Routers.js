@@ -22,6 +22,7 @@ import AdminRoute from './AdminRoute'
 import DbOrder from '../admin/pages/DbOrder'
 import ChangePassword from '../pages/ChangePassword.jsx'
 import CustomerInfo from '../pages/CustomerInfo'
+import ChangeCustomerInfo from '../pages/ChangeCustomerInfo'
 import AllCategories from '../admin/pages/AllCategories'
 import AllBrands from '../admin/pages/AllBrands'
 import AllSuppliers from '../admin/pages/AllSuppliers'
@@ -63,7 +64,9 @@ const Routers = () => {
       <Route path='orders' element={<Orders/>} />
       <Route path='order/:orderId' element={<Order/>} />
       <Route path='change-password' element={<ChangePassword />} />
-      <Route path='customer-infor' element={<CustomerInfo />} />
+      <Route path='customer-info' element={<CustomerInfo />} />
+      <Route path='change-customer-info' element={<ChangeCustomerInfo />} />
+
       <Route path='checkout' element={<Checkout />} />
     </Route>
 

@@ -70,7 +70,8 @@ namespace NTShop.Repositories
             var data = (await _unitOfWork.GetRepository<Warehousereceipt>().GetPagedListAsync(
                          pageSize: int.MaxValue,
                          include: p => p.Include(m => m.Staff)
-                                      .Include(n => n.Supplier))).Items;
+                                      .Include(n => n.Supplier),
+                         orderBy: p => p.OrderByDescending(m => m.Warehousereceiptcreateddate))).Items;
 
             return _mapper.Map<List<WarehouseReceiptModel>>(data);
         }

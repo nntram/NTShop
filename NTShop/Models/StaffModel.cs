@@ -13,5 +13,6 @@
         public bool? Staffisactive { get; set; }
         public string? Staffrefreshtoken { get; set; }
         public long? Stafftokenexpirytime { get; set; }
+        public RoleModel Role { get; set; }
     }
 }

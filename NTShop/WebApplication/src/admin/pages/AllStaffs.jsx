@@ -48,6 +48,7 @@ const AllStaffs = () => {
                         <th>STT</th>
                         <th>Tên nhân viên</th>
                         <th>Tên tài khoản</th>
+                        <th>Quyền</th>
                         <th>Email</th>
                         <th>Ngày tạo</th>
                         <th className='text-center'>Xem chi tiết</th>
@@ -60,6 +61,7 @@ const AllStaffs = () => {
                             <td>{index + 1}</td>
                             <td>{item.staffname}</td>
                             <td>{item.staffloginname}</td>
+                            <td>{item.role.rolename}</td>
                             <td>{item.staffemail}</td>
                             <td>{ToDateTimeString(item.staffcreateddate)}</td>
                             <td className='align-middle text-center text-info'><Link to={`/dashboard/all-staffs/${item.staffid}`}>Chi tiết</Link></td>

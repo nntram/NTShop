@@ -27,6 +27,7 @@ namespace NTShop.Repositories
         public async Task<List<StaffModel>> GetAllAsync()
         {
             var data = (await _unitOfWork.GetRepository<staff>().GetPagedListAsync(
+                        include: p => p.Include(m => m.Role),
                         pageSize: int.MaxValue)).Items;
 
             return _mapper.Map<List<StaffModel>>(data);

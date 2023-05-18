@@ -132,7 +132,7 @@ const Header = () => {
                         <i className="ri-key-fill"></i>
                         <span>Đổi mật khẩu</span>
                       </Link>
-                      <Link to="/customer-infor" className="d-flex gap-3">
+                      <Link to="/customer-info" className="d-flex gap-3">
                         <i className="ri-user-line"></i>
                         <span>Thông tin</span>
                       </Link>
