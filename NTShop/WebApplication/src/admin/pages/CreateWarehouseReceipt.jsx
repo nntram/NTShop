@@ -84,7 +84,7 @@ const CreateWarehouseReceipt = () => {
     data.append('StrWarehousereceiptdetail', JSON.stringify(wrDetail))
 
 
-    const result = await mutation.mutateAsync(data);
+    const result =""//= await mutation.mutateAsync(data);
     if (result) {
       toast.success(result, { autoClose: false })
       navigate('/dashboard/all-warehouse-receipts')
@@ -150,8 +150,9 @@ const CreateWarehouseReceipt = () => {
   const addTableRows = () => {
 
     const rowsInput = {
-      id: "id" + Math.random().toString(16).slice(2)
+      id: "id" + Math.random().toString(16).slice(2),
     }
+   
     setRowsData([...rowsData, rowsInput])
   }
   const deleteTableRows = (index) => {
@@ -160,7 +161,7 @@ const CreateWarehouseReceipt = () => {
     setRowsData(rows);
   }
 
-  const handleChange = (index, evnt, selectName) => {
+  const handleChange = (index, evnt, selectName, salePrice) => {
     let name, value
 
     if (selectName) {
@@ -173,6 +174,9 @@ const CreateWarehouseReceipt = () => {
     }
     const rowsInput = [...rowsData];
     rowsInput[index][name] = value;
+    if(salePrice){
+      rowsInput[index][`salePrice-${index}`] = salePrice
+    }
     setRowsData(rowsInput);
   }
 
@@ -328,7 +332,7 @@ const Tr = ({ deleteTableRows, productOptions, index, data, handleChange }) => {
   const handleProductSelect = (index, e, name) => {
     setProduct(e.value)
     setProductSalePrice(e.salePrice)
-    handleChange(index, e, name)
+    handleChange(index, e, name, e.salePrice)
   }
 
   return (
