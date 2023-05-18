@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NTShop.Models.Filters;
 using NTShop.Repositories.Interface;
@@ -8,6 +9,7 @@ namespace NTShop.Controllers
 {
     [Route("staffs")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class StaffsController : ControllerBase
     {
 

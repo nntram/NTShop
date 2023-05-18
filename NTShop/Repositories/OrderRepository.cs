@@ -141,6 +141,10 @@ namespace NTShop.Repositories
             {
                 predicate = predicate.And(p => p.Customerid == filter.Customerid);
             }
+            if(filter.Ordercode > 0)
+            {
+                predicate = predicate.And(p => p.Ordercode == filter.Ordercode);
+            }
 
             var data = await _unitOfWork.GetRepository<Order>().GetPagedListAsync(
                         pageIndex: filter.PageIndex,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useQueries } from 'react-query'
 import orderApi from '../../api/OrderApi'
 import Loading from '../../components/loading/Loading'
@@ -10,11 +10,17 @@ import Select from 'react-select'
 import { toast } from 'react-toastify'
 import CommonSection from '../../components/UI/CommonSection'
 import ReactPaginate from 'react-paginate';
+import useDebounce from '../../custom-hooks/useDebounce'
 
 const AllOrders = () => {
   const pageSize = 5;
   const [orderStatusSelected, setOrderStatusSelected] = useState("")
   const [orderPaymentSelected, setOrderPaymentSelected] = useState(null)
+
+  const iconRef = useRef(null)
+  const searchRef = useRef(null)
+  const [filter, setFilter] = useState(null);
+  const debouncedFilter = useDebounce(filter, 500);
 
   const now = new Date()
 
@@ -39,6 +45,7 @@ const AllOrders = () => {
           EndDate: endDate,
           PageIndex: pageIndex,
           PageSize: pageSize,
+          Ordercode: Boolean(filter) ? filter : -1
         }
       })
       return (response);
@@ -57,7 +64,7 @@ const AllOrders = () => {
   const queryOrder = useQueries([
     {
       queryKey: ['orders', orderStatusSelected, orderPaymentSelected,
-        begintDate, endDate, pageIndex],
+        begintDate, endDate, pageIndex, debouncedFilter],
       queryFn: fetchOrders,
       keepPreviousData: true,
       staleTime: 5000,
@@ -139,6 +146,27 @@ const AllOrders = () => {
     setPageInex(event.selected)
   };
 
+  const handleSearchIcon = () => {
+    if (iconRef.current.className === "ri-close-line") {
+      searchRef.current.value = ""
+      handleSearch()
+    }
+  }
+
+  const handleSearch = () => {
+    const searchValue = searchRef.current.value
+
+    if (searchValue !== '') {
+      iconRef.current.className = "ri-close-line"
+
+    }
+    else {
+      iconRef.current.className = "ri-search-line"
+    }
+    setFilter(searchValue)
+    setPageInex(0)
+  }
+
 
   return (
     <Helmet title='Đơn hàng'>
@@ -183,6 +211,18 @@ const AllOrders = () => {
               </>
             }
           </Row>
+
+          <Row>
+            <Col lg='6' md='6'>
+              <div className="search__box">
+                <input type="text" placeholder='Mã đơn hàng...'
+                  ref={searchRef} onChange={handleSearch} />
+                <span onClick={handleSearchIcon}>
+                  <i className="ri-search-line" ref={iconRef} ></i>
+                </span>
+              </div>
+            </Col>
+            </Row>
         </Container>
       </section>
       {
@@ -218,11 +258,11 @@ const AllOrders = () => {
                               {item.orderispaid ? "Đã thanh toán" : "Thanh toán khi nhận hàng"}
                             </td>
                             <td className={
-                                item.orderstatusid == '0' ? 'text-secondary'
-                                : item.orderstatusid == '1' ? 'text-primary' 
-                                : item.orderstatusid == '2' ? 'text-warning' 
-                                : item.orderstatusid == '3' ? 'text-success' 
-                                : item.orderstatusid == '-1' ? 'text-danger' 
+                                item.orderstatusid === '0' ? 'text-secondary'
+                                : item.orderstatusid === '1' ? 'text-primary' 
+                                : item.orderstatusid ==='2' ? 'text-warning' 
+                                : item.orderstatusid === '3' ? 'text-success' 
+                                : item.orderstatusid === '-1' ? 'text-danger' 
                                 : ''}>
                               {orderStatus.find(status => status.orderstatusid === item.orderstatusid).orderstatusname}
                             </td>
